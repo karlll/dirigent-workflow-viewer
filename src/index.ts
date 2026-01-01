@@ -3,9 +3,9 @@
 
 export const version = '0.1.0'
 
-// Export all workflow types
+// Export workflow types (rename Workflow type to avoid conflict with component)
 export type {
-  Workflow,
+  Workflow as WorkflowType,
   Trigger,
   Goto,
   StepDef,
@@ -16,4 +16,6 @@ export type {
   CaseDef
 } from './types/workflow'
 
-// Placeholder - will be replaced with actual component exports in later steps
+// Export main Workflow component
+export { Workflow } from './components/Workflow'
+export type { WorkflowProps } from './components/Workflow'
