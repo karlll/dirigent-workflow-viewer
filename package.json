@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "dagre": "0.8.5",
-    "js-yaml": "4.1.1"
+    "js-yaml": "4.1.1",
+    "reactflow": "11.11.0"
   }
 }
