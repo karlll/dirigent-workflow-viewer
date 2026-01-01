@@ -1,0 +1,48 @@
+name: triage_and_execute
+version: 1
+start: classify
+
+steps:
+  classify:
+    kind: llm
+    tool: classify_input
+    out:
+      intent: string
+      confidence: number
+    validate:
+      - "confidence >= 0 && confidence <= 1"
+    on_error:
+      goto: fail_invalid
+    goto: route
+
+  route:
+    kind: switch
+    cases:
+      - when: "confidence < 0.7"
+        goto: ask_clarify
+      - when: "intent == 'do_task'"
+        goto: do_task
+    default: fail_no_route
+
+  ask_clarify:
+    kind: tool
+    tool: ask_user
+    args:
+      question: "I’m not confident I understood. What exactly should I do?"
+    end: true
+
+  do_task:
+    kind: tool
+    tool: run_task
+    args:
+      intent: "{{intent}}"
+      payload: "{{input.text}}"
+    end: true
+
+  fail_invalid:
+    kind: fail
+    reason: "LLM output didn’t validate"
+
+  fail_no_route:
+    kind: fail
+    reason: "No route matched"

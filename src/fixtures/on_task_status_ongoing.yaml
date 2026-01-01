@@ -1,0 +1,15 @@
+name: on_task_status_ongoing
+version: 1
+start: enrich
+triggers:
+  - type: task.updated
+    when: "event.data.task.status == 'ongoing'"
+
+steps:
+  enrich:
+    kind: tool
+    tool: run_task
+    args:
+      intent: "start_work"
+      taskId: "{{event.data.task.id}}"
+    end: true

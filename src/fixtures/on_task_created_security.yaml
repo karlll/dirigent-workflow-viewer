@@ -1,0 +1,16 @@
+name: on_task_created_security
+version: 1
+start: notify
+triggers:
+  - type: task.created
+    when: "event.data.task.priority == 'high'"
+
+steps:
+  notify:
+    kind: tool
+    tool: run_task
+    args:
+      intent: "security_triage"
+      taskId: "{{event.data.task.id}}"
+      title: "{{event.data.task.title}}"
+    end: true
