@@ -1,4 +1,4 @@
-import type { Workflow, StepDef } from '../types/workflow'
+import type { Workflow, StepDef, Trigger } from '../types/workflow'
 import type { LayoutDirection } from './layout'
 
 /**
@@ -13,6 +13,7 @@ export interface Node {
     isStart?: boolean
     isEnd?: boolean
     direction?: LayoutDirection
+    triggers?: Trigger[]
   }
   position: { x: number; y: number }
 }
@@ -54,19 +55,36 @@ export function workflowToGraph(workflow: Workflow, direction: LayoutDirection =
   const END_NODE_ID = '__end__'
   const FAIL_NODE_ID = '__fail__'
 
-  // Add special START node
-  nodes.push({
-    id: START_NODE_ID,
-    type: 'start',
-    data: {
-      label: 'START',
-      stepDef: { kind: 'start' } as any, // Special type
-      direction
-    },
-    position: { x: 0, y: 0 }
-  })
+  // Check if workflow is event-driven (has triggers)
+  const hasTriggers = workflow.triggers && workflow.triggers.length > 0
 
-  // Connect START node to the workflow's starting step
+  // Add special START or TRIGGER node
+  if (hasTriggers) {
+    nodes.push({
+      id: START_NODE_ID,
+      type: 'trigger',
+      data: {
+        label: 'TRIGGER',
+        stepDef: { kind: 'trigger' } as any, // Special type
+        direction,
+        triggers: workflow.triggers
+      },
+      position: { x: 0, y: 0 }
+    })
+  } else {
+    nodes.push({
+      id: START_NODE_ID,
+      type: 'start',
+      data: {
+        label: 'START',
+        stepDef: { kind: 'start' } as any, // Special type
+        direction
+      },
+      position: { x: 0, y: 0 }
+    })
+  }
+
+  // Connect START/TRIGGER node to the workflow's starting step
   edges.push({
     id: `${START_NODE_ID}-${workflow.start}`,
     source: START_NODE_ID,
