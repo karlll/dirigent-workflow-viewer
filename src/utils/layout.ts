@@ -34,10 +34,10 @@ export function applyDagreLayout(
   // Configure graph layout
   graph.setGraph({
     rankdir: direction,
-    nodesep: 60,      // Horizontal spacing between nodes
-    ranksep: 100,     // Vertical spacing between ranks
-    marginx: 30,
-    marginy: 30
+    nodesep: 80,      // Horizontal spacing between nodes
+    ranksep: 130,     // Vertical spacing between ranks
+    marginx: 40,
+    marginy: 40
   })
 
   // Add nodes to the graph
