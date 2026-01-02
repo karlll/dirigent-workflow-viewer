@@ -1,12 +1,14 @@
 import { memo } from 'react'
 import { Handle, Position, type NodeProps } from 'reactflow'
 import type { ToolStepDef } from '../../types/workflow'
+import type { LayoutDirection } from '../../utils/layout'
 
 interface ToolNodeData {
   label: string
   stepDef: ToolStepDef
   isStart?: boolean
   isEnd?: boolean
+  direction?: LayoutDirection
 }
 
 /**
@@ -14,12 +16,16 @@ interface ToolNodeData {
  * Displays tool name and arguments with template variables
  */
 export const ToolNode = memo(({ data }: NodeProps<ToolNodeData>) => {
-  const { label, stepDef, isStart, isEnd } = data
+  const { label, stepDef, isStart, isEnd, direction = 'LR' } = data
   const hasArgs = stepDef.args && Object.keys(stepDef.args).length > 0
+
+  // Determine handle positions based on layout direction
+  const targetPosition = direction === 'TB' ? Position.Top : Position.Left
+  const sourcePosition = direction === 'TB' ? Position.Bottom : Position.Right
 
   return (
     <div className="tool-node">
-      <Handle type="target" position={Position.Left} />
+      <Handle type="target" position={targetPosition} />
 
       <div className="node-header">
         <div className="node-badges">
@@ -55,7 +61,7 @@ export const ToolNode = memo(({ data }: NodeProps<ToolNodeData>) => {
         )}
       </div>
 
-      <Handle type="source" position={Position.Right} />
+      <Handle type="source" position={sourcePosition} />
     </div>
   )
 })

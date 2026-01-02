@@ -1,4 +1,5 @@
 import type { Workflow, StepDef } from '../types/workflow'
+import type { LayoutDirection } from './layout'
 
 /**
  * Simple Node type (will use React Flow's Node type later)
@@ -11,6 +12,7 @@ export interface Node {
     stepDef: StepDef
     isStart?: boolean
     isEnd?: boolean
+    direction?: LayoutDirection
   }
   position: { x: number; y: number }
 }
@@ -41,9 +43,10 @@ export interface GraphData {
 /**
  * Convert a Workflow object to a graph representation
  * @param workflow - Parsed workflow object
+ * @param direction - Layout direction for handle positioning
  * @returns Graph data with nodes and edges (positions will be set by layout engine)
  */
-export function workflowToGraph(workflow: Workflow): GraphData {
+export function workflowToGraph(workflow: Workflow, direction: LayoutDirection = 'LR'): GraphData {
   const nodes: Node[] = []
   const edges: Edge[] = []
 
@@ -56,7 +59,8 @@ export function workflowToGraph(workflow: Workflow): GraphData {
         label: stepId,
         stepDef,
         isStart: stepId === workflow.start,
-        isEnd: stepDef.end === true
+        isEnd: stepDef.end === true,
+        direction
       },
       position: { x: 0, y: 0 } // Will be set by layout engine
     })

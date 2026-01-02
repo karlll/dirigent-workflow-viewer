@@ -1,12 +1,14 @@
 import { memo } from 'react'
 import { Handle, Position, type NodeProps } from 'reactflow'
 import type { LlmStepDef } from '../../types/workflow'
+import type { LayoutDirection } from '../../utils/layout'
 
 interface LlmNodeData {
   label: string
   stepDef: LlmStepDef
   isStart?: boolean
   isEnd?: boolean
+  direction?: LayoutDirection
 }
 
 /**
@@ -14,14 +16,18 @@ interface LlmNodeData {
  * Displays tool name, output schema, validation rules, and error handling
  */
 export const LlmNode = memo(({ data }: NodeProps<LlmNodeData>) => {
-  const { label, stepDef, isStart, isEnd } = data
+  const { label, stepDef, isStart, isEnd, direction = 'LR' } = data
   const outputFields = Object.entries(stepDef.out || {})
   const hasValidation = stepDef.validate && stepDef.validate.length > 0
   const hasErrorHandler = !!stepDef.on_error
 
+  // Determine handle positions based on layout direction
+  const targetPosition = direction === 'TB' ? Position.Top : Position.Left
+  const sourcePosition = direction === 'TB' ? Position.Bottom : Position.Right
+
   return (
     <div className="llm-node">
-      <Handle type="target" position={Position.Left} />
+      <Handle type="target" position={targetPosition} />
 
       <div className="node-header">
         <div className="node-badges">
@@ -74,7 +80,7 @@ export const LlmNode = memo(({ data }: NodeProps<LlmNodeData>) => {
         )}
       </div>
 
-      <Handle type="source" position={Position.Right} />
+      <Handle type="source" position={sourcePosition} />
     </div>
   )
 })

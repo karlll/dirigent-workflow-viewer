@@ -62,8 +62,8 @@ export function Workflow({ yaml, workflow, direction = 'LR', showHeader = true }
       // Store workflow data for header display
       setWorkflowData(parsedWorkflow)
 
-      // Convert workflow to graph representation
-      const graph = workflowToGraph(parsedWorkflow)
+      // Convert workflow to graph representation (pass direction for handle positioning)
+      const graph = workflowToGraph(parsedWorkflow, direction)
 
       // Apply layout algorithm to position nodes
       const layoutedNodes = applyDagreLayout(graph.nodes, graph.edges, direction)
