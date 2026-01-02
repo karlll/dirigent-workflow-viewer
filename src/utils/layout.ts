@@ -8,9 +8,10 @@ export type LayoutDirection = 'TB' | 'LR'
 
 /**
  * Default node dimensions
+ * Updated to accommodate custom node styling with more content
  */
-const NODE_WIDTH = 180
-const NODE_HEIGHT = 80
+const NODE_WIDTH = 280
+const NODE_HEIGHT = 150
 
 /**
  * Apply dagre layout algorithm to position nodes
@@ -33,10 +34,10 @@ export function applyDagreLayout(
   // Configure graph layout
   graph.setGraph({
     rankdir: direction,
-    nodesep: 80,      // Horizontal spacing between nodes
-    ranksep: 120,     // Vertical spacing between ranks
-    marginx: 20,
-    marginy: 20
+    nodesep: 100,     // Horizontal spacing between nodes (increased for custom nodes)
+    ranksep: 180,     // Vertical spacing between ranks (increased for custom nodes)
+    marginx: 40,
+    marginy: 40
   })
 
   // Add nodes to the graph
