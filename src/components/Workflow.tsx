@@ -7,7 +7,7 @@ import { parseWorkflow } from '../utils/parser'
 import { workflowToGraph } from '../utils/graphConverter'
 import { applyDagreLayout, type LayoutDirection } from '../utils/layout'
 import type { Workflow as WorkflowType } from '../types/workflow'
-import { LlmNode, ToolNode, SwitchNode, FailNode } from './nodes'
+import { LlmNode, ToolNode, SwitchNode, FailNode, StartNode, EndNode, FailTerminalNode } from './nodes'
 
 /**
  * Props for the Workflow component
@@ -29,6 +29,9 @@ const nodeTypes = {
   tool: ToolNode,
   switch: SwitchNode,
   fail: FailNode,
+  start: StartNode,
+  end: EndNode,
+  'fail-terminal': FailTerminalNode,
 }
 
 /**

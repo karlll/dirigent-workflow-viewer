@@ -50,23 +50,116 @@ export function workflowToGraph(workflow: Workflow, direction: LayoutDirection =
   const nodes: Node[] = []
   const edges: Edge[] = []
 
-  // Create nodes for each step
+  const START_NODE_ID = '__start__'
+  const END_NODE_ID = '__end__'
+  const FAIL_NODE_ID = '__fail__'
+
+  // Add special START node
+  nodes.push({
+    id: START_NODE_ID,
+    type: 'start',
+    data: {
+      label: 'START',
+      stepDef: { kind: 'start' } as any, // Special type
+      direction
+    },
+    position: { x: 0, y: 0 }
+  })
+
+  // Connect START node to the workflow's starting step
+  edges.push({
+    id: `${START_NODE_ID}-${workflow.start}`,
+    source: START_NODE_ID,
+    target: workflow.start,
+    type: 'default'
+  })
+
+  let hasFailSteps = false
+
+  // Create nodes for each workflow step
   for (const [stepId, stepDef] of Object.entries(workflow.steps)) {
+    // Skip fail steps - they will connect to the fail terminal node
+    if (stepDef.kind === 'fail') {
+      hasFailSteps = true
+      // Still create the node but will connect it to fail terminal
+      nodes.push({
+        id: stepId,
+        type: stepDef.kind,
+        data: {
+          label: stepId,
+          stepDef,
+          direction
+        },
+        position: { x: 0, y: 0 }
+      })
+      continue
+    }
+
     nodes.push({
       id: stepId,
       type: stepDef.kind,
       data: {
         label: stepId,
         stepDef,
-        isStart: stepId === workflow.start,
-        isEnd: stepDef.end === true,
         direction
       },
-      position: { x: 0, y: 0 } // Will be set by layout engine
+      position: { x: 0, y: 0 }
     })
 
     // Generate edges based on step type
     edges.push(...createEdgesForStep(stepId, stepDef))
+
+    // Connect terminal steps to END node
+    if (stepDef.end === true) {
+      edges.push({
+        id: `${stepId}-${END_NODE_ID}`,
+        source: stepId,
+        target: END_NODE_ID,
+        type: 'default'
+      })
+    }
+  }
+
+  // Add special END node
+  nodes.push({
+    id: END_NODE_ID,
+    type: 'end',
+    data: {
+      label: 'END',
+      stepDef: { kind: 'end' } as any, // Special type
+      direction
+    },
+    position: { x: 0, y: 0 }
+  })
+
+  // Add special FAIL terminal node if there are any fail steps
+  if (hasFailSteps) {
+    nodes.push({
+      id: FAIL_NODE_ID,
+      type: 'fail-terminal',
+      data: {
+        label: 'FAIL',
+        stepDef: { kind: 'fail-terminal' } as any, // Special type
+        direction
+      },
+      position: { x: 0, y: 0 }
+    })
+
+    // Connect all fail steps to the FAIL terminal node
+    for (const [stepId, stepDef] of Object.entries(workflow.steps)) {
+      if (stepDef.kind === 'fail') {
+        edges.push({
+          id: `${stepId}-${FAIL_NODE_ID}`,
+          source: stepId,
+          target: FAIL_NODE_ID,
+          type: 'default',
+          style: {
+            stroke: '#f38ba8',
+            strokeDasharray: '5,5'
+          }
+        })
+      }
+    }
   }
 
   return { nodes, edges }

@@ -69,30 +69,18 @@
   color: white;
 }
 
-.node-badges {
+.node-header-content {
   display: flex;
-  gap: 4px;
-  margin-bottom: 4px;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
 }
 
-.badge {
-  font-size: 9px;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 3px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.badge-start {
-  background: #a6e3a1;
-  color: #1e1e2e;
-}
-
-.badge-end {
-  background: #585b70;
-  color: #cdd6f4;
+.node-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  opacity: 0.8;
 }
 
 .node-type {
@@ -359,4 +347,73 @@
 .meta-item:first-child::before {
   content: none;
   margin-right: 0;
+}
+
+/* Special nodes (start, end, fail-terminal) */
+.special-node {
+  background: white;
+  border: 3px solid;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.special-node:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: scale(1.05);
+}
+
+.special-node-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.special-node-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.special-node-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Start node */
+.start-node {
+  border-color: #a6e3a1; /* Green */
+  color: #1e1e2e;
+}
+
+.start-node .special-node-icon {
+  color: #a6e3a1;
+}
+
+/* End node */
+.end-node {
+  border-color: #89b4fa; /* Blue */
+  color: #1e1e2e;
+}
+
+.end-node .special-node-icon {
+  color: #89b4fa;
+}
+
+/* Fail terminal node */
+.fail-terminal-node {
+  border-color: #f38ba8; /* Red */
+  color: #1e1e2e;
+}
+
+.fail-terminal-node .special-node-icon {
+  color: #f38ba8;
 }

@@ -1,13 +1,12 @@
 import { memo } from 'react'
 import { Handle, Position, type NodeProps } from 'reactflow'
+import { Wrench } from 'lucide-react'
 import type { ToolStepDef } from '../../types/workflow'
 import type { LayoutDirection } from '../../utils/layout'
 
 interface ToolNodeData {
   label: string
   stepDef: ToolStepDef
-  isStart?: boolean
-  isEnd?: boolean
   direction?: LayoutDirection
 }
 
@@ -16,7 +15,7 @@ interface ToolNodeData {
  * Displays tool name and arguments with template variables
  */
 export const ToolNode = memo(({ data }: NodeProps<ToolNodeData>) => {
-  const { label, stepDef, isStart, isEnd, direction = 'LR' } = data
+  const { label, stepDef, direction = 'LR' } = data
   const hasArgs = stepDef.args && Object.keys(stepDef.args).length > 0
 
   // Determine handle positions based on layout direction
@@ -28,23 +27,24 @@ export const ToolNode = memo(({ data }: NodeProps<ToolNodeData>) => {
       <Handle type="target" position={targetPosition} />
 
       <div className="node-header">
-        <div className="node-badges">
-          {isStart && <span className="badge badge-start">START</span>}
-          {isEnd && <span className="badge badge-end">END</span>}
+        <div className="node-header-content">
+          <div>
+            <div className="node-type">TOOL</div>
+            <div className="node-label">{label}</div>
+          </div>
+          <Wrench className="node-icon" />
         </div>
-        <div className="node-type">TOOL</div>
-        <div className="node-label">{label}</div>
       </div>
 
       <div className="node-body">
+        {stepDef.description && (
+          <div className="node-description">{stepDef.description}</div>
+        )}
+
         <div className="node-field">
           <span className="field-label">Tool:</span>
           <span className="field-value">{stepDef.tool}</span>
         </div>
-
-        {stepDef.description && (
-          <div className="node-description">{stepDef.description}</div>
-        )}
 
         {hasArgs && (
           <div className="node-section">

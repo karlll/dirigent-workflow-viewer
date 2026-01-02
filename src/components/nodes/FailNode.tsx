@@ -1,22 +1,21 @@
 import { memo } from 'react'
 import { Handle, Position, type NodeProps } from 'reactflow'
+import { AlertTriangle } from 'lucide-react'
 import type { FailStepDef } from '../../types/workflow'
 import type { LayoutDirection } from '../../utils/layout'
 
 interface FailNodeData {
   label: string
   stepDef: FailStepDef
-  isStart?: boolean
-  isEnd?: boolean
   direction?: LayoutDirection
 }
 
 /**
  * Custom node component for Fail/error steps
- * Displays failure reason with error styling
+ * Displays failure reason
  */
 export const FailNode = memo(({ data }: NodeProps<FailNodeData>) => {
-  const { label, stepDef, isStart, isEnd, direction = 'LR' } = data
+  const { label, stepDef, direction = 'LR' } = data
 
   // Determine handle positions based on layout direction
   const targetPosition = direction === 'TB' ? Position.Top : Position.Left
@@ -27,12 +26,13 @@ export const FailNode = memo(({ data }: NodeProps<FailNodeData>) => {
       <Handle type="target" position={targetPosition} />
 
       <div className="node-header">
-        <div className="node-badges">
-          {isStart && <span className="badge badge-start">START</span>}
-          {isEnd && <span className="badge badge-end">END</span>}
+        <div className="node-header-content">
+          <div>
+            <div className="node-type">FAIL</div>
+            <div className="node-label">{label}</div>
+          </div>
+          <AlertTriangle className="node-icon" />
         </div>
-        <div className="node-type">FAIL</div>
-        <div className="node-label">{label}</div>
       </div>
 
       <div className="node-body">
@@ -44,14 +44,9 @@ export const FailNode = memo(({ data }: NodeProps<FailNodeData>) => {
           <span className="field-label">Reason:</span>
           <span className="field-value reason-text">{stepDef.reason}</span>
         </div>
-
-        <div className="node-indicator error-indicator">
-          ❌ Workflow will fail
-        </div>
       </div>
 
-      {/* Fail nodes typically don't have outgoing connections, but include handle for completeness */}
-      <Handle type="source" position={sourcePosition} style={{ opacity: 0 }} />
+      <Handle type="source" position={sourcePosition} />
     </div>
   )
 })
