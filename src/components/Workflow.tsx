@@ -129,6 +129,11 @@ export function Workflow({ yaml, workflow, direction = 'LR', showHeader = true }
           edges={edges}
           nodeTypes={nodeTypes}
           fitView
+          fitViewOptions={{
+            padding: 0.2,
+            minZoom: 0.1,
+            maxZoom: 1.5
+          }}
           attributionPosition="bottom-left"
         >
           <Background />
