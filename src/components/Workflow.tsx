@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import ReactFlow, { Background, Controls, type Node, type Edge } from 'reactflow'
 import 'reactflow/dist/style.css'
+import '../styles/nodes.css'
 
 import { parseWorkflow } from '../utils/parser'
 import { workflowToGraph } from '../utils/graphConverter'
 import { applyDagreLayout, type LayoutDirection } from '../utils/layout'
 import type { Workflow as WorkflowType } from '../types/workflow'
+import { LlmNode, ToolNode, SwitchNode, FailNode } from './nodes'
 
 /**
  * Props for the Workflow component
@@ -17,6 +19,16 @@ export interface WorkflowProps {
   workflow?: WorkflowType
   /** Layout direction (default: LR) */
   direction?: LayoutDirection
+  /** Show workflow name and description (default: true) */
+  showHeader?: boolean
+}
+
+// Define custom node types outside component to prevent re-renders
+const nodeTypes = {
+  llm: LlmNode,
+  tool: ToolNode,
+  switch: SwitchNode,
+  fail: FailNode,
 }
 
 /**
@@ -30,23 +42,28 @@ export interface WorkflowProps {
  * <Workflow yaml={yamlString} direction="LR" />
  * ```
  */
-export function Workflow({ yaml, workflow, direction = 'LR' }: WorkflowProps) {
+export function Workflow({ yaml, workflow, direction = 'LR', showHeader = true }: WorkflowProps) {
   const [nodes, setNodes] = useState<Node[]>([])
   const [edges, setEdges] = useState<Edge[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [workflowData, setWorkflowData] = useState<WorkflowType | null>(null)
 
   useEffect(() => {
     try {
       // Parse workflow from YAML or use provided workflow object
-      const workflowData = workflow || (yaml ? parseWorkflow(yaml) : null)
+      const parsedWorkflow = workflow || (yaml ? parseWorkflow(yaml) : null)
 
-      if (!workflowData) {
+      if (!parsedWorkflow) {
         setError('No workflow provided')
+        setWorkflowData(null)
         return
       }
 
+      // Store workflow data for header display
+      setWorkflowData(parsedWorkflow)
+
       // Convert workflow to graph representation
-      const graph = workflowToGraph(workflowData)
+      const graph = workflowToGraph(parsedWorkflow)
 
       // Apply layout algorithm to position nodes
       const layoutedNodes = applyDagreLayout(graph.nodes, graph.edges, direction)
@@ -58,6 +75,7 @@ export function Workflow({ yaml, workflow, direction = 'LR' }: WorkflowProps) {
       setError(err instanceof Error ? err.message : 'Unknown error occurred')
       setNodes([])
       setEdges([])
+      setWorkflowData(null)
     }
   }, [yaml, workflow, direction])
 
@@ -88,16 +106,32 @@ export function Workflow({ yaml, workflow, direction = 'LR' }: WorkflowProps) {
   }
 
   return (
-    <div style={{ width: '100%', height: '600px' }}>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        fitView
-        attributionPosition="bottom-left"
-      >
-        <Background />
-        <Controls />
-      </ReactFlow>
+    <div className="workflow-viewer">
+      {showHeader && workflowData && (
+        <div className="workflow-header">
+          <h3 className="workflow-name">{workflowData.name}</h3>
+          {workflowData.description && (
+            <p className="workflow-description">{workflowData.description}</p>
+          )}
+          <div className="workflow-meta">
+            <span className="meta-item">Version: {workflowData.version}</span>
+            <span className="meta-item">Steps: {Object.keys(workflowData.steps).length}</span>
+            <span className="meta-item">Start: {workflowData.start}</span>
+          </div>
+        </div>
+      )}
+      <div style={{ width: '100%', height: showHeader ? 'calc(100% - 80px)' : '600px' }}>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          nodeTypes={nodeTypes}
+          fitView
+          attributionPosition="bottom-left"
+        >
+          <Background />
+          <Controls />
+        </ReactFlow>
+      </div>
     </div>
   )
 }

@@ -22,6 +22,10 @@ const meta: Meta<typeof Workflow> = {
       control: 'text',
       description: 'YAML workflow definition',
     },
+    showHeader: {
+      control: 'boolean',
+      description: 'Show workflow name, description, and metadata header',
+    },
   },
   tags: ['autodocs'],
 }
@@ -88,5 +92,16 @@ export const EmptyWorkflow: Story = {
   args: {
     yaml: '',
     direction: 'LR',
+  },
+}
+
+/**
+ * Workflow without header - demonstrates compact view.
+ */
+export const WithoutHeader: Story = {
+  args: {
+    yaml: sampleYaml,
+    direction: 'LR',
+    showHeader: false,
   },
 }
