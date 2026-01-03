@@ -706,3 +706,25 @@
 .react-flow.dark .trigger-condition {
   color: #a6adc8;
 }
+
+/* Special nodes text visibility in dark mode */
+.react-flow.dark .start-node,
+.react-flow.dark .end-node,
+.react-flow.dark .fail-terminal-node,
+.react-flow.dark .trigger-node {
+  color: #cdd6f4;
+}
+
+.react-flow.dark .special-node-title {
+  color: #cdd6f4;
+}
+
+/* Lighter edges for better visibility in dark mode */
+.react-flow.dark .react-flow__edge-path {
+  stroke: #6c7086;
+}
+
+.react-flow.dark .react-flow__edge.selected .react-flow__edge-path,
+.react-flow.dark .react-flow__edge:focus .react-flow__edge-path {
+  stroke: #89b4fa;
+}
