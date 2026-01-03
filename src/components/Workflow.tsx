@@ -53,6 +53,21 @@ export function Workflow({ yaml, workflow, direction = 'LR', showHeader = true, 
   const [edges, setEdges] = useState<Edge[]>([])
   const [error, setError] = useState<string | null>(null)
   const [workflowData, setWorkflowData] = useState<WorkflowType | null>(null)
+  const [isDark, setIsDark] = useState(false)
+
+  // Track system color scheme for 'system' mode
+  useEffect(() => {
+    if (colorMode === 'system') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      setIsDark(mediaQuery.matches)
+
+      const listener = (e: MediaQueryListEvent) => setIsDark(e.matches)
+      mediaQuery.addEventListener('change', listener)
+      return () => mediaQuery.removeEventListener('change', listener)
+    } else {
+      setIsDark(colorMode === 'dark')
+    }
+  }, [colorMode])
 
   useEffect(() => {
     try {
@@ -112,7 +127,7 @@ export function Workflow({ yaml, workflow, direction = 'LR', showHeader = true, 
   }
 
   return (
-    <div className="workflow-viewer">
+    <div className={`workflow-viewer ${isDark ? 'dark' : ''}`}>
       {showHeader && workflowData && (
         <div className="workflow-header">
           <h3 className="workflow-name">{workflowData.name}</h3>

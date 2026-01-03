@@ -649,24 +649,24 @@
   border-color: #f38ba8;
 }
 
-.react-flow.dark .workflow-header {
+.workflow-viewer.dark .workflow-header {
   background: #181825;
   border-bottom-color: #45475a;
 }
 
-.react-flow.dark .workflow-name {
+.workflow-viewer.dark .workflow-name {
   color: #cdd6f4;
 }
 
-.react-flow.dark .workflow-description {
+.workflow-viewer.dark .workflow-description {
   color: #a6adc8;
 }
 
-.react-flow.dark .meta-item {
+.workflow-viewer.dark .meta-item {
   color: #a6adc8;
 }
 
-.react-flow.dark .meta-item::before {
+.workflow-viewer.dark .meta-item::before {
   color: #585b70;
 }
 
