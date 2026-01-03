@@ -1,19 +1,21 @@
 import { memo, useState } from 'react'
-import { Handle, Position, type NodeProps } from 'reactflow'
+import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
 import { Zap } from 'lucide-react'
 import type { LayoutDirection } from '../../utils/layout'
 import type { Trigger } from '../../types/workflow'
 
-interface TriggerNodeData {
+interface TriggerNodeData extends Record<string, unknown> {
   direction?: LayoutDirection
   triggers?: Trigger[]
 }
+
+type TriggerNode = Node<TriggerNodeData>
 
 /**
  * Special trigger node component for event-driven workflows
  * Shows minimal info with hover tooltip for trigger details
  */
-export const TriggerNode = memo(({ data }: NodeProps<TriggerNodeData>) => {
+export const TriggerNode = memo(({ data }: NodeProps<TriggerNode>) => {
   const { direction = 'LR', triggers = [] } = data
   const triggerCount = triggers.length
   const [showTooltip, setShowTooltip] = useState(false)

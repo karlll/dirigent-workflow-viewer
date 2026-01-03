@@ -1,17 +1,19 @@
 import { memo } from 'react'
-import { Handle, Position, type NodeProps } from 'reactflow'
+import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
 import { Play } from 'lucide-react'
 import type { LayoutDirection } from '../../utils/layout'
 
-interface StartNodeData {
+interface StartNodeData extends Record<string, unknown> {
   direction?: LayoutDirection
 }
+
+type StartNode = Node<StartNodeData>
 
 /**
  * Special start node component
  * Minimal design with only title, icon, and color
  */
-export const StartNode = memo(({ data }: NodeProps<StartNodeData>) => {
+export const StartNode = memo(({ data }: NodeProps<StartNode>) => {
   const { direction = 'LR' } = data
 
   // Only source handle (no target - this is the entry point)

@@ -1,20 +1,22 @@
 import { memo } from 'react'
-import { Handle, Position, type NodeProps } from 'reactflow'
+import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
 import { Wrench } from 'lucide-react'
 import type { ToolStepDef } from '../../types/workflow'
 import type { LayoutDirection } from '../../utils/layout'
 
-interface ToolNodeData {
+interface ToolNodeData extends Record<string, unknown> {
   label: string
   stepDef: ToolStepDef
   direction?: LayoutDirection
 }
 
+type ToolNode = Node<ToolNodeData>
+
 /**
  * Custom node component for Tool steps
  * Displays tool name and arguments with template variables
  */
-export const ToolNode = memo(({ data }: NodeProps<ToolNodeData>) => {
+export const ToolNode = memo(({ data }: NodeProps<ToolNode>) => {
   const { label, stepDef, direction = 'LR' } = data
   const hasArgs = stepDef.args && Object.keys(stepDef.args).length > 0
 

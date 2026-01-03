@@ -16,6 +16,9 @@ export type {
   CaseDef
 } from './types/workflow'
 
+// Export React Flow types for consumers
+export type { ColorMode } from '@xyflow/react'
+
 // Export main Workflow component
 export { Workflow } from './components/Workflow'
 export type { WorkflowProps } from './components/Workflow'

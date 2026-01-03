@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import ReactFlow, { Background, Controls, type Node, type Edge } from 'reactflow'
-import 'reactflow/dist/style.css'
+import { ReactFlow, Background, Controls, type Node, type Edge, type ColorMode } from '@xyflow/react'
+import '@xyflow/react/dist/style.css'
 import '../styles/nodes.css'
 
 import { parseWorkflow } from '../utils/parser'
@@ -21,6 +21,8 @@ export interface WorkflowProps {
   direction?: LayoutDirection
   /** Show workflow name and description (default: true) */
   showHeader?: boolean
+  /** Color mode for the workflow viewer (default: system) */
+  colorMode?: ColorMode
 }
 
 // Define custom node types outside component to prevent re-renders
@@ -46,7 +48,7 @@ const nodeTypes = {
  * <Workflow yaml={yamlString} direction="LR" />
  * ```
  */
-export function Workflow({ yaml, workflow, direction = 'LR', showHeader = true }: WorkflowProps) {
+export function Workflow({ yaml, workflow, direction = 'LR', showHeader = true, colorMode = 'system' }: WorkflowProps) {
   const [nodes, setNodes] = useState<Node[]>([])
   const [edges, setEdges] = useState<Edge[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -129,6 +131,7 @@ export function Workflow({ yaml, workflow, direction = 'LR', showHeader = true }
           nodes={nodes}
           edges={edges}
           nodeTypes={nodeTypes}
+          colorMode={colorMode}
           fitView
           fitViewOptions={{
             padding: 0.2,

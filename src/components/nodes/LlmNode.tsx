@@ -1,20 +1,22 @@
 import { memo } from 'react'
-import { Handle, Position, type NodeProps } from 'reactflow'
+import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
 import { Brain } from 'lucide-react'
 import type { LlmStepDef } from '../../types/workflow'
 import type { LayoutDirection } from '../../utils/layout'
 
-interface LlmNodeData {
+interface LlmNodeData extends Record<string, unknown> {
   label: string
   stepDef: LlmStepDef
   direction?: LayoutDirection
 }
 
+type LlmNode = Node<LlmNodeData>
+
 /**
  * Custom node component for LLM steps
  * Displays tool name, output schema, and validation rules
  */
-export const LlmNode = memo(({ data }: NodeProps<LlmNodeData>) => {
+export const LlmNode = memo(({ data }: NodeProps<LlmNode>) => {
   const { label, stepDef, direction = 'LR' } = data
   const outputFields = Object.entries(stepDef.out || {})
   const hasValidation = stepDef.validate && stepDef.validate.length > 0

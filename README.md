@@ -99,6 +99,28 @@ function App() {
 />
 ```
 
+### Dark Mode
+
+```tsx
+// Explicit dark mode
+<Workflow
+  yaml={yamlWorkflow}
+  colorMode="dark"
+/>
+
+// Explicit light mode
+<Workflow
+  yaml={yamlWorkflow}
+  colorMode="light"
+/>
+
+// System preference (default)
+<Workflow
+  yaml={yamlWorkflow}
+  colorMode="system"
+/>
+```
+
 ## Component API
 
 ### `<Workflow>`
@@ -112,6 +134,8 @@ Main component for rendering workflow visualizations.
 | `yaml` | `string` | - | YAML string representing the workflow |
 | `workflow` | `WorkflowType` | - | Pre-parsed workflow object |
 | `direction` | `'LR' \| 'TB'` | `'LR'` | Layout direction (left-to-right or top-to-bottom) |
+| `showHeader` | `boolean` | `true` | Show workflow name, description, and metadata |
+| `colorMode` | `'light' \| 'dark' \| 'system'` | `'system'` | Color scheme for the viewer |
 
 **Note:** Either `yaml` or `workflow` must be provided, but not both.
 

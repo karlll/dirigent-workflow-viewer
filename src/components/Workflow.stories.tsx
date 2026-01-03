@@ -26,6 +26,11 @@ const meta: Meta<typeof Workflow> = {
       control: 'boolean',
       description: 'Show workflow name, description, and metadata header',
     },
+    colorMode: {
+      control: 'radio',
+      options: ['light', 'dark', 'system'],
+      description: 'Color scheme: light, dark, or system (follows OS preference)',
+    },
   },
   tags: ['autodocs'],
 }
@@ -103,5 +108,38 @@ export const WithoutHeader: Story = {
     yaml: sampleYaml,
     direction: 'LR',
     showHeader: false,
+  },
+}
+
+/**
+ * Dark mode - demonstrates dark color scheme.
+ */
+export const DarkMode: Story = {
+  args: {
+    yaml: sampleYaml,
+    direction: 'LR',
+    colorMode: 'dark',
+  },
+}
+
+/**
+ * System color mode - follows OS preference.
+ */
+export const SystemColorMode: Story = {
+  args: {
+    yaml: sampleYaml,
+    direction: 'LR',
+    colorMode: 'system',
+  },
+}
+
+/**
+ * Dark mode with security workflow.
+ */
+export const DarkModeSecurityWorkflow: Story = {
+  args: {
+    yaml: securityYaml,
+    direction: 'LR',
+    colorMode: 'dark',
   },
 }

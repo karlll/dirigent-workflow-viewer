@@ -1,20 +1,22 @@
 import { memo } from 'react'
-import { Handle, Position, type NodeProps } from 'reactflow'
+import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
 import { AlertTriangle } from 'lucide-react'
 import type { FailStepDef } from '../../types/workflow'
 import type { LayoutDirection } from '../../utils/layout'
 
-interface FailNodeData {
+interface FailNodeData extends Record<string, unknown> {
   label: string
   stepDef: FailStepDef
   direction?: LayoutDirection
 }
 
+type FailNode = Node<FailNodeData>
+
 /**
  * Custom node component for Fail/error steps
  * Displays failure reason
  */
-export const FailNode = memo(({ data }: NodeProps<FailNodeData>) => {
+export const FailNode = memo(({ data }: NodeProps<FailNode>) => {
   const { label, stepDef, direction = 'LR' } = data
 
   // Determine handle positions based on layout direction

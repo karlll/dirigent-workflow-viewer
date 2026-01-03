@@ -1,20 +1,22 @@
 import { memo } from 'react'
-import { Handle, Position, type NodeProps } from 'reactflow'
+import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
 import { GitBranch } from 'lucide-react'
 import type { SwitchStepDef } from '../../types/workflow'
 import type { LayoutDirection } from '../../utils/layout'
 
-interface SwitchNodeData {
+interface SwitchNodeData extends Record<string, unknown> {
   label: string
   stepDef: SwitchStepDef
   direction?: LayoutDirection
 }
 
+type SwitchNode = Node<SwitchNodeData>
+
 /**
  * Custom node component for Switch/branching steps
  * Cases are shown on edge labels
  */
-export const SwitchNode = memo(({ data }: NodeProps<SwitchNodeData>) => {
+export const SwitchNode = memo(({ data }: NodeProps<SwitchNode>) => {
   const { label, stepDef, direction = 'LR' } = data
   const caseCount = stepDef.cases.length
 

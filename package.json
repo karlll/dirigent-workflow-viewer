@@ -61,9 +61,9 @@
     "vitest": "^4.0.16"
   },
   "dependencies": {
+    "@xyflow/react": "12.10.0",
     "dagre": "0.8.5",
     "js-yaml": "4.1.1",
-    "lucide-react": "^0.468.0",
-    "reactflow": "11.11.0"
+    "lucide-react": "^0.468.0"
   }
 }
