@@ -9,7 +9,7 @@ import securityYaml from '../fixtures/on_task_created_security.yaml?raw'
 
 // Mock instance states for different scenarios
 const runningInstanceState: InstanceState = {
-  workflowName: 'sample_workflow',
+  workflowName: 'triage_and_execute',
   workflowVersion: 1,
   status: 'running',
   startedAt: '2026-01-06T10:00:00Z',
@@ -24,21 +24,35 @@ const runningInstanceState: InstanceState = {
       },
     ],
     [
-      'route_high',
+      'route',
+      {
+        status: 'pending',
+        stepKind: 'switch',
+      },
+    ],
+    [
+      'ask_clarify',
       {
         status: 'pending',
         stepKind: 'tool',
       },
     ],
     [
-      'route_low',
+      'do_task',
       {
         status: 'pending',
         stepKind: 'tool',
       },
     ],
     [
-      'error_handler',
+      'fail_invalid',
+      {
+        status: 'pending',
+        stepKind: 'fail',
+      },
+    ],
+    [
+      'fail_no_route',
       {
         status: 'pending',
         stepKind: 'fail',
@@ -49,7 +63,7 @@ const runningInstanceState: InstanceState = {
 }
 
 const completedInstanceState: InstanceState = {
-  workflowName: 'sample_workflow',
+  workflowName: 'triage_and_execute',
   workflowVersion: 1,
   status: 'completed',
   startedAt: '2026-01-06T10:00:00Z',
@@ -67,24 +81,41 @@ const completedInstanceState: InstanceState = {
       },
     ],
     [
-      'route_high',
+      'route',
       {
         status: 'completed',
-        stepKind: 'tool',
+        stepKind: 'switch',
         startedAt: '2026-01-06T10:00:02Z',
-        completedAt: '2026-01-06T10:00:05Z',
-        durationMs: 3000,
+        completedAt: '2026-01-06T10:00:02.1Z',
+        durationMs: 100,
       },
     ],
     [
-      'route_low',
+      'do_task',
+      {
+        status: 'completed',
+        stepKind: 'tool',
+        startedAt: '2026-01-06T10:00:02.1Z',
+        completedAt: '2026-01-06T10:00:05Z',
+        durationMs: 2900,
+      },
+    ],
+    [
+      'ask_clarify',
       {
         status: 'pending',
         stepKind: 'tool',
       },
     ],
     [
-      'error_handler',
+      'fail_invalid',
+      {
+        status: 'pending',
+        stepKind: 'fail',
+      },
+    ],
+    [
+      'fail_no_route',
       {
         status: 'pending',
         stepKind: 'fail',
@@ -94,15 +125,20 @@ const completedInstanceState: InstanceState = {
   branches: [
     {
       fromStep: 'classify',
-      toStep: 'route_high',
-      condition: 'confidence > 0.8',
+      toStep: 'route',
       timestamp: '2026-01-06T10:00:02Z',
+    },
+    {
+      fromStep: 'route',
+      toStep: 'do_task',
+      condition: 'intent == "do_task"',
+      timestamp: '2026-01-06T10:00:02.1Z',
     },
   ],
 }
 
 const failedInstanceState: InstanceState = {
-  workflowName: 'sample_workflow',
+  workflowName: 'triage_and_execute',
   workflowVersion: 1,
   status: 'failed',
   startedAt: '2026-01-06T10:00:00Z',
@@ -123,21 +159,35 @@ const failedInstanceState: InstanceState = {
       },
     ],
     [
-      'route_high',
+      'route',
+      {
+        status: 'pending',
+        stepKind: 'switch',
+      },
+    ],
+    [
+      'ask_clarify',
       {
         status: 'pending',
         stepKind: 'tool',
       },
     ],
     [
-      'route_low',
+      'do_task',
       {
         status: 'pending',
         stepKind: 'tool',
       },
     ],
     [
-      'error_handler',
+      'fail_invalid',
+      {
+        status: 'pending',
+        stepKind: 'fail',
+      },
+    ],
+    [
+      'fail_no_route',
       {
         status: 'pending',
         stepKind: 'fail',
@@ -194,25 +244,28 @@ const meta: Meta<typeof ExecutableWorkflow> = {
   tags: ['autodocs'],
   decorators: [
     (Story, context) => {
-      // Mock EventManager for Storybook
-      const mockInstanceId = context.args.instanceId || 'mock-instance-123'
+      // Determine which mock state to use based on story name
+      let mockState: InstanceState | undefined
 
-      // Set up mock based on story name
       if (context.name.includes('Running')) {
-        eventManager.getState = () => runningInstanceState
+        mockState = runningInstanceState
       } else if (context.name.includes('Completed')) {
-        eventManager.getState = () => completedInstanceState
+        mockState = completedInstanceState
       } else if (context.name.includes('Failed')) {
-        eventManager.getState = () => failedInstanceState
-      } else {
-        eventManager.getState = () => undefined
+        mockState = failedInstanceState
       }
 
-      // Mock connection check
+      // Mock EventManager methods
+      eventManager.getState = () => mockState
+      eventManager.fetchState = () => {
+        if (mockState) {
+          return Promise.resolve(mockState)
+        }
+        return Promise.reject(new Error('Instance not found'))
+      }
       eventManager.isEventSourceConnected = () => false
-
-      // Mock subscribe to prevent actual SSE connections
       eventManager.subscribe = () => () => {}
+      eventManager.connect = () => {}
 
       return <Story />
     },
