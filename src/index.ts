@@ -22,3 +22,13 @@ export type { ColorMode } from '@xyflow/react'
 // Export main Workflow component
 export { Workflow } from './components/Workflow'
 export type { WorkflowProps } from './components/Workflow'
+
+// Export ExecutableWorkflow component
+export { ExecutableWorkflow } from './components/ExecutableWorkflow'
+export type { ExecutableWorkflowProps } from './components/ExecutableWorkflow'
+
+// Export execution types
+export type { InstanceState, StepState, ExecutionState } from './types/execution'
+
+// Export EventManager for advanced use cases
+export { eventManager } from './lib/EventManager'

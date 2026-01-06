@@ -63,3 +63,34 @@ global.EventSource = class MockEventSource {
     return true
   }
 } as any
+
+// Mock window.matchMedia for dark mode detection
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: (query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: () => {}, // deprecated
+    removeListener: () => {}, // deprecated
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => true,
+  }),
+})
+
+// Mock ResizeObserver for React Flow
+global.ResizeObserver = class ResizeObserver {
+  constructor(_callback: ResizeObserverCallback) {
+    // Mock implementation
+  }
+  observe(_target: Element, _options?: ResizeObserverOptions): void {
+    // Mock implementation
+  }
+  unobserve(_target: Element): void {
+    // Mock implementation
+  }
+  disconnect(): void {
+    // Mock implementation
+  }
+}
