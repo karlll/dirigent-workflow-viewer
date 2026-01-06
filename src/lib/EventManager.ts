@@ -370,6 +370,7 @@ class WorkflowEventManager {
       this.eventSource.close()
       this.eventSource = null
       this.isConnected = false
+      this.apiBaseUrl = ''
       console.log('[EventManager] Disconnected from SSE')
     }
   }
