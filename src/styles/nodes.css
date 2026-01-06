@@ -1,4 +1,5 @@
 /* Custom Node Styles */
+@import './execution.css';
 
 /* Base node styles */
 .llm-node,

@@ -1,0 +1,248 @@
+/* ============================================
+   Workflow Execution State Styles
+   ============================================ */
+
+/* ============================================
+   Execution Path Highlighting
+   ============================================ */
+
+.on-execution-path {
+  border: 2px solid #3b82f6 !important;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);
+}
+
+/* Current executing step */
+.current-step {
+  border: 2px solid #f59e0b !important;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(245, 158, 11, 0.8);
+  }
+}
+
+/* ============================================
+   Step Execution States
+   ============================================ */
+
+.node-pending {
+  opacity: 0.5;
+}
+
+.node-running {
+  background: linear-gradient(to bottom, #fef3c7 0%, #fde68a 100%) !important;
+  border-color: #f59e0b !important;
+}
+
+.node-completed {
+  background: linear-gradient(to bottom, #d1fae5 0%, #a7f3d0 100%) !important;
+  border-color: #10b981 !important;
+}
+
+.node-failed {
+  background: linear-gradient(to bottom, #fee2e2 0%, #fecaca 100%) !important;
+  border-color: #ef4444 !important;
+}
+
+.node-skipped {
+  opacity: 0.3;
+  filter: grayscale(100%);
+}
+
+/* ============================================
+   Execution Status Indicators
+   ============================================ */
+
+.node-header-icons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.execution-status {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.execution-status svg {
+  color: inherit;
+}
+
+/* Running state animation */
+.node-running .execution-status svg.animate-spin {
+  color: #f59e0b;
+}
+
+/* Completed state icon */
+.node-completed .execution-status svg {
+  color: #10b981;
+}
+
+/* Failed state icon */
+.node-failed .execution-status svg {
+  color: #ef4444;
+}
+
+/* ============================================
+   Execution Timing Display
+   ============================================ */
+
+.execution-timing {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+  padding: 4px 8px;
+  background: #f3f4f6;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.execution-timing svg {
+  flex-shrink: 0;
+  color: #9ca3af;
+}
+
+/* ============================================
+   Error Message Display
+   ============================================ */
+
+.execution-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  font-size: 12px;
+  color: #dc2626;
+  background: #fee2e2;
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 8px;
+  border-left: 3px solid #ef4444;
+}
+
+.execution-error svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #ef4444;
+}
+
+.execution-error span {
+  word-break: break-word;
+}
+
+/* ============================================
+   React Flow Edge Highlighting
+   ============================================ */
+
+/* Highlight edges on execution path */
+.react-flow__edge.on-execution-path path {
+  stroke: #3b82f6;
+  stroke-width: 3;
+}
+
+.react-flow__edge.on-execution-path.animated path {
+  stroke-dasharray: 5;
+  animation: dashdraw 0.5s linear infinite;
+}
+
+@keyframes dashdraw {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 10; }
+}
+
+/* Edge markers on execution path */
+.react-flow__edge.on-execution-path .react-flow__edge-path {
+  stroke: #3b82f6;
+}
+
+.react-flow__edge.on-execution-path marker {
+  fill: #3b82f6;
+}
+
+/* ============================================
+   Dark Mode Overrides
+   ============================================ */
+
+.react-flow.dark .node-running {
+  background: linear-gradient(to bottom, #78350f 0%, #92400e 100%) !important;
+}
+
+.react-flow.dark .node-completed {
+  background: linear-gradient(to bottom, #064e3b 0%, #065f46 100%) !important;
+}
+
+.react-flow.dark .node-failed {
+  background: linear-gradient(to bottom, #7f1d1d 0%, #991b1b 100%) !important;
+}
+
+.react-flow.dark .execution-error {
+  background: #7f1d1d;
+  color: #fca5a5;
+  border-left-color: #ef4444;
+}
+
+.react-flow.dark .execution-error svg {
+  color: #fca5a5;
+}
+
+.react-flow.dark .execution-timing {
+  background: #313244;
+  color: #a6adc8;
+}
+
+.react-flow.dark .execution-timing svg {
+  color: #6c7086;
+}
+
+/* Dark mode execution path */
+.react-flow.dark .on-execution-path {
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 12px rgba(96, 165, 250, 0.4);
+}
+
+.react-flow.dark .current-step {
+  border-color: #fbbf24 !important;
+}
+
+@keyframes pulse-dark {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(251, 191, 36, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(251, 191, 36, 0.8);
+  }
+}
+
+.react-flow.dark .current-step {
+  animation: pulse-dark 2s ease-in-out infinite;
+}
+
+/* Dark mode edge highlighting */
+.react-flow.dark .react-flow__edge.on-execution-path path {
+  stroke: #60a5fa;
+}
+
+.react-flow.dark .react-flow__edge.on-execution-path marker {
+  fill: #60a5fa;
+}
+
+/* Dark mode status icon colors */
+.react-flow.dark .node-running .execution-status svg.animate-spin {
+  color: #fbbf24;
+}
+
+.react-flow.dark .node-completed .execution-status svg {
+  color: #34d399;
+}
+
+.react-flow.dark .node-failed .execution-status svg {
+  color: #f87171;
+}
