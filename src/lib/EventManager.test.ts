@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { eventManager } from './EventManager'
-import type { InstanceState } from '../types/execution'
 
 describe('EventManager', () => {
   beforeEach(() => {
@@ -46,15 +45,6 @@ describe('EventManager', () => {
     it('should call callback immediately with current state if available', () => {
       const instanceId = 'test-instance-123'
       const mockCallback = vi.fn()
-
-      // Manually add state (simulating an event being received)
-      const mockState: InstanceState = {
-        status: 'running',
-        workflowName: 'test-workflow',
-        workflowVersion: 1,
-        steps: new Map(),
-        branches: [],
-      }
 
       // Subscribe
       eventManager.subscribe(instanceId, mockCallback)

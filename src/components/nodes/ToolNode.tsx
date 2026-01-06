@@ -1,9 +1,10 @@
 import { memo } from 'react'
 import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
-import { Wrench } from 'lucide-react'
+import { Wrench, CheckCircle, XCircle, AlertCircle, Clock, Loader2 } from 'lucide-react'
 import type { ToolStepDef } from '../../types/workflow'
 import type { LayoutDirection } from '../../utils/layout'
 import type { ExecutionState } from '../../types/execution'
+import { classNames } from '../../utils/classNames'
 
 interface ToolNodeData extends Record<string, unknown> {
   label: string
@@ -19,15 +20,26 @@ type ToolNode = Node<ToolNodeData>
  * Displays tool name and arguments with template variables
  */
 export const ToolNode = memo(({ data }: NodeProps<ToolNode>) => {
-  const { label, stepDef, direction = 'LR' } = data
+  const { label, stepDef, direction = 'LR', execution } = data
   const hasArgs = stepDef.args && Object.keys(stepDef.args).length > 0
 
   // Determine handle positions based on layout direction
   const targetPosition = direction === 'TB' ? Position.Top : Position.Left
   const sourcePosition = direction === 'TB' ? Position.Bottom : Position.Right
 
+  // Build dynamic className based on execution state
+  const nodeClassName = classNames('tool-node', {
+    'node-pending': execution?.status === 'pending',
+    'node-running': execution?.status === 'running',
+    'node-completed': execution?.status === 'completed',
+    'node-failed': execution?.status === 'failed',
+    'node-skipped': execution?.status === 'skipped',
+    'on-execution-path': execution?.isOnExecutionPath,
+    'current-step': execution?.isCurrentStep,
+  })
+
   return (
-    <div className="tool-node">
+    <div className={nodeClassName}>
       <Handle type="target" position={targetPosition} />
 
       <div className="node-header">
@@ -36,7 +48,16 @@ export const ToolNode = memo(({ data }: NodeProps<ToolNode>) => {
             <div className="node-type">TOOL</div>
             <div className="node-label">{label}</div>
           </div>
-          <Wrench className="node-icon" />
+          <div className="node-header-icons">
+            <Wrench className="node-icon" />
+            {execution && (
+              <div className="execution-status">
+                {execution.status === 'running' && <Loader2 className="animate-spin" size={16} />}
+                {execution.status === 'completed' && <CheckCircle size={16} />}
+                {execution.status === 'failed' && <XCircle size={16} />}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -61,6 +82,20 @@ export const ToolNode = memo(({ data }: NodeProps<ToolNode>) => {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {execution?.durationMs !== undefined && (
+          <div className="execution-timing">
+            <Clock size={14} />
+            <span>{execution.durationMs}ms</span>
+          </div>
+        )}
+
+        {execution?.error && (
+          <div className="execution-error">
+            <AlertCircle size={14} />
+            <span>{execution.error}</span>
           </div>
         )}
       </div>

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { ToolNode } from './ToolNode'
 import type { NodeProps } from '@xyflow/react'
@@ -7,7 +7,7 @@ import type { ExecutionState } from '../../types/execution'
 
 // Mock ReactFlow context
 vi.mock('@xyflow/react', async () => {
-  const actual = await vi.importActual('@xyflow/react')
+  const actual = await vi.importActual<typeof import('@xyflow/react')>('@xyflow/react')
   return {
     ...actual,
     Handle: () => null,
@@ -33,6 +33,9 @@ describe('ToolNode', () => {
     },
     type: 'tool',
     selected: false,
+    selectable: true,
+    deletable: true,
+    draggable: true,
     isConnectable: true,
     zIndex: 0,
     dragging: false,
@@ -40,6 +43,10 @@ describe('ToolNode', () => {
     positionAbsoluteY: 0,
     width: 100,
     height: 100,
+    sourcePosition: undefined,
+    targetPosition: undefined,
+    dragHandle: undefined,
+    parentId: undefined,
   }
 
   it('should render tool node without execution state', () => {
@@ -78,9 +85,11 @@ describe('ToolNode', () => {
 
     const { container } = render(<ToolNode {...propsWithExecution} />)
 
-    // Check that the node has the pending class (once we add it)
-    // For now, just verify it renders without error
-    expect(container.querySelector('.tool-node')).toBeInTheDocument()
+    const node = container.querySelector('.tool-node')
+    expect(node).toBeInTheDocument()
+    expect(node).toHaveClass('node-pending')
+    // Pending status has no icon
+    expect(container.querySelector('.execution-status')).toBeInTheDocument()
   })
 
   it('should render with running execution state', () => {
@@ -100,7 +109,12 @@ describe('ToolNode', () => {
 
     const { container } = render(<ToolNode {...propsWithExecution} />)
 
-    expect(container.querySelector('.tool-node')).toBeInTheDocument()
+    const node = container.querySelector('.tool-node')
+    expect(node).toBeInTheDocument()
+    expect(node).toHaveClass('node-running')
+    expect(node).toHaveClass('current-step')
+    // Running status should show spinner icon
+    expect(container.querySelector('.animate-spin')).toBeInTheDocument()
   })
 
   it('should render with completed execution state', () => {
@@ -120,11 +134,16 @@ describe('ToolNode', () => {
       },
     }
 
-    const { container } = render(<ToolNode {...propsWithExecution} />)
+    render(<ToolNode {...propsWithExecution} />)
 
-    expect(container.querySelector('.tool-node')).toBeInTheDocument()
-    // Once we add the duration display, we can check for it
-    // expect(screen.getByText('1000ms')).toBeInTheDocument()
+    const node = document.querySelector('.tool-node')
+    expect(node).toBeInTheDocument()
+    expect(node).toHaveClass('node-completed')
+    expect(node).toHaveClass('on-execution-path')
+    // Check for duration display
+    expect(screen.getByText('1000ms')).toBeInTheDocument()
+    // Should show checkmark icon
+    expect(document.querySelector('.execution-status')).toBeInTheDocument()
   })
 
   it('should render with failed execution state and error', () => {
@@ -145,11 +164,16 @@ describe('ToolNode', () => {
       },
     }
 
-    const { container } = render(<ToolNode {...propsWithExecution} />)
+    render(<ToolNode {...propsWithExecution} />)
 
-    expect(container.querySelector('.tool-node')).toBeInTheDocument()
-    // Once we add the error display, we can check for it
-    // expect(screen.getByText('Tool execution failed')).toBeInTheDocument()
+    const node = document.querySelector('.tool-node')
+    expect(node).toBeInTheDocument()
+    expect(node).toHaveClass('node-failed')
+    expect(node).toHaveClass('on-execution-path')
+    // Check for error message display
+    expect(screen.getByText('Tool execution failed')).toBeInTheDocument()
+    // Check for duration display
+    expect(screen.getByText('1000ms')).toBeInTheDocument()
   })
 
   it('should handle no arguments gracefully', () => {

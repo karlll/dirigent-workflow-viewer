@@ -1,9 +1,10 @@
 import { memo } from 'react'
 import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
-import { Brain } from 'lucide-react'
+import { Brain, CheckCircle, XCircle, AlertCircle, Clock, Loader2 } from 'lucide-react'
 import type { LlmStepDef } from '../../types/workflow'
 import type { LayoutDirection } from '../../utils/layout'
 import type { ExecutionState } from '../../types/execution'
+import { classNames } from '../../utils/classNames'
 
 interface LlmNodeData extends Record<string, unknown> {
   label: string
@@ -19,7 +20,7 @@ type LlmNode = Node<LlmNodeData>
  * Displays tool name, output schema, and validation rules
  */
 export const LlmNode = memo(({ data }: NodeProps<LlmNode>) => {
-  const { label, stepDef, direction = 'LR' } = data
+  const { label, stepDef, direction = 'LR', execution } = data
   const outputFields = Object.entries(stepDef.out || {})
   const hasValidation = stepDef.validate && stepDef.validate.length > 0
 
@@ -27,8 +28,19 @@ export const LlmNode = memo(({ data }: NodeProps<LlmNode>) => {
   const targetPosition = direction === 'TB' ? Position.Top : Position.Left
   const sourcePosition = direction === 'TB' ? Position.Bottom : Position.Right
 
+  // Build dynamic className based on execution state
+  const nodeClassName = classNames('llm-node', {
+    'node-pending': execution?.status === 'pending',
+    'node-running': execution?.status === 'running',
+    'node-completed': execution?.status === 'completed',
+    'node-failed': execution?.status === 'failed',
+    'node-skipped': execution?.status === 'skipped',
+    'on-execution-path': execution?.isOnExecutionPath,
+    'current-step': execution?.isCurrentStep,
+  })
+
   return (
-    <div className="llm-node">
+    <div className={nodeClassName}>
       <Handle type="target" position={targetPosition} />
 
       <div className="node-header">
@@ -37,7 +49,16 @@ export const LlmNode = memo(({ data }: NodeProps<LlmNode>) => {
             <div className="node-type">LLM</div>
             <div className="node-label">{label}</div>
           </div>
-          <Brain className="node-icon" />
+          <div className="node-header-icons">
+            <Brain className="node-icon" />
+            {execution && (
+              <div className="execution-status">
+                {execution.status === 'running' && <Loader2 className="animate-spin" size={16} />}
+                {execution.status === 'completed' && <CheckCircle size={16} />}
+                {execution.status === 'failed' && <XCircle size={16} />}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -73,6 +94,20 @@ export const LlmNode = memo(({ data }: NodeProps<LlmNode>) => {
                 <li key={idx} className="validation-rule">{rule}</li>
               ))}
             </ul>
+          </div>
+        )}
+
+        {execution?.durationMs !== undefined && (
+          <div className="execution-timing">
+            <Clock size={14} />
+            <span>{execution.durationMs}ms</span>
+          </div>
+        )}
+
+        {execution?.error && (
+          <div className="execution-error">
+            <AlertCircle size={14} />
+            <span>{execution.error}</span>
           </div>
         )}
       </div>

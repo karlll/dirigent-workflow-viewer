@@ -1,9 +1,10 @@
 import { memo } from 'react'
 import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, CheckCircle, XCircle, AlertCircle, Clock, Loader2 } from 'lucide-react'
 import type { FailStepDef } from '../../types/workflow'
 import type { LayoutDirection } from '../../utils/layout'
 import type { ExecutionState } from '../../types/execution'
+import { classNames } from '../../utils/classNames'
 
 interface FailNodeData extends Record<string, unknown> {
   label: string
@@ -19,14 +20,25 @@ type FailNode = Node<FailNodeData>
  * Displays failure reason
  */
 export const FailNode = memo(({ data }: NodeProps<FailNode>) => {
-  const { label, stepDef, direction = 'LR' } = data
+  const { label, stepDef, direction = 'LR', execution } = data
 
   // Determine handle positions based on layout direction
   const targetPosition = direction === 'TB' ? Position.Top : Position.Left
   const sourcePosition = direction === 'TB' ? Position.Bottom : Position.Right
 
+  // Build dynamic className based on execution state
+  const nodeClassName = classNames('fail-node', {
+    'node-pending': execution?.status === 'pending',
+    'node-running': execution?.status === 'running',
+    'node-completed': execution?.status === 'completed',
+    'node-failed': execution?.status === 'failed',
+    'node-skipped': execution?.status === 'skipped',
+    'on-execution-path': execution?.isOnExecutionPath,
+    'current-step': execution?.isCurrentStep,
+  })
+
   return (
-    <div className="fail-node">
+    <div className={nodeClassName}>
       <Handle type="target" position={targetPosition} />
 
       <div className="node-header">
@@ -35,7 +47,16 @@ export const FailNode = memo(({ data }: NodeProps<FailNode>) => {
             <div className="node-type">FAIL</div>
             <div className="node-label">{label}</div>
           </div>
-          <AlertTriangle className="node-icon" />
+          <div className="node-header-icons">
+            <AlertTriangle className="node-icon" />
+            {execution && (
+              <div className="execution-status">
+                {execution.status === 'running' && <Loader2 className="animate-spin" size={16} />}
+                {execution.status === 'completed' && <CheckCircle size={16} />}
+                {execution.status === 'failed' && <XCircle size={16} />}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -48,6 +69,20 @@ export const FailNode = memo(({ data }: NodeProps<FailNode>) => {
           <span className="field-label">Reason:</span>
           <span className="field-value reason-text">{stepDef.reason}</span>
         </div>
+
+        {execution?.durationMs !== undefined && (
+          <div className="execution-timing">
+            <Clock size={14} />
+            <span>{execution.durationMs}ms</span>
+          </div>
+        )}
+
+        {execution?.error && (
+          <div className="execution-error">
+            <AlertCircle size={14} />
+            <span>{execution.error}</span>
+          </div>
+        )}
       </div>
 
       <Handle type="source" position={sourcePosition} />
