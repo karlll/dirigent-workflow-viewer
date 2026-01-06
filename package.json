@@ -22,10 +22,11 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest",
+    "test": "vitest --run",
     "test:unit": "vitest --project=unit",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
+    "test:watch": "vitest",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
