@@ -3,11 +3,13 @@ import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
 import { Wrench } from 'lucide-react'
 import type { ToolStepDef } from '../../types/workflow'
 import type { LayoutDirection } from '../../utils/layout'
+import type { ExecutionState } from '../../types/execution'
 
 interface ToolNodeData extends Record<string, unknown> {
   label: string
   stepDef: ToolStepDef
   direction?: LayoutDirection
+  execution?: ExecutionState
 }
 
 type ToolNode = Node<ToolNodeData>

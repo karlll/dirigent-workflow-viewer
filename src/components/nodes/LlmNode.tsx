@@ -3,11 +3,13 @@ import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
 import { Brain } from 'lucide-react'
 import type { LlmStepDef } from '../../types/workflow'
 import type { LayoutDirection } from '../../utils/layout'
+import type { ExecutionState } from '../../types/execution'
 
 interface LlmNodeData extends Record<string, unknown> {
   label: string
   stepDef: LlmStepDef
   direction?: LayoutDirection
+  execution?: ExecutionState
 }
 
 type LlmNode = Node<LlmNodeData>

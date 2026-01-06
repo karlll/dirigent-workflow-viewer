@@ -3,11 +3,13 @@ import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
 import { GitBranch } from 'lucide-react'
 import type { SwitchStepDef } from '../../types/workflow'
 import type { LayoutDirection } from '../../utils/layout'
+import type { ExecutionState } from '../../types/execution'
 
 interface SwitchNodeData extends Record<string, unknown> {
   label: string
   stepDef: SwitchStepDef
   direction?: LayoutDirection
+  execution?: ExecutionState
 }
 
 type SwitchNode = Node<SwitchNodeData>

@@ -3,11 +3,13 @@ import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
 import { AlertTriangle } from 'lucide-react'
 import type { FailStepDef } from '../../types/workflow'
 import type { LayoutDirection } from '../../utils/layout'
+import type { ExecutionState } from '../../types/execution'
 
 interface FailNodeData extends Record<string, unknown> {
   label: string
   stepDef: FailStepDef
   direction?: LayoutDirection
+  execution?: ExecutionState
 }
 
 type FailNode = Node<FailNodeData>
