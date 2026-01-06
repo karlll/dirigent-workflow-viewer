@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { useEffect } from 'react'
 import { ExecutableWorkflow } from './ExecutableWorkflow'
 import { eventManager } from '../lib/EventManager'
 import type { InstanceState } from '../types/execution'
@@ -242,8 +243,8 @@ const meta: Meta<typeof ExecutableWorkflow> = {
     },
   },
   tags: ['autodocs'],
-  decorators: [
-    (Story, context) => {
+  loaders: [
+    async (context) => {
       // Determine which mock state to use based on story name
       let mockState: InstanceState | undefined
 
@@ -255,7 +256,21 @@ const meta: Meta<typeof ExecutableWorkflow> = {
         mockState = failedInstanceState
       }
 
-      // Mock EventManager methods
+      return { mockState }
+    },
+  ],
+  decorators: [
+    (Story, context) => {
+      const { mockState } = context.loaded
+
+      // Set up mocks before rendering
+      const originalGetState = eventManager.getState
+      const originalFetchState = eventManager.fetchState
+      const originalIsConnected = eventManager.isEventSourceConnected
+      const originalSubscribe = eventManager.subscribe
+      const originalConnect = eventManager.connect
+
+      // Apply mocks
       eventManager.getState = () => mockState
       eventManager.fetchState = () => {
         if (mockState) {
@@ -266,6 +281,18 @@ const meta: Meta<typeof ExecutableWorkflow> = {
       eventManager.isEventSourceConnected = () => false
       eventManager.subscribe = () => () => {}
       eventManager.connect = () => {}
+
+      // Clean up on unmount
+      const cleanup = () => {
+        eventManager.getState = originalGetState
+        eventManager.fetchState = originalFetchState
+        eventManager.isEventSourceConnected = originalIsConnected
+        eventManager.subscribe = originalSubscribe
+        eventManager.connect = originalConnect
+      }
+
+      // Use useEffect to clean up when story changes
+      useEffect(() => cleanup, [])
 
       return <Story />
     },
