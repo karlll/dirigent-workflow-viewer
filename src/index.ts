@@ -32,3 +32,6 @@ export type { InstanceState, StepState, ExecutionState } from './types/execution
 
 // Export EventManager for advanced use cases
 export { eventManager } from './lib/EventManager'
+
+// Export utility types
+export type { LayoutDirection } from './utils/layout'
