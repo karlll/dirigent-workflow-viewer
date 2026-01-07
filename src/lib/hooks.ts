@@ -7,7 +7,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { createApiClient } from './ApiClient'
 import { eventManager } from './EventManager'
 import { parseWorkflow } from '../utils/parser'
-import type { WorkflowMetadata, InstanceSummaryDto, InstanceFilter } from '../types/api'
+import type { WorkflowMetadata, InstanceSummaryDto, InstanceDetailsDto, InstanceFilter } from '../types/api'
 import type { InstanceState } from '../types/execution'
 import type { Workflow } from '../types/workflow'
 
@@ -286,4 +286,67 @@ export function useWorkflowDefinition(workflowName: string, apiBaseUrl: string) 
   }, [workflowName, apiBaseUrl])
 
   return { yaml, workflow, loading, error }
+}
+
+/**
+ * Fetch detailed information about a specific workflow instance.
+ * 
+ * @param instanceId - ID of the instance to fetch
+ * @param apiBaseUrl - Base URL of the Dirigent API
+ * @returns Object containing instance details, loading state, and error
+ * 
+ * @example
+ * ```tsx
+ * function InstanceViewer({ id }: { id: string }) {
+ *   const { instance, loading, error } = useInstanceDetails(
+ *     id,
+ *     'http://localhost:8080'
+ *   )
+ *  
+ *   if (loading) return <div>Loading...</div>
+ *   if (error) return <div>Error: {error}</div>
+ *   if (!instance) return <div>Instance not found</div>
+ *  
+ *   return (
+ *     <div>
+ *       <h2>{instance.workflowName}</h2>
+ *       <p>Status: {instance.status}</p>
+ *     </div>
+ *   )
+ * }
+ * ```
+ */
+export function useInstanceDetails(instanceId: string, apiBaseUrl: string) {
+  const [instance, setInstance] = useState<InstanceDetailsDto | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!instanceId) {
+      setInstance(null)
+      setLoading(false)
+      return
+    }
+
+    const fetchInstance = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        const client = createApiClient(apiBaseUrl)
+        const result = await client.getInstanceDetails(instanceId)
+        setInstance(result)
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : `Failed to fetch instance '${instanceId}'`
+        )
+        setInstance(null)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchInstance()
+  }, [instanceId, apiBaseUrl])
+
+  return { instance, loading, error }
 }

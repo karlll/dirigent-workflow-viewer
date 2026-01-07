@@ -185,6 +185,14 @@ export class ApiClient {
   }
 
   /**
+   * Alias for getInstance() for consistency with hook naming.
+   * @see getInstance
+   */
+  async getInstanceDetails(instanceId: string): Promise<InstanceDetailsDto> {
+    return this.getInstance(instanceId)
+  }
+
+  /**
    * Fetch with timeout support.
    * Uses AbortController to implement timeout.
    */

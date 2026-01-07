@@ -54,8 +54,8 @@ export { InstanceBrowser } from './components/InstanceBrowser'
 export type { InstanceBrowserProps } from './components/InstanceBrowser'
 
 // Export InstanceMonitor component
-export { InstanceMonitor } from './components/InstanceMonitor'
-export type { InstanceMonitorProps } from './components/InstanceMonitor'
+export { InstanceMonitor } from './lib/components/InstanceMonitor'
+export type { InstanceMonitorProps } from './lib/components/InstanceMonitor'
 
 // ============================================================================
 // Hooks (for custom integrations)
@@ -66,6 +66,7 @@ export {
   useWorkflowDefinition,
   useInstances,
   useInstanceState,
+  useInstanceDetails,
 } from './lib/hooks'
 
 // ============================================================================
