@@ -106,7 +106,8 @@ export function workflowToGraph(workflow: Workflow, direction: LayoutDirection =
         data: {
           label: stepId,
           stepDef,
-          direction
+          direction,
+          execution: (stepDef as any).execution  // Pass through execution state if present
         },
         position: { x: 0, y: 0 }
       })
@@ -119,7 +120,8 @@ export function workflowToGraph(workflow: Workflow, direction: LayoutDirection =
       data: {
         label: stepId,
         stepDef,
-        direction
+        direction,
+        execution: (stepDef as any).execution  // Pass through execution state if present
       },
       position: { x: 0, y: 0 }
     })

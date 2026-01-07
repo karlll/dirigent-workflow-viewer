@@ -126,6 +126,57 @@ export interface InstanceListResponse {
   offset: number
 }
 
+/**
+ * Workflow metadata summary.
+ * Response from GET /api/v1/workflows
+ */
+export interface WorkflowMetadata {
+  /** Workflow name */
+  name: string
+
+  /** Workflow version number */
+  version: number
+
+  /** Event types that trigger this workflow */
+  triggerTypes: string[]
+
+  /** Number of steps in the workflow */
+  stepCount: number
+}
+
+/**
+ * List of workflow metadata.
+ * Response from GET /api/v1/workflows
+ */
+export interface WorkflowListResponse {
+  /** List of workflows */
+  workflows: WorkflowMetadata[]
+}
+
+/**
+ * Filter options for instance queries.
+ * Used as query parameters in GET /api/v1/instances
+ */
+export interface InstanceFilter {
+  /** Filter by instance status */
+  status?: 'RUNNING' | 'COMPLETED' | 'FAILED'
+
+  /** Filter by workflow name */
+  workflowName?: string
+
+  /** Maximum number of instances to return */
+  limit?: number
+
+  /** Number of instances to skip (for pagination) */
+  offset?: number
+
+  /** Filter instances started after this timestamp (ISO 8601) */
+  since?: string
+
+  /** Filter instances started before this timestamp (ISO 8601) */
+  until?: string
+}
+
 // ============================================================================
 // SSE Event Types
 // ============================================================================
