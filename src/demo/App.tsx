@@ -10,7 +10,7 @@ import { WorkflowDetailView } from './components/WorkflowDetailView'
 import { InstanceDetailView } from './components/InstanceDetailView'
 import { EmptyState } from './components/EmptyState'
 import { useWorkflows, useInstances } from '../lib/hooks'
-import { eventManager } from '../lib/eventManager'
+import { eventManager } from '../lib/EventManager'
 
 export function App() {
   const [apiBaseUrl, setApiBaseUrl] = useState(() => loadApiUrl())

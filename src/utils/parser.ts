@@ -25,9 +25,14 @@ export function parseWorkflow(yamlString: string): Workflow {
     throw new WorkflowParseError('YAML string is empty')
   }
 
+  // Strip Jackson YAML type tags (!<tool>, !<llm>, etc.) from backend
+  // These are used for polymorphic deserialization on the backend but we don't need them
+  // on the frontend since we treat all steps uniformly
+  const cleanedYaml = yamlString.replace(/!<[^>]+>/g, '')
+
   let parsed: unknown
   try {
-    parsed = yaml.load(yamlString)
+    parsed = yaml.load(cleanedYaml)
   } catch (error) {
     throw new WorkflowParseError(
       'Failed to parse YAML',
