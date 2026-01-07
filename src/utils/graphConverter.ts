@@ -14,6 +14,7 @@ export interface Node {
     isEnd?: boolean
     direction?: LayoutDirection
     triggers?: Trigger[]
+    execution?: any  // Optional execution state for ExecutableWorkflow
   }
   position: { x: number; y: number }
 }

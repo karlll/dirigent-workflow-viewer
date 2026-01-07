@@ -5,7 +5,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
 import { InstanceBrowser } from './InstanceBrowser'
-import { handlers, emptyHandlers, errorHandlers } from '../mocks/handlers'
+import { handlers } from '../mocks/handlers'
 import { http, HttpResponse, delay } from 'msw'
 
 const meta: Meta<typeof InstanceBrowser> = {

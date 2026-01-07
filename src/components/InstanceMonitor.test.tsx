@@ -3,8 +3,9 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { InstanceMonitor } from './InstanceMonitor'
+import type { InstanceState } from '../types/execution'
 import * as hooks from '../lib/hooks'
 
 // Mock the hooks
@@ -40,12 +41,13 @@ steps:
     end: true
 `
 
-  const mockInstanceState = {
+  const mockInstanceState: InstanceState = {
     workflowName: 'sample_workflow',
     workflowVersion: 1,
     status: 'running',
     startedAt: '2026-01-07T10:00:00Z',
     currentStepId: 'step1',
+    branches: [],
     steps: new Map([
       [
         'step1',

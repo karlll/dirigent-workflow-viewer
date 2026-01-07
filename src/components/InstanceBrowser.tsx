@@ -230,13 +230,13 @@ interface InstanceItemProps {
 }
 
 function InstanceItem({ instance, selected, showMetadata, onClick }: InstanceItemProps) {
-  const statusColors = {
+  const statusColors: Record<string, { bg: string; border: string; text: string }> = {
     RUNNING: { bg: '#dbeafe', border: '#3b82f6', text: '#1e40af' },
     COMPLETED: { bg: '#d1fae5', border: '#10b981', text: '#065f46' },
     FAILED: { bg: '#fee2e2', border: '#ef4444', text: '#991b1b' },
   }
 
-  const colors = statusColors[instance.status]
+  const colors = statusColors[instance.status] || statusColors.RUNNING
   const isRunning = instance.status === 'RUNNING'
 
   // Format duration
