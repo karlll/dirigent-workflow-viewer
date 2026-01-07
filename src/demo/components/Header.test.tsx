@@ -9,7 +9,6 @@ import { Header } from './Header'
 
 describe('Header', () => {
   const defaultProps = {
-    apiBaseUrl: 'http://localhost:8080',
     onSettingsClick: vi.fn(),
     connected: true,
     sseConnected: true,
@@ -46,8 +45,8 @@ describe('Header', () => {
   })
 
   it('should show connected status when both are connected', () => {
-    const { container } = render(
-      <Header {...defaultProps} connected={true} sseConnected={true} />
+    render(
+      <Header connected={true} sseConnected={true} onSettingsClick={vi.fn()} />
     )
     
     // Both indicators should be present

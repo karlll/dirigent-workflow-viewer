@@ -6,8 +6,6 @@ import { Header } from './Header'
 import { Sidebar } from './Sidebar'
 
 interface DemoLayoutProps {
-  apiBaseUrl: string
-  onApiBaseUrlChange: (url: string) => void
   activeView: 'workflows' | 'instances'
   onViewChange: (view: 'workflows' | 'instances') => void
   children: React.ReactNode
@@ -20,8 +18,6 @@ interface DemoLayoutProps {
 }
 
 export function DemoLayout({
-  apiBaseUrl,
-  onApiBaseUrlChange,
   activeView,
   onViewChange,
   children,
@@ -43,7 +39,6 @@ export function DemoLayout({
     >
       {/* Header */}
       <Header
-        apiBaseUrl={apiBaseUrl}
         onSettingsClick={onSettingsClick}
         connected={connected}
         sseConnected={sseConnected}

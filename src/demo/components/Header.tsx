@@ -3,14 +3,12 @@
  */
 
 interface HeaderProps {
-  apiBaseUrl: string
   onSettingsClick: () => void
   connected: boolean
   sseConnected: boolean
 }
 
 export function Header({
-  apiBaseUrl,
   onSettingsClick,
   connected,
   sseConnected,

@@ -1,125 +1,136 @@
-import { useState } from 'react'
-import { Workflow } from '../index'
-import type { LayoutDirection } from '../utils/layout'
+/**
+ * Demo application main component
+ */
 
-const SAMPLE_WORKFLOW = `name: triage_and_execute
-version: 1
-start: classify
+import { useState, useEffect } from 'react'
+import { DemoLayout } from './components/DemoLayout'
+import { SettingsPanel, loadApiUrl } from './components/SettingsPanel'
+import { WorkflowBrowser } from '../components/WorkflowBrowser'
+import { WorkflowDetailView } from './components/WorkflowDetailView'
+import { EmptyState } from './components/EmptyState'
+import { useWorkflows } from '../lib/hooks'
+import { eventManager } from '../lib/eventManager'
 
-steps:
-  classify:
-    kind: llm
-    tool: classify_input
-    out:
-      intent: string
-      confidence: number
-    validate:
-      - "confidence >= 0 && confidence <= 1"
-    on_error:
-      goto: fail_invalid
-    goto: route
+export function App() {
+  const [apiBaseUrl, setApiBaseUrl] = useState(() => loadApiUrl())
+  const [activeView, setActiveView] = useState<'workflows' | 'instances'>(
+    'workflows'
+  )
+  const [selectedWorkflow, setSelectedWorkflow] = useState<string | null>(null)
+  const [showSettings, setShowSettings] = useState(false)
+  const [sseConnected, setSseConnected] = useState(false)
 
-  route:
-    kind: switch
-    cases:
-      - when: "confidence < 0.7"
-        goto: ask_clarify
-      - when: "intent == 'do_task'"
-        goto: do_task
-    default: fail_no_route
+  // Load workflows for counts
+  const { workflows } = useWorkflows(apiBaseUrl)
 
-  ask_clarify:
-    kind: tool
-    tool: ask_user
-    args:
-      question: "I'm not confident I understood. What exactly should I do?"
-    end: true
+  // Check API connection
+  const [connected, setConnected] = useState(false)
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        const response = await fetch(`${apiBaseUrl}/health`)
+        setConnected(response.ok)
+      } catch {
+        setConnected(false)
+      }
+    }
+    checkConnection()
+    const interval = setInterval(checkConnection, 5000)
+    return () => clearInterval(interval)
+  }, [apiBaseUrl])
 
-  do_task:
-    kind: tool
-    tool: run_task
-    args:
-      intent: "{{intent}}"
-      payload: "{{input.text}}"
-    end: true
+  // Monitor SSE connection
+  useEffect(() => {
+    const updateSseStatus = () => {
+      setSseConnected(eventManager.isEventSourceConnected())
+    }
+    
+    // Check initial state
+    updateSseStatus()
+    
+    // Set up periodic check
+    const interval = setInterval(updateSseStatus, 1000)
+    return () => clearInterval(interval)
+  }, [])
 
-  fail_invalid:
-    kind: fail
-    reason: "LLM output didn't validate"
-
-  fail_no_route:
-    kind: fail
-    reason: "No route matched"
-`
-
-function App() {
-  const [yaml, setYaml] = useState(SAMPLE_WORKFLOW)
-  const [direction, setDirection] = useState<LayoutDirection>('LR')
+  const handleApiBaseUrlChange = (newUrl: string) => {
+    setApiBaseUrl(newUrl)
+    // Reset selections when API changes
+    setSelectedWorkflow(null)
+  }
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '1400px', margin: '0 auto' }}>
-      <h1>Dirigent Workflow Viewer - Demo</h1>
-      <p style={{ color: '#6b7280', marginBottom: '2rem' }}>
-        Interactive demo of the workflow visualization component
-      </p>
-
-      <div style={{ marginBottom: '2rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-        <label style={{ fontWeight: 500 }}>
-          Layout Direction:
-          <select
-            value={direction}
-            onChange={(e) => setDirection(e.target.value as LayoutDirection)}
+    <>
+      <DemoLayout
+        activeView={activeView}
+        onViewChange={setActiveView}
+        onSettingsClick={() => setShowSettings(true)}
+        connected={connected}
+        sseConnected={sseConnected}
+        workflowCount={workflows?.length || 0}
+        runningInstances={0}
+        totalInstances={0}
+      >
+        {activeView === 'workflows' && (
+          <div
             style={{
-              marginLeft: '0.5rem',
-              padding: '0.5rem',
-              borderRadius: '4px',
-              border: '1px solid #d1d5db'
+              display: 'flex',
+              height: '100%',
+              overflow: 'hidden',
             }}
           >
-            <option value="LR">Left to Right</option>
-            <option value="TB">Top to Bottom</option>
-          </select>
-        </label>
+            {/* Workflow Browser Panel */}
+            <aside
+              style={{
+                width: '300px',
+                borderRight: '1px solid #e5e7eb',
+                overflow: 'auto',
+                backgroundColor: '#f9fafb',
+              }}
+            >
+              <WorkflowBrowser
+                apiBaseUrl={apiBaseUrl}
+                selectedWorkflow={selectedWorkflow || undefined}
+                onSelect={setSelectedWorkflow}
+                mode="list"
+                showMetadata
+              />
+            </aside>
 
-        <button
-          onClick={() => setYaml(SAMPLE_WORKFLOW)}
-          style={{
-            padding: '0.5rem 1rem',
-            borderRadius: '4px',
-            border: '1px solid #d1d5db',
-            backgroundColor: '#f9fafb',
-            cursor: 'pointer'
-          }}
-        >
-          Reset to Sample
-        </button>
-      </div>
+            {/* Workflow Detail Panel */}
+            <main style={{ flex: 1, overflow: 'hidden' }}>
+              {selectedWorkflow ? (
+                <WorkflowDetailView
+                  workflowName={selectedWorkflow}
+                  apiBaseUrl={apiBaseUrl}
+                />
+              ) : (
+                <EmptyState
+                  message="Select a workflow from the list to view its details"
+                  icon="📋"
+                />
+              )}
+            </main>
+          </div>
+        )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-        <div>
-          <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>YAML Input</h2>
-          <textarea
-            value={yaml}
-            onChange={(e) => setYaml(e.target.value)}
-            style={{
-              width: '100%',
-              height: '600px',
-              fontFamily: 'monospace',
-              fontSize: '0.875rem',
-              padding: '1rem',
-              border: '1px solid #d1d5db',
-              borderRadius: '8px',
-              resize: 'vertical'
-            }}
+        {activeView === 'instances' && (
+          <EmptyState
+            message="Instances view - Coming soon!"
+            icon="📊"
           />
-        </div>
+        )}
+      </DemoLayout>
 
-        <div>
-          <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Visualization</h2>
-          <Workflow yaml={yaml} direction={direction} />
-        </div>
-      </div>
-    </div>
+      {/* Settings Panel */}
+      {showSettings && (
+        <SettingsPanel
+          apiBaseUrl={apiBaseUrl}
+          onApiBaseUrlChange={handleApiBaseUrlChange}
+          onClose={() => setShowSettings(false)}
+        />
+      )}
+    </>
   )
 }
 

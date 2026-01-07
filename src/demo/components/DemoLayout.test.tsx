@@ -8,8 +8,6 @@ import { DemoLayout } from './DemoLayout'
 
 describe('DemoLayout', () => {
   const defaultProps = {
-    apiBaseUrl: 'http://localhost:8080',
-    onApiBaseUrlChange: vi.fn(),
     activeView: 'workflows' as const,
     onViewChange: vi.fn(),
     children: <div>Test Content</div>,
