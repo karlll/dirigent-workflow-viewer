@@ -25,14 +25,26 @@ export function parseWorkflow(yamlString: string): Workflow {
     throw new WorkflowParseError('YAML string is empty')
   }
 
-  // Strip Jackson YAML type tags (!<tool>, !<llm>, etc.) from backend
-  // These are used for polymorphic deserialization on the backend but we don't need them
-  // on the frontend since we treat all steps uniformly
-  const cleanedYaml = yamlString.replace(/!<[^>]+>/g, '')
+  // Extract type information from Jackson YAML type tags (!<tool>, !<llm>, etc.)
+  // and add 'kind' field to each step
+  const typeTagRegex = /!<(\w+)>/g
+  const stepKinds: Record<string, string> = {}
+  
+  // Find all type tags in the YAML and their positions
+  let match: RegExpExecArray | null
+  while ((match = typeTagRegex.exec(yamlString)) !== null) {
+    const kind = match[1]
+    // Store the kind for later matching with steps
+    stepKinds[match.index] = kind.toLowerCase()
+  }
 
+  // Parse YAML without the type tags
+  const cleanedYaml = yamlString.replace(/!<[^>]+>/g, '')
   let parsed: unknown
   try {
-    parsed = yaml.load(cleanedYaml)
+    parsed = yaml.load(cleanedYaml, {
+      schema: yaml.JSON_SCHEMA,
+    })
   } catch (error) {
     throw new WorkflowParseError(
       'Failed to parse YAML',
@@ -70,6 +82,41 @@ export function parseWorkflow(yamlString: string): Workflow {
     throw new WorkflowParseError(
       `Start step "${workflow.start}" not found in steps`
     )
+  }
+
+  // Add 'kind' field to steps based on extracted type tags
+  // We need to match type tags with steps by parsing the YAML structure
+  for (const [stepId, stepDef] of Object.entries(workflow.steps)) {
+    // If kind is already present, skip
+    if ('kind' in stepDef) {
+      continue
+    }
+    
+    // Try to infer kind from step properties
+    const step = stepDef as any
+    if (step.tool) {
+      // Could be llm or tool - llm has 'out' field
+      if (step.out) {
+        step.kind = 'llm'
+      } else {
+        step.kind = 'tool'
+      }
+    } else if (step.cases) {
+      step.kind = 'switch'
+    } else if (step.reason) {
+      step.kind = 'fail'
+    } else {
+      // Fallback: try to extract from YAML directly
+      const stepPattern = new RegExp(`${stepId}:\\s*!<(\\w+)>`)
+      const typeMatch = yamlString.match(stepPattern)
+      if (typeMatch) {
+        step.kind = typeMatch[1].toLowerCase()
+      } else {
+        throw new WorkflowParseError(
+          `Unable to determine kind for step "${stepId}"`
+        )
+      }
+    }
   }
 
   return workflow
