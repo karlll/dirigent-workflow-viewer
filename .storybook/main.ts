@@ -13,6 +13,7 @@ const config: StorybookConfig = {
     "@storybook/addon-onboarding",
     "msw-storybook-addon"
   ],
-  "framework": "@storybook/react-vite"
+  "framework": "@storybook/react-vite",
+  "staticDirs": ["../public"]
 };
 export default config;
