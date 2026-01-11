@@ -23,6 +23,10 @@ export interface WorkflowProps {
   showHeader?: boolean
   /** Color mode for the workflow viewer (default: system) */
   colorMode?: ColorMode
+  /** Pre-computed nodes (for ExecutableWorkflow with execution state) */
+  nodes?: Node[]
+  /** Pre-computed edges (for ExecutableWorkflow with execution state) */
+  edges?: Edge[]
 }
 
 // Define custom node types outside component to prevent re-renders
@@ -48,7 +52,15 @@ const nodeTypes = {
  * <Workflow yaml={yamlString} direction="LR" />
  * ```
  */
-export function Workflow({ yaml, workflow, direction = 'LR', showHeader = true, colorMode = 'system' }: WorkflowProps) {
+export function Workflow({
+  yaml,
+  workflow,
+  direction = 'LR',
+  showHeader = true,
+  colorMode = 'system',
+  nodes: precomputedNodes,
+  edges: precomputedEdges
+}: WorkflowProps) {
   const [nodes, setNodes] = useState<Node[]>([])
   const [edges, setEdges] = useState<Edge[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -70,6 +82,20 @@ export function Workflow({ yaml, workflow, direction = 'LR', showHeader = true, 
   }, [colorMode])
 
   useEffect(() => {
+    // If pre-computed nodes and edges are provided, use them directly
+    if (precomputedNodes && precomputedEdges) {
+      setNodes(precomputedNodes)
+      setEdges(precomputedEdges)
+
+      // Still try to get workflow data for header
+      if (workflow) {
+        setWorkflowData(workflow)
+      }
+      setError(null)
+      return
+    }
+
+    // Otherwise, compute from workflow/yaml
     try {
       // Parse workflow from YAML or use provided workflow object
       const parsedWorkflow = workflow || (yaml ? parseWorkflow(yaml) : null)
@@ -98,7 +124,7 @@ export function Workflow({ yaml, workflow, direction = 'LR', showHeader = true, 
       setEdges([])
       setWorkflowData(null)
     }
-  }, [yaml, workflow, direction])
+  }, [yaml, workflow, direction, precomputedNodes, precomputedEdges])
 
   if (error) {
     return (

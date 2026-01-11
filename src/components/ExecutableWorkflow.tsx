@@ -4,6 +4,9 @@ import { eventManager } from '../lib/EventManager'
 import type { Workflow as WorkflowType } from '../types/workflow'
 import type { InstanceState, ExecutionState } from '../types/execution'
 import { parseWorkflow } from '../utils/parser'
+import { workflowToGraph } from '../utils/graphConverter'
+import { applyDagreLayout } from '../utils/layout'
+import type { Node, Edge } from '@xyflow/react'
 
 /**
  * Props for ExecutableWorkflow component
@@ -163,6 +166,43 @@ export function ExecutableWorkflow({
     return enrichWorkflowWithExecution(baseWorkflow, instanceState)
   }, [baseWorkflow, instanceState])
 
+  // Compute enriched nodes and edges with execution path classes
+  const { enrichedNodes, enrichedEdges } = useMemo(() => {
+    if (!enrichedWorkflow || !instanceState) {
+      return { enrichedNodes: undefined, enrichedEdges: undefined }
+    }
+
+    const direction = workflowProps.direction || 'LR'
+    const graph = workflowToGraph(enrichedWorkflow, direction)
+    const layoutedNodes = applyDagreLayout(graph.nodes, graph.edges, direction)
+
+    // Build execution path: set of step IDs that were executed
+    const executionPath = new Set<string>()
+    instanceState.steps.forEach((stepState, stepId) => {
+      if (stepState.status !== 'pending') {
+        executionPath.add(stepId)
+      }
+    })
+
+    // Enrich edges with execution path class
+    const edgesWithExecution: Edge[] = graph.edges.map(edge => {
+      // Check if both source and target are on execution path
+      const sourceOnPath = executionPath.has(edge.source) || edge.source === '__start__'
+      const targetOnPath = executionPath.has(edge.target)
+      const isOnExecutionPath = sourceOnPath && targetOnPath
+
+      return {
+        ...edge,
+        className: isOnExecutionPath ? 'on-execution-path' : undefined,
+      }
+    })
+
+    return {
+      enrichedNodes: layoutedNodes as Node[],
+      enrichedEdges: edgesWithExecution,
+    }
+  }, [enrichedWorkflow, instanceState, workflowProps.direction])
+
   // Loading state
   if (loading && showLoading) {
     return (
@@ -231,5 +271,12 @@ export function ExecutableWorkflow({
   }
 
   // Render workflow with execution state
-  return <Workflow workflow={enrichedWorkflow} {...workflowProps} />
+  return (
+    <Workflow
+      workflow={enrichedWorkflow}
+      nodes={enrichedNodes}
+      edges={enrichedEdges}
+      {...workflowProps}
+    />
+  )
 }
