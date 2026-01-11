@@ -143,7 +143,7 @@ steps:
         {
           stepId: 'step1',
           stepKind: 'tool',
-          status: instance.status === 'FAILED' ? 'FAILED' : 'COMPLETED',
+          status: instance.status === 'FAILED' ? 'FAILED' : 'SUCCEEDED',
           startedAt: instance.startedAt,
           completedAt: instance.completedAt,
           durationMs: instance.durationMs,

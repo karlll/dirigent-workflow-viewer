@@ -278,23 +278,56 @@ class WorkflowEventManager {
 
     const data: InstanceDetailsDto = await response.json()
 
+    // Helper function to map API status to frontend status
+    const mapInstanceStatus = (apiStatus: string): 'running' | 'completed' | 'failed' => {
+      const normalized = apiStatus.toUpperCase()
+      switch (normalized) {
+        case 'RUNNING':
+          return 'running'
+        case 'COMPLETED':
+          return 'completed'
+        case 'FAILED':
+          return 'failed'
+        default:
+          console.warn(`[EventManager] Unknown instance status: ${apiStatus}, defaulting to 'failed'`)
+          return 'failed'
+      }
+    }
+
+    const mapStepStatus = (apiStatus: string): StepState['status'] => {
+      const normalized = apiStatus.toUpperCase()
+      switch (normalized) {
+        case 'PENDING':
+          return 'pending'
+        case 'RUNNING':
+          return 'running'
+        case 'SUCCEEDED':
+          return 'completed'
+        case 'FAILED':
+          return 'failed'
+        default:
+          console.warn(`[EventManager] Unknown step status: ${apiStatus}, defaulting to 'pending'`)
+          return 'pending'
+      }
+    }
+
     // Transform API response to InstanceState
     const state: InstanceState = {
-      status: data.status.toLowerCase() as 'running' | 'completed' | 'failed',
+      status: mapInstanceStatus(data.status),
       workflowName: data.workflowName,
       workflowVersion: data.workflowVersion,
       startedAt: data.startedAt,
       completedAt: data.completedAt || undefined,
-      durationMs: data.durationMs || undefined,
+      durationMs: data.durationMs ?? undefined,
       error: data.error || undefined,
       failedStep: data.failedStep || undefined,
       steps: new Map(
         data.steps.map(step => [step.stepId, {
-          status: step.status.toLowerCase() as StepState['status'],
+          status: mapStepStatus(step.status),
           stepKind: step.stepKind,
           startedAt: step.startedAt,
           completedAt: step.completedAt || undefined,
-          durationMs: step.durationMs || undefined,
+          durationMs: step.durationMs ?? undefined,
           error: step.error || undefined,
           input: step.input || undefined,
           output: step.output || undefined,

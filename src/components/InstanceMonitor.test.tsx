@@ -314,10 +314,10 @@ steps:
     })
 
     it('should not show current step for completed instances', () => {
-      const completedState = {
+      const completedState: InstanceState = {
         ...mockInstanceState,
         status: 'completed',
-        currentStepId: null,
+        currentStepId: undefined,
       }
 
       mockUseWorkflowDefinition.mockReturnValue({

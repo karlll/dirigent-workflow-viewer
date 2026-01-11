@@ -56,7 +56,7 @@ export interface StepExecutionDto {
   /** Type of step (tool, llm, switch, fail) */
   stepKind: string
 
-  /** Status of step execution (RUNNING, COMPLETED, FAILED) */
+  /** Status of step execution (RUNNING, SUCCEEDED, FAILED) */
   status: string
 
   /** ISO 8601 timestamp when step started */

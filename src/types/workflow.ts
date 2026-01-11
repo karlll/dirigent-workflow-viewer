@@ -2,6 +2,8 @@
  * Workflow definition matching the Kotlin model in Model.kt
  */
 
+import type { ExecutionState } from './execution'
+
 /**
  * Top-level workflow definition
  */
@@ -64,6 +66,8 @@ export interface LlmStepDef {
   goto?: string
   /** If true, this is a terminal step */
   end?: boolean
+  /** Runtime execution state (added when enriching with execution data) */
+  execution?: ExecutionState
 }
 
 /**
@@ -82,6 +86,8 @@ export interface ToolStepDef {
   goto?: string
   /** If true, this is a terminal step */
   end?: boolean
+  /** Runtime execution state (added when enriching with execution data) */
+  execution?: ExecutionState
 }
 
 /**
@@ -98,6 +104,8 @@ export interface SwitchStepDef {
   default: string
   /** If true, this is a terminal step */
   end?: boolean
+  /** Runtime execution state (added when enriching with execution data) */
+  execution?: ExecutionState
 }
 
 /**
@@ -122,4 +130,6 @@ export interface FailStepDef {
   reason: string
   /** If true, this is a terminal step (typically true for fail steps) */
   end?: boolean
+  /** Runtime execution state (added when enriching with execution data) */
+  execution?: ExecutionState
 }
