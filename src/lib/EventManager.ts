@@ -312,7 +312,7 @@ class WorkflowEventManager {
     }
 
     // Transform API response to InstanceState
-    const state: InstanceState = {
+    let state: InstanceState = {
       status: mapInstanceStatus(data.status),
       workflowName: data.workflowName,
       workflowVersion: data.workflowVersion,
@@ -339,7 +339,63 @@ class WorkflowEventManager {
         : undefined,
     }
 
-    // Store in memory
+    // Merge with existing SSE-tracked state if available
+    const existing = this.instanceStates.get(instanceId)
+
+    if (existing) {
+      console.log('[EventManager] Merging REST API state with existing SSE state for:', instanceId)
+
+      // Merge steps: prefer newer data based on status and timestamps
+      const mergedSteps = new Map(state.steps)
+
+      existing.steps.forEach((existingStep, stepId) => {
+        const fetchedStep = state.steps.get(stepId)
+
+        if (!fetchedStep) {
+          // SSE tracked a step not yet in REST API response
+          console.log(`[EventManager] Keeping SSE-only step: ${stepId}`)
+          mergedSteps.set(stepId, existingStep)
+        } else {
+          // Both have the step - merge intelligently
+          let preferredStep = fetchedStep
+
+          // If SSE shows completed but REST API shows running, prefer SSE (REST API lag)
+          if (existingStep.status === 'completed' && fetchedStep.status === 'running') {
+            console.log(`[EventManager] Preferring SSE completed status over REST API running for step: ${stepId}`)
+            preferredStep = existingStep
+          } else if (existingStep.status === 'failed' && fetchedStep.status === 'running') {
+            console.log(`[EventManager] Preferring SSE failed status over REST API running for step: ${stepId}`)
+            preferredStep = existingStep
+          } else if (existingStep.completedAt && fetchedStep.completedAt) {
+            // Both show completed - use whichever has later timestamp
+            const existingTime = new Date(existingStep.completedAt).getTime()
+            const fetchedTime = new Date(fetchedStep.completedAt).getTime()
+
+            if (existingTime > fetchedTime) {
+              console.log(`[EventManager] Preferring SSE step data (newer timestamp) for: ${stepId}`)
+              preferredStep = existingStep
+            }
+          }
+
+          mergedSteps.set(stepId, preferredStep)
+        }
+      })
+
+      // Merge branches: combine both (SSE might have captured branches not yet in REST API)
+      const mergedBranches = [...existing.branches]
+
+      // Prefer currentStepId from SSE if REST API doesn't have one
+      const mergedCurrentStepId = state.currentStepId || existing.currentStepId
+
+      state = {
+        ...state,
+        steps: mergedSteps,
+        branches: mergedBranches,
+        currentStepId: mergedCurrentStepId,
+      }
+    }
+
+    // Store merged state in memory
     this.instanceStates.set(instanceId, state)
 
     // Notify listeners
@@ -413,22 +469,22 @@ class WorkflowEventManager {
   private updateInstance(instanceId: string, updates: Partial<InstanceState>): void {
     const current = this.instanceStates.get(instanceId)
 
+    let updated: InstanceState
     if (!current) {
       // New instance - create with defaults
-      const newState: InstanceState = {
+      updated = {
         status: 'running',
         steps: new Map(),
         branches: [],
         ...updates,
       } as InstanceState
-
-      this.instanceStates.set(instanceId, newState)
     } else {
-      // Update existing
-      Object.assign(current, updates)
+      // Update existing - create new object to trigger React re-renders
+      updated = { ...current, ...updates }
     }
 
-    this.notifyListeners(instanceId, this.instanceStates.get(instanceId)!)
+    this.instanceStates.set(instanceId, updated)
+    this.notifyListeners(instanceId, updated)
   }
 
   private updateInstanceStep(
@@ -448,9 +504,15 @@ class WorkflowEventManager {
       stepKind: '',
     }
 
-    instance.steps.set(stepId, { ...current, ...stepState } as StepState)
+    // Create new Map to avoid mutation
+    const newSteps = new Map(instance.steps)
+    newSteps.set(stepId, { ...current, ...stepState } as StepState)
 
-    this.notifyListeners(instanceId, instance)
+    // Create new instance object with new Map
+    const updated = { ...instance, steps: newSteps }
+    this.instanceStates.set(instanceId, updated)
+
+    this.notifyListeners(instanceId, updated)
   }
 
   private recordBranch(instanceId: string, branch: BranchInfo): void {
@@ -461,9 +523,11 @@ class WorkflowEventManager {
       return
     }
 
-    instance.branches.push(branch)
+    // Create new array and instance object to avoid mutation
+    const updated = { ...instance, branches: [...instance.branches, branch] }
+    this.instanceStates.set(instanceId, updated)
 
-    this.notifyListeners(instanceId, instance)
+    this.notifyListeners(instanceId, updated)
   }
 
   private notifyListeners(instanceId: string, state: InstanceState): void {

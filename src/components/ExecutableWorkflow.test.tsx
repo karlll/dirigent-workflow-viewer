@@ -218,10 +218,9 @@ describe('ExecutableWorkflow', () => {
       fetchStateSpy.mockRestore()
     })
 
-    it('should use state from memory if available', async () => {
-      // Pre-populate EventManager state
-      const getStateSpy = vi.spyOn(eventManager, 'getState').mockReturnValue(mockInstanceState)
-      const fetchStateSpy = vi.spyOn(eventManager, 'fetchState')
+    it('should always fetch complete state from API', async () => {
+      // With the new implementation, we ALWAYS fetch from API to ensure complete historical data
+      const fetchStateSpy = vi.spyOn(eventManager, 'fetchState').mockResolvedValue(mockInstanceState)
 
       render(
         <ExecutableWorkflow
@@ -231,10 +230,11 @@ describe('ExecutableWorkflow', () => {
         />
       )
 
-      expect(getStateSpy).toHaveBeenCalledWith(instanceId)
-      expect(fetchStateSpy).not.toHaveBeenCalled()
+      // Should always call fetchState to get complete historical data
+      await waitFor(() => {
+        expect(fetchStateSpy).toHaveBeenCalledWith(instanceId)
+      })
 
-      getStateSpy.mockRestore()
       fetchStateSpy.mockRestore()
     })
 
@@ -358,8 +358,8 @@ invalid yaml content here
 
   describe('Workflow enrichment', () => {
     it('should enrich workflow with execution state', async () => {
-      // Mock getState to return mock instance state
-      vi.spyOn(eventManager, 'getState').mockReturnValue(mockInstanceState)
+      // Mock fetchState to return mock instance state
+      vi.spyOn(eventManager, 'fetchState').mockResolvedValue(mockInstanceState)
 
       const { container } = render(
         <ExecutableWorkflow
@@ -379,9 +379,8 @@ invalid yaml content here
     })
 
     it('should display error when state fetch fails', async () => {
-      vi.spyOn(eventManager, 'getState').mockReturnValue(undefined)
-
-      global.fetch = vi.fn().mockRejectedValueOnce(new Error('Network error'))
+      // Mock fetchState to reject with error
+      vi.spyOn(eventManager, 'fetchState').mockRejectedValueOnce(new Error('Network error'))
 
       render(
         <ExecutableWorkflow
@@ -401,7 +400,7 @@ invalid yaml content here
 
   describe('Props pass-through', () => {
     it('should pass direction prop to base Workflow', async () => {
-      vi.spyOn(eventManager, 'getState').mockReturnValue(mockInstanceState)
+      vi.spyOn(eventManager, 'fetchState').mockResolvedValue(mockInstanceState)
 
       const { container } = render(
         <ExecutableWorkflow
@@ -420,7 +419,7 @@ invalid yaml content here
     })
 
     it('should pass colorMode prop to base Workflow', async () => {
-      vi.spyOn(eventManager, 'getState').mockReturnValue(mockInstanceState)
+      vi.spyOn(eventManager, 'fetchState').mockResolvedValue(mockInstanceState)
 
       const { container } = render(
         <ExecutableWorkflow
@@ -437,7 +436,7 @@ invalid yaml content here
     })
 
     it('should pass showHeader prop to base Workflow', async () => {
-      vi.spyOn(eventManager, 'getState').mockReturnValue(mockInstanceState)
+      vi.spyOn(eventManager, 'fetchState').mockResolvedValue(mockInstanceState)
 
       render(
         <ExecutableWorkflow

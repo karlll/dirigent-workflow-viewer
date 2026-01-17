@@ -127,29 +127,22 @@ export function ExecutableWorkflow({
     setLoading(true)
     setError(null)
 
-    // Try to get state from memory first
-    const currentState = eventManager.getState(instanceId)
+    // Always fetch complete state from REST API to ensure we have all historical data
+    // EventManager will merge with any SSE updates that arrived in the meantime
+    eventManager
+      .fetchState(instanceId)
+      .then((state) => {
+        setInstanceState(state)
+        setLoading(false)
+        setError(null)
+      })
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : 'Failed to fetch instance state')
+        setLoading(false)
+        setInstanceState(null)
+      })
 
-    if (currentState) {
-      setInstanceState(currentState)
-      setLoading(false)
-    } else {
-      // Fetch from API
-      eventManager
-        .fetchState(instanceId)
-        .then((state) => {
-          setInstanceState(state)
-          setLoading(false)
-          setError(null)
-        })
-        .catch((err) => {
-          setError(err instanceof Error ? err.message : 'Failed to fetch instance state')
-          setLoading(false)
-          setInstanceState(null)
-        })
-    }
-
-    // Subscribe to real-time updates
+    // Subscribe to real-time updates (will merge with fetched state)
     const unsubscribe = eventManager.subscribe(instanceId, (state) => {
       setInstanceState(state)
       setError(null)

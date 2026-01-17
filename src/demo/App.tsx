@@ -24,7 +24,9 @@ export function App() {
 
   // Load workflows and instances for counts
   const { workflows } = useWorkflows(apiBaseUrl)
-  const { instances } = useInstances(apiBaseUrl)
+  const { instances } = useInstances(apiBaseUrl, {
+    refreshInterval: 3000  // Auto-refresh every 3 seconds
+  })
 
   // Check API connection
   const [connected, setConnected] = useState(false)
