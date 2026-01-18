@@ -181,7 +181,9 @@ export function ExecutableWorkflow({
     const edgesWithExecution: Edge[] = graph.edges.map(edge => {
       // Check if both source and target are on execution path
       const sourceOnPath = executionPath.has(edge.source) || edge.source === '__start__'
-      const targetOnPath = executionPath.has(edge.target)
+      const targetOnPath = executionPath.has(edge.target) ||
+                           (edge.target === '__end__' && instanceState.status === 'completed') ||
+                           (edge.target === '__fail__' && instanceState.status === 'failed')
       const isOnExecutionPath = sourceOnPath && targetOnPath
 
       return {
