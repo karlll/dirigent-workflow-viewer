@@ -5,6 +5,7 @@ import type { FailStepDef } from '../../types/workflow'
 import type { LayoutDirection } from '../../utils/layout'
 import type { ExecutionState } from '../../types/execution'
 import { classNames } from '../../utils/classNames'
+import { BorderLoadingIndicator } from './BorderLoadingIndicator'
 
 interface FailNodeData extends Record<string, unknown> {
   label: string
@@ -37,7 +38,7 @@ export const FailNode = memo(({ data }: NodeProps<FailNode>) => {
     'current-step': execution?.isCurrentStep,
   })
 
-  return (
+  const nodeContent = (
     <div className={nodeClassName}>
       <Handle type="target" position={targetPosition} />
 
@@ -87,6 +88,13 @@ export const FailNode = memo(({ data }: NodeProps<FailNode>) => {
 
       <Handle type="source" position={sourcePosition} />
     </div>
+  )
+
+  // Wrap with BorderLoadingIndicator if this is the currently executing step
+  return execution?.isCurrentStep ? (
+    <BorderLoadingIndicator>{nodeContent}</BorderLoadingIndicator>
+  ) : (
+    nodeContent
   )
 })
 

@@ -5,6 +5,7 @@ import type { LlmStepDef } from '../../types/workflow'
 import type { LayoutDirection } from '../../utils/layout'
 import type { ExecutionState } from '../../types/execution'
 import { classNames } from '../../utils/classNames'
+import { BorderLoadingIndicator } from './BorderLoadingIndicator'
 
 interface LlmNodeData extends Record<string, unknown> {
   label: string
@@ -39,7 +40,7 @@ export const LlmNode = memo(({ data }: NodeProps<LlmNode>) => {
     'current-step': execution?.isCurrentStep,
   })
 
-  return (
+  const nodeContent = (
     <div className={nodeClassName}>
       <Handle type="target" position={targetPosition} />
 
@@ -114,6 +115,13 @@ export const LlmNode = memo(({ data }: NodeProps<LlmNode>) => {
 
       <Handle type="source" position={sourcePosition} />
     </div>
+  )
+
+  // Wrap with BorderLoadingIndicator if this is the currently executing step
+  return execution?.isCurrentStep ? (
+    <BorderLoadingIndicator>{nodeContent}</BorderLoadingIndicator>
+  ) : (
+    nodeContent
   )
 })
 
