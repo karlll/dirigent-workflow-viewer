@@ -113,8 +113,8 @@ describe('ToolNode', () => {
     expect(node).toBeInTheDocument()
     expect(node).toHaveClass('node-running')
     expect(node).toHaveClass('current-step')
-    // Running status should show spinner icon
-    expect(container.querySelector('.animate-spin')).toBeInTheDocument()
+    // Current step should NOT show spinner (animated border provides visual indicator)
+    expect(container.querySelector('.animate-spin')).not.toBeInTheDocument()
   })
 
   it('should render with completed execution state', () => {

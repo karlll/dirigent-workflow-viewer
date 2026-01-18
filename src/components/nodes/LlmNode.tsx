@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
-import { Brain, CheckCircle, XCircle, AlertCircle, Clock, Loader2 } from 'lucide-react'
+import { Brain, CheckCircle, XCircle, AlertCircle, Clock } from 'lucide-react'
 import type { LlmStepDef } from '../../types/workflow'
 import type { LayoutDirection } from '../../utils/layout'
 import type { ExecutionState } from '../../types/execution'
@@ -54,7 +54,6 @@ export const LlmNode = memo(({ data }: NodeProps<LlmNode>) => {
             <Brain className="node-icon" />
             {execution && (
               <div className="execution-status">
-                {execution.status === 'running' && <Loader2 className="animate-spin" size={16} />}
                 {execution.status === 'completed' && <CheckCircle size={16} />}
                 {execution.status === 'failed' && <XCircle size={16} />}
               </div>

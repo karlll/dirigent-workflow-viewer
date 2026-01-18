@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
-import { GitBranch, CheckCircle, XCircle, AlertCircle, Clock, Loader2 } from 'lucide-react'
+import { GitBranch, CheckCircle, XCircle, AlertCircle, Clock } from 'lucide-react'
 import type { SwitchStepDef } from '../../types/workflow'
 import type { LayoutDirection } from '../../utils/layout'
 import type { ExecutionState } from '../../types/execution'
@@ -53,7 +53,6 @@ export const SwitchNode = memo(({ data }: NodeProps<SwitchNode>) => {
             <GitBranch className="node-icon" />
             {execution && (
               <div className="execution-status">
-                {execution.status === 'running' && <Loader2 className="animate-spin" size={16} />}
                 {execution.status === 'completed' && <CheckCircle size={16} />}
                 {execution.status === 'failed' && <XCircle size={16} />}
               </div>
