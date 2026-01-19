@@ -396,6 +396,49 @@ invalid yaml content here
         expect(screen.getByText(/Error:/)).toBeInTheDocument()
       })
     })
+
+    it('should mark unexecuted steps as pending', async () => {
+      // Create an instance state with only one executed step
+      const partialInstanceState: InstanceState = {
+        status: 'running',
+        workflowName: 'sample_workflow',
+        workflowVersion: 1,
+        startedAt: '2026-01-06T10:00:00Z',
+        currentStepId: 'classify',
+        steps: new Map([
+          [
+            'classify',
+            {
+              status: 'running',
+              stepKind: 'llm',
+              startedAt: '2026-01-06T10:00:00Z',
+            },
+          ],
+        ]),
+        branches: [],
+      }
+
+      vi.spyOn(eventManager, 'fetchState').mockResolvedValue(partialInstanceState)
+
+      const { container } = render(
+        <ExecutableWorkflow
+          instanceId={instanceId}
+          apiBaseUrl={apiBaseUrl}
+          yaml={sampleWorkflowYaml}
+        />
+      )
+
+      await waitFor(() => {
+        expect(container.querySelector('.react-flow')).toBeInTheDocument()
+      })
+
+      // Check that unexecuted steps have the 'node-pending' class
+      await waitFor(() => {
+        const pendingNodes = container.querySelectorAll('.node-pending')
+        // Sample workflow has 5 steps, 1 is running, so 4 should be pending
+        expect(pendingNodes.length).toBeGreaterThan(0)
+      })
+    })
   })
 
   describe('Props pass-through', () => {

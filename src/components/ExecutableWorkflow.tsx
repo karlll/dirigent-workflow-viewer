@@ -49,7 +49,7 @@ function enrichWorkflowWithExecution(
   for (const [stepId, stepDef] of Object.entries(workflow.steps)) {
     const stepState = instanceState.steps.get(stepId)
 
-    const execution: ExecutionState | undefined = stepState
+    const execution: ExecutionState = stepState
       ? {
           status: stepState.status,
           startedAt: stepState.startedAt,
@@ -59,7 +59,11 @@ function enrichWorkflowWithExecution(
           isOnExecutionPath: executionPath.has(stepId),
           isCurrentStep: instanceState.currentStepId === stepId,
         }
-      : undefined
+      : {
+          status: 'pending',
+          isOnExecutionPath: false,
+          isCurrentStep: false,
+        }
 
     enrichedSteps[stepId] = {
       ...stepDef,
