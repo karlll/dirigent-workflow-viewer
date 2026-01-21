@@ -1,21 +1,66 @@
 # @dirigent/workflow-viewer
 
-React component for visualizing Dirigent workflow YAML files as interactive node graphs.
+React component library for visualizing and monitoring Dirigent workflows. Provides both static workflow visualization and real-time execution monitoring with Server-Sent Events (SSE).
 
 ## Features
 
+### Core Visualization
 - 🎨 **Visual workflow representation** - Renders workflows as interactive node graphs using React Flow
-- 🔴 **Real-time execution visualization** - Live workflow execution state via Server-Sent Events (SSE)
 - 📊 **Automatic layout** - Uses Dagre algorithm for optimal node positioning
 - 🔄 **Multiple layouts** - Supports left-to-right (LR) and top-to-bottom (TB) orientations
-- ⚡ **Execution state highlighting** - Color-coded nodes, path highlighting, and current step animation
-- ⏱️ **Timing information** - Displays execution duration and error messages
+- 🎨 **Color modes** - Light, dark, and system preference support
 - ✨ **Type-safe** - Full TypeScript support with exported types
 - 🎯 **Zero config** - Works out of the box with YAML or parsed workflow objects
-- 🚨 **Error handling** - Graceful error display for invalid YAML or workflows
-- 📦 **Minimal dependencies** - Only 3 runtime dependencies (reactflow, dagre, js-yaml)
+
+### Real-time Execution Monitoring
+- 🔴 **Live execution visualization** - Real-time workflow execution state via SSE
+- ⚡ **Execution state highlighting** - Color-coded nodes, path highlighting, and animated current step
+- ⏱️ **Timing information** - Displays execution duration and timestamps
+- 🚨 **Error handling** - Graceful error display for failed steps and invalid workflows
+- 📡 **Automatic reconnection** - SSE connection with exponential backoff and Last-Event-ID resumption
+- 🔄 **State merging** - Smart merging of REST API data with SSE updates
+
+### Library Components
+- 📋 **Workflow Browser** - List and select available workflows
+- 📊 **Instance Browser** - Browse and filter workflow instances with auto-refresh
+- 🖥️ **Instance Monitor** - Complete instance monitoring with metadata and visualization
+- 🎣 **React Hooks** - Composable hooks for building custom workflow UIs
+- 🔧 **API Client** - HTTP client for Dirigent API integration
+
+### Dependencies
+- 📦 **Minimal dependencies** - Only 4 runtime dependencies (@xyflow/react, dagre, js-yaml, lucide-react)
 
 ## Installation
+
+### From npm (When Published)
+
+```bash
+npm install @dirigent/workflow-viewer
+```
+
+**Status:** Package is configured for public npm publishing (`"private": false` in package.json). To publish:
+
+```bash
+cd ui/workflow
+npm run build
+npm publish
+```
+
+### From Git Repository
+
+```bash
+npm install github:karlll/dirigent#main
+```
+
+Or add to package.json:
+
+```json
+{
+  "dependencies": {
+    "@dirigent/workflow-viewer": "github:karlll/dirigent#main"
+  }
+}
+```
 
 ### Local Development (npm link)
 
@@ -26,22 +71,106 @@ npm install
 npm run build
 npm link
 
-# In your project (e.g., knutpunkt frontend)
+# In your consuming project
 cd your-project
 npm link @dirigent/workflow-viewer
 ```
 
-### From Git Repository
+## Quick Start
 
-```json
-{
-  "dependencies": {
-    "@dirigent/workflow-viewer": "github:your-org/dirigent#ui/workflow/v0.1.0"
-  }
+For complete usage examples, API documentation, and integration guide, see **[USAGE_GUIDE.md](./USAGE_GUIDE.md)**.
+
+### Basic Static Visualization
+
+```tsx
+import { Workflow } from '@dirigent/workflow-viewer'
+
+function App() {
+  const yaml = `
+    name: my_workflow
+    version: 1
+    start: first_step
+    steps:
+      first_step:
+        kind: tool
+        tool: my_tool
+        end: true
+  `
+
+  return (
+    <div style={{ width: '100%', height: '600px' }}>
+      <Workflow yaml={yaml} direction="LR" />
+    </div>
+  )
 }
 ```
 
-## Usage
+### Real-time Execution Monitoring
+
+```tsx
+import { ExecutableWorkflow } from '@dirigent/workflow-viewer'
+
+function Monitor({ instanceId }: { instanceId: string }) {
+  return (
+    <div style={{ width: '100%', height: '600px' }}>
+      <ExecutableWorkflow
+        instanceId={instanceId}
+        apiBaseUrl="http://localhost:8080"
+        direction="LR"
+      />
+    </div>
+  )
+}
+```
+
+### Complete Workflow Dashboard
+
+```tsx
+import { InstanceMonitor } from '@dirigent/workflow-viewer'
+
+function Dashboard({ instanceId }: { instanceId: string }) {
+  return (
+    <div style={{ height: '100vh' }}>
+      <InstanceMonitor
+        instanceId={instanceId}
+        apiBaseUrl="http://localhost:8080"
+      />
+    </div>
+  )
+}
+```
+
+## Exported Components
+
+### Core Components
+
+- **`<Workflow>`** - Static workflow visualization from YAML or parsed object
+- **`<ExecutableWorkflow>`** - Real-time execution monitoring with SSE
+
+### Library Components
+
+- **`<WorkflowBrowser>`** - Browse and select available workflows
+- **`<InstanceBrowser>`** - Browse and filter workflow instances with auto-refresh
+- **`<InstanceMonitor>`** - Complete instance monitoring (metadata + visualization)
+
+### React Hooks
+
+- **`useWorkflows(apiBaseUrl)`** - Fetch list of available workflows
+- **`useWorkflowDefinition(name, apiBaseUrl)`** - Fetch specific workflow YAML
+- **`useInstances(apiBaseUrl, options)`** - Fetch/filter instances with auto-refresh
+- **`useInstanceState(instanceId, apiBaseUrl)`** - Subscribe to real-time SSE updates
+- **`useInstanceDetails(instanceId, apiBaseUrl)`** - Fetch detailed instance information
+
+### Utilities
+
+- **`ApiClient`** - HTTP client for Dirigent API
+- **`eventManager`** - Singleton for managing SSE connections
+
+### TypeScript Types
+
+All workflow, execution, and API types are exported. See [Exported Types](#exported-types) section below.
+
+## Usage Examples
 
 ### Basic Example
 
@@ -137,7 +266,7 @@ function App() {
   return (
     <ExecutableWorkflow
       instanceId="550e8400-e29b-41d4-a716-446655440000"
-      apiBaseUrl="http://localhost:8081"
+      apiBaseUrl="http://localhost:8080"
       yaml={yamlWorkflow}
       direction="LR"
     />
@@ -181,7 +310,7 @@ function WorkflowViewer({ instanceId }: { instanceId: string }) {
   return (
     <ExecutableWorkflow
       instanceId={instanceId}
-      apiBaseUrl="http://localhost:8081"
+      apiBaseUrl="http://localhost:8080"
       yaml={workflowYaml}
     />
   )
@@ -191,8 +320,8 @@ function WorkflowViewer({ instanceId }: { instanceId: string }) {
 function MultipleWorkflows() {
   return (
     <>
-      <ExecutableWorkflow instanceId="instance-1" apiBaseUrl="http://localhost:8081" yaml={yaml1} />
-      <ExecutableWorkflow instanceId="instance-2" apiBaseUrl="http://localhost:8081" yaml={yaml2} />
+      <ExecutableWorkflow instanceId="instance-1" apiBaseUrl="http://localhost:8080" yaml={yaml1} />
+      <ExecutableWorkflow instanceId="instance-2" apiBaseUrl="http://localhost:8080" yaml={yaml2} />
     </>
   )
 }
@@ -206,7 +335,7 @@ For advanced use cases, you can directly control the `EventManager`:
 import { eventManager } from '@dirigent/workflow-viewer'
 
 // Manually connect to SSE endpoint
-eventManager.connect('http://localhost:8081')
+eventManager.connect('http://localhost:8080')
 
 // Check connection status
 const isConnected = eventManager.isEventSourceConnected()
@@ -258,7 +387,7 @@ function WorkflowViewer() {
   return (
     <ExecutableWorkflow
       instanceId="unknown-instance"
-      apiBaseUrl="http://localhost:8081"
+      apiBaseUrl="http://localhost:8080"
       yaml={yaml}
     />
   )
@@ -309,7 +438,7 @@ Component for rendering workflows with real-time execution state from the Dirige
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `instanceId` | `string` | **required** | UUID of the workflow instance to track |
-| `apiBaseUrl` | `string` | **required** | Base URL of the Dirigent API (e.g., "http://localhost:8081") |
+| `apiBaseUrl` | `string` | **required** | Base URL of the Dirigent API (e.g., "http://localhost:8080") |
 | `yaml` | `string` | - | YAML string representing the workflow |
 | `workflow` | `WorkflowType` | - | Pre-parsed workflow object |
 | `direction` | `'LR' \| 'TB'` | `'LR'` | Layout direction (left-to-right or top-to-bottom) |
@@ -324,7 +453,7 @@ Component for rendering workflows with real-time execution state from the Dirige
 ```tsx
 <ExecutableWorkflow
   instanceId="550e8400-e29b-41d4-a716-446655440000"
-  apiBaseUrl="http://localhost:8081"
+  apiBaseUrl="http://localhost:8080"
   yaml={yamlString}
   direction="LR"
   showLoading={true}
@@ -344,12 +473,13 @@ Component for rendering workflows with real-time execution state from the Dirige
 
 ## Exported Types
 
-### Workflow Types
+The library exports comprehensive TypeScript types for type-safe integration.
+
+### Workflow Definition Types
 
 ```typescript
 import type {
-  // Workflow definition types
-  WorkflowType,      // Main workflow type
+  WorkflowType,      // Main workflow definition
   StepDef,           // Union of all step types
   LlmStepDef,        // LLM step definition
   ToolStepDef,       // Tool step definition
@@ -357,17 +487,7 @@ import type {
   FailStepDef,       // Fail/error step definition
   Trigger,           // Event trigger definition
   CaseDef,           // Switch case definition
-  Goto,              // Goto target
-} from '@dirigent/workflow-viewer'
-```
-
-### Component Types
-
-```typescript
-import type {
-  // Component props
-  WorkflowProps,           // Workflow component props
-  ExecutableWorkflowProps, // ExecutableWorkflow component props
+  Goto,              // Goto target (string or end marker)
 } from '@dirigent/workflow-viewer'
 ```
 
@@ -375,20 +495,57 @@ import type {
 
 ```typescript
 import type {
-  // Execution state types
   InstanceState,     // Complete workflow instance execution state
   StepState,         // Individual step execution state
-  ExecutionState,    // Visual execution state for nodes
+  ExecutionState,    // Visual execution state for node enrichment
 } from '@dirigent/workflow-viewer'
 ```
 
-### EventManager
+### API Response Types
+
+```typescript
+import type {
+  WorkflowMetadata,      // Workflow summary (name, version, triggers, step count)
+  WorkflowListResponse,  // List of workflows response
+  InstanceSummaryDto,    // Instance summary for lists
+  InstanceListResponse,  // List of instances response
+  InstanceDetailsDto,    // Detailed instance information
+  StepExecutionDto,      // Step execution details
+} from '@dirigent/workflow-viewer'
+```
+
+### Component Props Types
+
+```typescript
+import type {
+  WorkflowProps,             // Workflow component props
+  ExecutableWorkflowProps,   // ExecutableWorkflow component props
+  WorkflowBrowserProps,      // WorkflowBrowser component props
+  InstanceBrowserProps,      // InstanceBrowser component props
+  InstanceMonitorProps,      // InstanceMonitor component props
+} from '@dirigent/workflow-viewer'
+```
+
+### Utility Types
+
+```typescript
+import type {
+  LayoutDirection,           // 'LR' | 'TB'
+  ColorMode,                 // 'light' | 'dark' | 'system' (from @xyflow/react)
+} from '@dirigent/workflow-viewer'
+```
+
+### Utilities and Singletons
 
 ```typescript
 import { eventManager } from '@dirigent/workflow-viewer'
+// EventManager singleton for managing SSE connections
 
-// EventManager is a singleton for managing SSE connections
-// and workflow execution state across multiple components
+import { ApiClient } from '@dirigent/workflow-viewer'
+// HTTP client for Dirigent API
+
+import { version } from '@dirigent/workflow-viewer'
+// Current library version (e.g., "0.1.0")
 ```
 
 ## Development
@@ -431,21 +588,31 @@ npm test
 ```
 ui/workflow/
 ├── src/
+│   ├── index.ts                          # Library entry point (exports)
 │   ├── components/
 │   │   ├── Workflow.tsx                  # Static workflow viewer
 │   │   ├── Workflow.stories.tsx          # Storybook stories
 │   │   ├── ExecutableWorkflow.tsx        # Real-time execution viewer
-│   │   ├── ExecutableWorkflow.test.tsx   # Execution viewer tests
+│   │   ├── ExecutableWorkflow.test.tsx   # Component tests
+│   │   ├── WorkflowBrowser.tsx           # Workflow list component
+│   │   ├── InstanceBrowser.tsx           # Instance list component
+│   │   ├── InstanceMonitor.tsx           # Instance detail component
 │   │   └── nodes/
-│   │       ├── StartNode.tsx             # START node component
-│   │       ├── EndNode.tsx               # END node component
+│   │       ├── StartNode.tsx             # START node
+│   │       ├── EndNode.tsx               # END node
+│   │       ├── TriggerNode.tsx           # TRIGGER node
 │   │       ├── LlmNode.tsx               # LLM step node
 │   │       ├── ToolNode.tsx              # Tool step node
 │   │       ├── SwitchNode.tsx            # Switch/branch node
-│   │       └── FailNode.tsx              # Fail/error node
+│   │       ├── FailNode.tsx              # Fail/error node
+│   │       └── BorderLoadingIndicator.tsx # Animated border
 │   ├── lib/
+│   │   ├── ApiClient.ts                  # HTTP client for Dirigent API
 │   │   ├── EventManager.ts               # SSE connection manager
-│   │   └── EventManager.test.ts          # EventManager tests
+│   │   ├── EventManager.test.ts          # EventManager tests
+│   │   ├── hooks.ts                      # React hooks
+│   │   └── components/
+│   │       └── InstanceMonitor.tsx       # Instance monitor wrapper
 │   ├── types/
 │   │   ├── workflow.ts                   # Workflow definition types
 │   │   ├── execution.ts                  # Execution state types
@@ -456,44 +623,68 @@ ui/workflow/
 │   ├── utils/
 │   │   ├── parser.ts                     # YAML parser
 │   │   ├── graphConverter.ts             # Workflow → graph converter
-│   │   └── layout.ts                     # Dagre layout engine
+│   │   ├── layout.ts                     # Dagre layout engine
+│   │   └── classNames.ts                 # CSS utility
+│   ├── demo/
+│   │   ├── main.tsx                      # Demo app entry point
+│   │   ├── App.tsx                       # Full-featured demo
+│   │   └── components/                   # Demo-specific components
 │   ├── test/
 │   │   └── setup.ts                      # Test environment setup
-│   ├── fixtures/
-│   │   └── *.yaml                        # Example workflows
-│   ├── App.tsx                           # Demo application
-│   └── index.ts                          # Library entry point
-├── .storybook/                           # Storybook configuration
-├── dist/                                 # Build output
+│   ├── mocks/
+│   │   └── handlers.ts                   # MSW mock handlers for Storybook
+│   └── fixtures/
+│       └── *.yaml                        # Example workflows for testing
+├── .storybook/
+│   ├── main.ts                           # Storybook configuration
+│   └── preview.ts                        # Preview settings
+├── dist/                                 # Build output (ESM)
+│   ├── index.js                          # Bundled library
+│   ├── index.d.ts                        # TypeScript definitions
+│   └── index.css                         # Styles
+├── public/
+│   └── mockServiceWorker.js              # MSW service worker
 ├── package.json
-├── vite.config.ts
-└── README.md
+├── vite.config.ts                        # Vite build config
+├── tsconfig.json                         # TypeScript config
+├── README.md                             # This file
+└── USAGE_GUIDE.md                        # Comprehensive integration guide
 ```
 
 ## Dependencies
 
-### Runtime Dependencies (3)
+### Runtime Dependencies (4)
 
-- **reactflow** `11.11.0` - Node-based UI rendering
-- **dagre** `0.8.5` - Graph layout algorithm
+- **@xyflow/react** `12.10.0` - Interactive node-based UI rendering
+- **dagre** `0.8.5` - Graph layout algorithm for automatic node positioning
 - **js-yaml** `4.1.1` - YAML parsing
+- **lucide-react** `^0.468.0` - Icon library for UI elements
 
-### Peer Dependencies
+### Peer Dependencies (Required)
 
 - **react** `>=18.0.0` - Provided by consuming application
 - **react-dom** `>=18.0.0` - Provided by consuming application
 
+### Dev Dependencies (Testing & Build)
+
+- **Vite** `^7.2.4` - Build tool and dev server
+- **TypeScript** `~5.9.3` - Type checking and compilation
+- **Vitest** `^4.0.16` - Unit testing framework
+- **Testing Library** - React component testing
+- **Storybook** `^10.1.11` - Component documentation and demos
+- **ESLint** - Code linting
+
 ## Security
 
-- All dependencies use **exact versions** (no `^` or `~`)
+- Runtime dependencies use **exact versions** for @xyflow/react, dagre, and js-yaml
 - Regular `npm audit` checks for vulnerabilities
-- Minimal dependency tree (3 runtime deps + ~50 transitive)
-- No publishing to public npm registry
+- Minimal dependency tree (4 runtime deps)
+- Clean dependency audit status
 
 ### Dependency Security Status
 
 ```bash
-npm audit  # Should report: found 0 vulnerabilities
+npm audit  # Check for vulnerabilities
 ```
 
 ## Workflow YAML Structure
@@ -546,10 +737,45 @@ import { Workflow, type WorkflowType } from '@dirigent/workflow-viewer'
 //       ^component      ^type
 ```
 
+## Documentation
+
+- **[USAGE_GUIDE.md](./USAGE_GUIDE.md)** - Comprehensive integration guide with examples
+- **[Main Project README](../../README.md)** - Dirigent workflow engine documentation
+- **[Storybook](http://localhost:6006)** - Interactive component demos (run `npm run storybook`)
+
+## Related Projects
+
+- **[Dirigent](https://github.com/karlll/dirigent)** - Deterministic workflow engine for JVM (Kotlin)
+- **Workflow DSL** - YAML-based agent workflow definition language
+- **REST API** - Dirigent API for querying workflows and instances
+- **SSE Stream** - Real-time workflow execution events
+
 ## License
 
 MIT
 
 ## Contributing
 
-This component is part of the Dirigent workflow engine project. See the main project README for contribution guidelines.
+This library is part of the Dirigent workflow engine project.
+
+**Ways to contribute:**
+- Report bugs or request features via GitHub Issues
+- Submit pull requests with improvements or bug fixes
+- Improve documentation and examples
+- Add test coverage
+
+**Development setup:**
+```bash
+git clone https://github.com/karlll/dirigent.git
+cd dirigent/ui/workflow
+npm install
+npm run dev        # Start demo app
+npm run storybook  # Start Storybook
+npm test           # Run tests
+```
+
+**Before submitting PRs:**
+- Run `npm test` to ensure tests pass
+- Run `npm run lint` to check code style
+- Update documentation if adding new features
+- Add tests for new functionality
