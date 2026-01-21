@@ -1,10 +1,10 @@
 {
   "name": "@dirigent/workflow-viewer",
-  "private": true,
+  "private": false,
   "version": "0.1.0",
   "type": "module",
   "description": "React component for visualizing Dirigent workflow YAML files",
-  "author": "Dirigent",
+  "author": "Karl Larsaeus",
   "license": "MIT",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -20,6 +20,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "prepare": "npm run build",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest --run",
