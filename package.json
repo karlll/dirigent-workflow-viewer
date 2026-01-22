@@ -6,6 +6,21 @@
   "description": "React component for visualizing Dirigent workflow YAML files",
   "author": "Karl Larsaeus",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/karlll/dirigent-workflow-viewer. git"
+  },
+  "homepage": "https://github.com/karlll/dirigent-workflow-viewer#readme",
+  "bugs": {
+    "url": "https://github.com/karlll/dirigent-workflow-viewer/issues"
+  },
+  "keywords":  [
+    "react",
+    "workflow",
+    "visualization",
+    "dirigent",
+    "react-flow"
+  ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
