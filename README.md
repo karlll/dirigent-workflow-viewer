@@ -38,6 +38,14 @@ React component library for visualizing and monitoring Dirigent workflows. Provi
 npm install @dirigent/workflow-viewer
 ```
 
+**Important:** You must also import the CSS in your application:
+
+```javascript
+import '@dirigent/workflow-viewer/styles';
+// or
+import '@dirigent/workflow-viewer/dist/index.css';
+```
+
 **Status:** Package is configured for public npm publishing (`"private": false` in package.json). To publish:
 
 ```bash
@@ -78,12 +86,19 @@ npm link @dirigent/workflow-viewer
 
 ## Quick Start
 
+**Important:** Import the CSS before using any components:
+
+```tsx
+import '@dirigent/workflow-viewer/styles';
+```
+
 For complete usage examples, API documentation, and integration guide, see **[USAGE_GUIDE.md](./USAGE_GUIDE.md)**.
 
 ### Basic Static Visualization
 
 ```tsx
 import { Workflow } from '@dirigent/workflow-viewer'
+import '@dirigent/workflow-viewer/styles'
 
 function App() {
   const yaml = `
@@ -109,6 +124,7 @@ function App() {
 
 ```tsx
 import { ExecutableWorkflow } from '@dirigent/workflow-viewer'
+import '@dirigent/workflow-viewer/styles'
 
 function Monitor({ instanceId }: { instanceId: string }) {
   return (
@@ -127,6 +143,7 @@ function Monitor({ instanceId }: { instanceId: string }) {
 
 ```tsx
 import { InstanceMonitor } from '@dirigent/workflow-viewer'
+import '@dirigent/workflow-viewer/styles'
 
 function Dashboard({ instanceId }: { instanceId: string }) {
   return (
