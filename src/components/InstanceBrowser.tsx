@@ -30,6 +30,9 @@ export interface InstanceBrowserProps {
   /** Show detailed metadata */
   showMetadata?: boolean
 
+  /** Show header with instance count and filters (default: false) */
+  showHeader?: boolean
+
   /** Maximum number of instances to display */
   limit?: number
 
@@ -65,18 +68,20 @@ export function InstanceBrowser({
   onSelect,
   refreshInterval,
   showMetadata = false,
+  showHeader = false,
   limit = 50,
   className = '',
   style,
 }: InstanceBrowserProps) {
-  const { instances, total, loading, error } = useInstances(apiBaseUrl, {
+  const { instances, total, loading, isRefreshing, error } = useInstances(apiBaseUrl, {
     workflowName,
     status,
     limit,
     refreshInterval,
   })
 
-  if (loading) {
+  // Only show full loading spinner on INITIAL load
+  if (loading && instances.length === 0) {
     return (
       <div
         className={className}
@@ -165,34 +170,45 @@ export function InstanceBrowser({
       }}
     >
       {/* Header with count */}
-      <div
-        style={{
-          padding: '0.75rem 1rem',
-          backgroundColor: '#f9fafb',
-          borderBottom: '1px solid #e5e7eb',
-          fontSize: '0.875rem',
-          color: '#6b7280',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
-        <div>
-          {total} instance{total !== 1 ? 's' : ''}
-          {(workflowName || status) && (
-            <span style={{ marginLeft: '0.5rem' }}>
-              {workflowName && `• ${workflowName}`}
-              {workflowName && status && ' '}
-              {status && `• ${status}`}
-            </span>
+      {showHeader && (
+        <div
+          style={{
+            padding: '0.75rem 1rem',
+            backgroundColor: '#f9fafb',
+            borderBottom: '1px solid #e5e7eb',
+            fontSize: '0.875rem',
+            color: '#6b7280',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <div>
+            {total} instance{total !== 1 ? 's' : ''}
+            {(workflowName || status) && (
+              <span style={{ marginLeft: '0.5rem' }}>
+                {workflowName && `• ${workflowName}`}
+                {workflowName && status && ' '}
+                {status && `• ${status}`}
+              </span>
+            )}
+          </div>
+          {/* Show subtle refresh indicator */}
+          {isRefreshing && (
+            <div
+              style={{
+                width: '16px',
+                height: '16px',
+                border: '2px solid #e5e7eb',
+                borderTopColor: '#3b82f6',
+                borderRadius: '50%',
+                animation: 'spin 1s linear infinite',
+              }}
+              title="Refreshing..."
+            />
           )}
         </div>
-        {refreshInterval && refreshInterval > 0 && (
-          <div style={{ fontSize: '0.75rem' }}>
-            Auto-refresh: {refreshInterval / 1000}s
-          </div>
-        )}
-      </div>
+      )}
 
       {/* Instance list */}
       <div

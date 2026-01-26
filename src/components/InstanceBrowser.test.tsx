@@ -59,6 +59,7 @@ describe('InstanceBrowser', () => {
         instances: [],
         total: 0,
         loading: true,
+        isRefreshing: false,
         error: null,
         refresh: vi.fn(),
       })
@@ -75,6 +76,7 @@ describe('InstanceBrowser', () => {
         instances: [],
         total: 0,
         loading: false,
+        isRefreshing: false,
         error: 'Network error',
         refresh: vi.fn(),
       })
@@ -91,6 +93,7 @@ describe('InstanceBrowser', () => {
         instances: [],
         total: 0,
         loading: false,
+        isRefreshing: false,
         error: null,
         refresh: vi.fn(),
       })
@@ -105,6 +108,7 @@ describe('InstanceBrowser', () => {
         instances: [],
         total: 0,
         loading: false,
+        isRefreshing: false,
         error: null,
         refresh: vi.fn(),
       })
@@ -128,6 +132,7 @@ describe('InstanceBrowser', () => {
         instances: mockInstances,
         total: 3,
         loading: false,
+        isRefreshing: false,
         error: null,
         refresh: vi.fn(),
       })
@@ -144,11 +149,12 @@ describe('InstanceBrowser', () => {
         instances: mockInstances,
         total: 3,
         loading: false,
+        isRefreshing: false,
         error: null,
         refresh: vi.fn(),
       })
 
-      render(<InstanceBrowser apiBaseUrl="http://localhost:8080" />)
+      render(<InstanceBrowser apiBaseUrl="http://localhost:8080" showHeader={true} />)
 
       expect(screen.getByText(/3 instances/)).toBeInTheDocument()
     })
@@ -158,6 +164,7 @@ describe('InstanceBrowser', () => {
         instances: mockInstances,
         total: 3,
         loading: false,
+        isRefreshing: false,
         error: null,
         refresh: vi.fn(),
       })
@@ -175,6 +182,7 @@ describe('InstanceBrowser', () => {
         instances: mockInstances,
         total: 3,
         loading: false,
+        isRefreshing: false,
         error: null,
         refresh: vi.fn(),
       })
@@ -195,6 +203,7 @@ describe('InstanceBrowser', () => {
         instances: mockInstances,
         total: 3,
         loading: false,
+        isRefreshing: false,
         error: null,
         refresh: vi.fn(),
       })
@@ -213,6 +222,7 @@ describe('InstanceBrowser', () => {
         instances: mockInstances,
         total: 3,
         loading: false,
+        isRefreshing: false,
         error: null,
         refresh: vi.fn(),
       })
@@ -235,6 +245,7 @@ describe('InstanceBrowser', () => {
         instances: mockInstances,
         total: 3,
         loading: false,
+        isRefreshing: false,
         error: null,
         refresh: vi.fn(),
       })
@@ -255,6 +266,7 @@ describe('InstanceBrowser', () => {
         instances: mockInstances,
         total: 3,
         loading: false,
+        isRefreshing: false,
         error: null,
         refresh: vi.fn(),
       })
@@ -271,6 +283,7 @@ describe('InstanceBrowser', () => {
         instances: [],
         total: 0,
         loading: false,
+        isRefreshing: false,
         error: null,
         refresh: vi.fn(),
       })
@@ -295,6 +308,7 @@ describe('InstanceBrowser', () => {
         instances: [],
         total: 0,
         loading: false,
+        isRefreshing: false,
         error: null,
         refresh: vi.fn(),
       })
@@ -316,6 +330,7 @@ describe('InstanceBrowser', () => {
         instances: mockInstances,
         total: 3,
         loading: false,
+        isRefreshing: false,
         error: null,
         refresh: vi.fn(),
       })
@@ -325,6 +340,7 @@ describe('InstanceBrowser', () => {
           apiBaseUrl="http://localhost:8080"
           workflowName="sample_workflow"
           status="RUNNING"
+          showHeader={true}
         />
       )
 
@@ -342,6 +358,7 @@ describe('InstanceBrowser', () => {
         instances: mockInstances,
         total: 3,
         loading: false,
+        isRefreshing: false,
         error: null,
         refresh: vi.fn(),
       })
@@ -358,20 +375,26 @@ describe('InstanceBrowser', () => {
       )
     })
 
-    it('should show refresh info in header', () => {
+    it('should show refresh indicator when refreshing', () => {
       mockUseInstances.mockReturnValue({
         instances: mockInstances,
         total: 3,
         loading: false,
+        isRefreshing: true,
         error: null,
         refresh: vi.fn(),
       })
 
       render(
-        <InstanceBrowser apiBaseUrl="http://localhost:8080" refreshInterval={5000} />
+        <InstanceBrowser
+          apiBaseUrl="http://localhost:8080"
+          refreshInterval={5000}
+          showHeader={true}
+        />
       )
 
-      expect(screen.getByText(/Auto-refresh: 5s/)).toBeInTheDocument()
+      // Check for refresh indicator by its title attribute
+      expect(screen.getByTitle('Refreshing...')).toBeInTheDocument()
     })
   })
 
@@ -381,6 +404,7 @@ describe('InstanceBrowser', () => {
         instances: mockInstances,
         total: 3,
         loading: false,
+        isRefreshing: false,
         error: null,
         refresh: vi.fn(),
       })
@@ -400,6 +424,7 @@ describe('InstanceBrowser', () => {
         instances: mockInstances,
         total: 3,
         loading: false,
+        isRefreshing: false,
         error: null,
         refresh: vi.fn(),
       })

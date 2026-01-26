@@ -92,23 +92,40 @@ export function useInstances(apiBaseUrl: string, options?: UseInstancesOptions) 
   const [instances, setInstances] = useState<InstanceSummaryDto[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const intervalRef = useRef<number | null>(null)
+  const isInitialMount = useRef(true)
 
   const fetchInstances = useCallback(async () => {
     try {
-      setLoading(true)
+      // Only show full loading spinner on initial load
+      if (isInitialMount.current) {
+        setLoading(true)
+      } else {
+        setIsRefreshing(true)
+      }
+
       setError(null)
       const client = createApiClient(apiBaseUrl)
       const result = await client.listInstances(options)
       setInstances(result.instances)
       setTotal(result.total)
+
+      // Mark that we've completed initial load
+      if (isInitialMount.current) {
+        isInitialMount.current = false
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch instances')
-      setInstances([])
-      setTotal(0)
+      // Only clear instances on initial load errors
+      if (isInitialMount.current) {
+        setInstances([])
+        setTotal(0)
+      }
     } finally {
       setLoading(false)
+      setIsRefreshing(false)
     }
   }, [apiBaseUrl, options?.status, options?.workflowName, options?.limit, options?.offset, options?.since, options?.until])
 
@@ -132,7 +149,7 @@ export function useInstances(apiBaseUrl: string, options?: UseInstancesOptions) 
     }
   }, [options?.refreshInterval, fetchInstances])
 
-  return { instances, total, loading, error, refresh: fetchInstances }
+  return { instances, total, loading, isRefreshing, error, refresh: fetchInstances }
 }
 
 /**
