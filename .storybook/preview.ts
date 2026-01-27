@@ -1,6 +1,12 @@
 import type { Preview } from '@storybook/react-vite'
 import { initialize, mswLoader } from 'msw-storybook-addon'
 
+// Import CSS (order matters: theme first, then Tailwind, then component styles)
+import '../src/styles/theme.css'
+import '../src/styles/tailwind.css'
+import '@xyflow/react/dist/style.css'
+import '../src/styles/nodes.css'
+
 // Initialize MSW
 initialize()
 
