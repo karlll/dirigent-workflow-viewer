@@ -6,7 +6,7 @@
 .tool-node,
 .switch-node,
 .fail-node {
-  background: white;
+  background: var(--card);
   border: 2px solid;
   border-radius: 8px;
   padding: 0;
@@ -28,46 +28,47 @@
 
 /* Node type colors */
 .llm-node {
-  border-color: #cba6f7; /* Mauve - AI/intelligent steps */
+  border-color: var(--workflow-node-llm);
 }
 
 .tool-node {
-  border-color: #89b4fa; /* Blue - Action/execution steps */
+  border-color: var(--workflow-node-tool);
 }
 
 .switch-node {
-  border-color: #f9e2af; /* Yellow - Decision points */
+  border-color: var(--workflow-node-switch);
 }
 
 .fail-node {
-  border-color: #f38ba8; /* Red - Error states */
-  background: #fef2f2;
+  border-color: var(--workflow-node-fail);
+  background: var(--destructive);
+  background: color-mix(in srgb, var(--destructive) 5%, var(--card));
 }
 
 /* Node header */
 .node-header {
   padding: 8px 12px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border);
 }
 
 .llm-node .node-header {
-  background: linear-gradient(135deg, #cba6f7 0%, #b4a0d8 100%);
-  color: #1e1e2e;
+  background: linear-gradient(135deg, var(--ctp-mauve) 0%, color-mix(in srgb, var(--ctp-mauve) 85%, black) 100%);
+  color: var(--primary-foreground);
 }
 
 .tool-node .node-header {
-  background: linear-gradient(135deg, #89b4fa 0%, #7aa2e3 100%);
-  color: #1e1e2e;
+  background: linear-gradient(135deg, var(--ctp-blue) 0%, color-mix(in srgb, var(--ctp-blue) 85%, black) 100%);
+  color: var(--primary-foreground);
 }
 
 .switch-node .node-header {
-  background: linear-gradient(135deg, #f9e2af 0%, #e8d39f 100%);
-  color: #1e1e2e;
+  background: linear-gradient(135deg, var(--ctp-yellow) 0%, color-mix(in srgb, var(--ctp-yellow) 85%, black) 100%);
+  color: var(--primary-foreground);
 }
 
 .fail-node .node-header {
-  background: linear-gradient(135deg, #f38ba8 0%, #e27a98 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--destructive) 0%, color-mix(in srgb, var(--destructive) 85%, black) 100%);
+  color: var(--destructive-foreground);
 }
 
 .node-header-content {
@@ -112,45 +113,45 @@
 
 .field-label {
   font-weight: 600;
-  color: #6b7280;
+  color: var(--muted-foreground);
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
 
 .field-value {
-  color: #1f2937;
+  color: var(--foreground);
   font-weight: 500;
   word-break: break-word;
 }
 
 .fail-node .reason-text {
-  color: #dc2626;
+  color: var(--destructive);
   font-weight: 600;
 }
 
 .node-description {
   font-size: 12px;
-  color: #6b7280;
+  color: var(--muted-foreground);
   font-style: italic;
   margin: 8px 0;
   padding: 6px;
-  background: #f9fafb;
+  background: var(--muted);
   border-radius: 4px;
-  border-left: 3px solid #d1d5db;
+  border-left: 3px solid var(--border);
 }
 
 /* Node sections */
 .node-section {
   margin-top: 10px;
   padding-top: 8px;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--border);
 }
 
 .section-title {
   font-size: 11px;
   font-weight: 700;
-  color: #6b7280;
+  color: var(--muted-foreground);
   text-transform: uppercase;
   letter-spacing: 0.3px;
   margin-bottom: 6px;
@@ -168,21 +169,21 @@
   justify-content: space-between;
   align-items: center;
   padding: 4px 8px;
-  background: #f3f4f6;
+  background: var(--muted);
   border-radius: 4px;
   font-size: 12px;
 }
 
 .schema-key {
   font-weight: 600;
-  color: #374151;
+  color: var(--foreground);
   font-family: 'Monaco', 'Courier New', monospace;
 }
 
 .schema-type {
   font-size: 11px;
-  color: #6b7280;
-  background: #e5e7eb;
+  color: var(--muted-foreground);
+  background: var(--border);
   padding: 2px 6px;
   border-radius: 3px;
   font-family: 'Monaco', 'Courier New', monospace;
@@ -198,7 +199,7 @@
 .validation-rule {
   position: relative;
   font-size: 12px;
-  color: #374151;
+  color: var(--foreground);
   font-family: 'Monaco', 'Courier New', monospace;
   margin-bottom: 4px;
   padding-left: 4px;
@@ -208,7 +209,7 @@
   content: '✓';
   position: absolute;
   left: -14px;
-  color: #10b981;
+  color: var(--ctp-green);
   font-weight: bold;
 }
 
@@ -222,19 +223,19 @@
 .arg-field {
   font-size: 12px;
   padding: 4px 8px;
-  background: #f3f4f6;
+  background: var(--muted);
   border-radius: 4px;
   font-family: 'Monaco', 'Courier New', monospace;
 }
 
 .arg-key {
-  color: #374151;
+  color: var(--foreground);
   font-weight: 600;
   margin-right: 4px;
 }
 
 .arg-value {
-  color: #6b7280;
+  color: var(--muted-foreground);
 }
 
 /* Switch cases */
@@ -250,30 +251,30 @@
   gap: 6px;
   padding: 4px 8px;
   margin-bottom: 4px;
-  background: #f3f4f6;
+  background: var(--muted);
   border-radius: 4px;
   font-size: 12px;
 }
 
 .case-item.case-default {
-  background: #fef3c7;
-  border: 1px solid #fbbf24;
+  background: color-mix(in srgb, var(--ctp-yellow) 20%, var(--card));
+  border: 1px solid var(--ctp-yellow);
 }
 
 .case-when {
   font-family: 'Monaco', 'Courier New', monospace;
-  color: #374151;
+  color: var(--foreground);
   font-weight: 500;
   flex: 1;
 }
 
 .case-arrow {
-  color: #9ca3af;
+  color: var(--muted-foreground);
   font-weight: bold;
 }
 
 .case-goto {
-  color: #6366f1;
+  color: var(--primary);
   font-weight: 600;
 }
 
@@ -288,15 +289,15 @@
 }
 
 .error-handler {
-  background: #fef3c7;
-  color: #92400e;
-  border: 1px solid #fbbf24;
+  background: color-mix(in srgb, var(--ctp-yellow) 20%, var(--card));
+  color: var(--ctp-yellow);
+  border: 1px solid var(--ctp-yellow);
 }
 
 .error-indicator {
-  background: #fee2e2;
-  color: #991b1b;
-  border: 1px solid #fca5a5;
+  background: color-mix(in srgb, var(--destructive) 15%, var(--card));
+  color: var(--destructive);
+  border: 1px solid var(--destructive);
 }
 
 /* Workflow header */
@@ -309,21 +310,21 @@
 
 .workflow-header {
   padding: 16px 20px;
-  background: #f9fafb;
-  border-bottom: 2px solid #e5e7eb;
+  background: var(--muted);
+  border-bottom: 2px solid var(--border);
 }
 
 .workflow-name {
   margin: 0 0 8px 0;
   font-size: 18px;
   font-weight: 700;
-  color: #111827;
+  color: var(--foreground);
 }
 
 .workflow-description {
   margin: 0 0 12px 0;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--muted-foreground);
   font-style: italic;
 }
 
@@ -335,14 +336,14 @@
 
 .meta-item {
   font-size: 12px;
-  color: #6b7280;
+  color: var(--muted-foreground);
   font-weight: 500;
 }
 
 .meta-item::before {
   content: '•';
   margin-right: 6px;
-  color: #d1d5db;
+  color: var(--border);
 }
 
 .meta-item:first-child::before {
@@ -352,7 +353,7 @@
 
 /* Special nodes (start, end, fail-terminal) */
 .special-node {
-  background: white;
+  background: var(--card);
   border: 3px solid;
   border-radius: 50%;
   width: 80px;
@@ -391,43 +392,43 @@
 
 /* Start node */
 .start-node {
-  border-color: #a6e3a1; /* Green */
-  color: #1e1e2e;
+  border-color: var(--workflow-node-start);
+  color: var(--foreground);
 }
 
 .start-node .special-node-icon {
-  color: #a6e3a1;
+  color: var(--workflow-node-start);
 }
 
 /* End node */
 .end-node {
-  border-color: #89b4fa; /* Blue */
-  color: #1e1e2e;
+  border-color: var(--workflow-node-end);
+  color: var(--foreground);
 }
 
 .end-node .special-node-icon {
-  color: #89b4fa;
+  color: var(--workflow-node-end);
 }
 
 /* Fail terminal node */
 .fail-terminal-node {
-  border-color: #f38ba8; /* Red */
-  color: #1e1e2e;
+  border-color: var(--workflow-node-fail);
+  color: var(--foreground);
 }
 
 .fail-terminal-node .special-node-icon {
-  color: #f38ba8;
+  color: var(--workflow-node-fail);
 }
 
 /* Trigger node */
 .trigger-node {
-  border-color: #fab387; /* Amber/Orange - event-driven */
-  color: #1e1e2e;
+  border-color: var(--workflow-node-trigger);
+  color: var(--foreground);
   position: relative;
 }
 
 .trigger-node .special-node-icon {
-  color: #fab387;
+  color: var(--workflow-node-trigger);
 }
 
 /* Larger trigger node for multiple triggers */
@@ -451,8 +452,8 @@
   bottom: calc(100% + 15px);
   left: 50%;
   transform: translateX(-50%);
-  background: white;
-  border: 2px solid #fab387;
+  background: var(--card);
+  border: 2px solid var(--ctp-peach);
   border-radius: 8px;
   padding: 10px 12px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -473,7 +474,7 @@
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-top: 8px solid #fab387;
+  border-top: 8px solid var(--ctp-peach);
 }
 
 .trigger-tooltip-header {
@@ -481,18 +482,18 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #6b7280;
+  color: var(--muted-foreground);
   margin-bottom: 8px;
   padding-bottom: 6px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border);
 }
 
 .trigger-tooltip-item {
   margin-bottom: 8px;
   padding: 6px 8px;
-  background: #fef3c7;
+  background: color-mix(in srgb, var(--ctp-yellow) 20%, var(--card));
   border-radius: 4px;
-  border-left: 3px solid #fab387;
+  border-left: 3px solid var(--ctp-peach);
 }
 
 .trigger-tooltip-item:last-child {
@@ -502,230 +503,48 @@
 .trigger-type {
   font-size: 12px;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--foreground);
   font-family: 'Monaco', 'Courier New', monospace;
   margin-bottom: 4px;
 }
 
 .trigger-condition {
   font-size: 11px;
-  color: #6b7280;
+  color: var(--muted-foreground);
   font-family: 'Monaco', 'Courier New', monospace;
   font-style: italic;
 }
 
 /* ============================================
-   Dark Mode Styles
+   Dark Mode Overrides
    ============================================ */
 
+/* Most dark mode styling is now handled by CSS variables in theme.css.
+   These overrides are only for specific cases that need different styling. */
+
+/* Darker box shadows for dark mode */
 .react-flow.dark .llm-node,
 .react-flow.dark .tool-node,
 .react-flow.dark .switch-node,
-.react-flow.dark .fail-node {
-  background: #1e1e2e;
-  color: #cdd6f4;
+.react-flow.dark .fail-node,
+.react-flow.dark .special-node {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
 }
 
 .react-flow.dark .llm-node:hover,
 .react-flow.dark .tool-node:hover,
 .react-flow.dark .switch-node:hover,
-.react-flow.dark .fail-node:hover {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
-}
-
-.react-flow.dark .fail-node {
-  background: #2d1e28;
-}
-
-.react-flow.dark .node-header {
-  border-bottom-color: #45475a;
-}
-
-.react-flow.dark .llm-node .node-header {
-  background: linear-gradient(135deg, #cba6f7 0%, #a084cf 100%);
-  color: #11111b;
-}
-
-.react-flow.dark .tool-node .node-header {
-  background: linear-gradient(135deg, #89b4fa 0%, #6890d9 100%);
-  color: #11111b;
-}
-
-.react-flow.dark .switch-node .node-header {
-  background: linear-gradient(135deg, #f9e2af 0%, #d8c28e 100%);
-  color: #11111b;
-}
-
-.react-flow.dark .fail-node .node-header {
-  background: linear-gradient(135deg, #f38ba8 0%, #d26b87 100%);
-  color: #ffffff;
-}
-
-.react-flow.dark .field-label {
-  color: #a6adc8;
-}
-
-.react-flow.dark .field-value {
-  color: #cdd6f4;
-}
-
-.react-flow.dark .fail-node .reason-text {
-  color: #f38ba8;
-}
-
-.react-flow.dark .node-description {
-  color: #a6adc8;
-  background: #313244;
-  border-left-color: #585b70;
-}
-
-.react-flow.dark .node-section {
-  border-top-color: #313244;
-}
-
-.react-flow.dark .section-title {
-  color: #a6adc8;
-}
-
-.react-flow.dark .schema-field {
-  background: #313244;
-}
-
-.react-flow.dark .schema-key {
-  color: #cdd6f4;
-}
-
-.react-flow.dark .schema-type {
-  color: #a6adc8;
-  background: #45475a;
-}
-
-.react-flow.dark .validation-rule {
-  color: #cdd6f4;
-}
-
-.react-flow.dark .arg-field {
-  background: #313244;
-}
-
-.react-flow.dark .arg-key {
-  color: #cdd6f4;
-}
-
-.react-flow.dark .arg-value {
-  color: #a6adc8;
-}
-
-.react-flow.dark .case-item {
-  background: #313244;
-}
-
-.react-flow.dark .case-item.case-default {
-  background: #3d3628;
-  border-color: #f9e2af;
-}
-
-.react-flow.dark .case-when {
-  color: #cdd6f4;
-}
-
-.react-flow.dark .case-arrow {
-  color: #6c7086;
-}
-
-.react-flow.dark .case-goto {
-  color: #89b4fa;
-}
-
-.react-flow.dark .error-handler {
-  background: #3d3628;
-  color: #f9e2af;
-  border-color: #f9e2af;
-}
-
-.react-flow.dark .error-indicator {
-  background: #2d1e28;
-  color: #f38ba8;
-  border-color: #f38ba8;
-}
-
-.workflow-viewer.dark .workflow-header {
-  background: #181825;
-  border-bottom-color: #45475a;
-}
-
-.workflow-viewer.dark .workflow-name {
-  color: #cdd6f4;
-}
-
-.workflow-viewer.dark .workflow-description {
-  color: #a6adc8;
-}
-
-.workflow-viewer.dark .meta-item {
-  color: #a6adc8;
-}
-
-.workflow-viewer.dark .meta-item::before {
-  color: #585b70;
-}
-
-.react-flow.dark .special-node {
-  background: #1e1e2e;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-}
-
+.react-flow.dark .fail-node:hover,
 .react-flow.dark .special-node:hover {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
 }
 
-.react-flow.dark .special-node-title {
-  color: inherit;
-}
-
-.react-flow.dark .trigger-tooltip {
-  background: #1e1e2e;
-  border-color: #fab387;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
-}
-
-.react-flow.dark .trigger-tooltip-header {
-  color: #a6adc8;
-  border-bottom-color: #45475a;
-}
-
-.react-flow.dark .trigger-tooltip-item {
-  background: #3d3628;
-  border-left-color: #fab387;
-}
-
-.react-flow.dark .trigger-type {
-  color: #cdd6f4;
-}
-
-.react-flow.dark .trigger-condition {
-  color: #a6adc8;
-}
-
-/* Special nodes text visibility in dark mode */
-.react-flow.dark .start-node,
-.react-flow.dark .end-node,
-.react-flow.dark .fail-terminal-node,
-.react-flow.dark .trigger-node {
-  color: #cdd6f4;
-}
-
-.react-flow.dark .special-node-title {
-  color: #cdd6f4;
-}
-
 /* Lighter edges for better visibility in dark mode */
 .react-flow.dark .react-flow__edge-path {
-  stroke: #6c7086;
+  stroke: var(--border);
 }
 
 .react-flow.dark .react-flow__edge.selected .react-flow__edge-path,
 .react-flow.dark .react-flow__edge:focus .react-flow__edge-path {
-  stroke: #89b4fa;
+  stroke: var(--primary);
 }

@@ -7,7 +7,7 @@
    ============================================ */
 
 .on-execution-path {
-  box-shadow: 0 0 12px rgba(59, 130, 246, 0.5) !important;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--workflow-execution-path) 50%, transparent) !important;
 }
 
 /* Override completed/failed borders for execution path */
@@ -15,21 +15,21 @@
 .node-failed.on-execution-path,
 .node-running.on-execution-path,
 .node-pending.on-execution-path {
-  border: 3px solid #3b82f6 !important;
+  border: 3px solid var(--workflow-execution-path) !important;
 }
 
 /* Current executing step */
 .current-step {
-  border: 2px solid #f59e0b !important;
+  border: 2px solid var(--workflow-current-step) !important;
   animation: pulse 2s ease-in-out infinite;
 }
 
 @keyframes pulse {
   0%, 100% {
-    box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--workflow-current-step) 50%, transparent);
   }
   50% {
-    box-shadow: 0 0 24px rgba(245, 158, 11, 0.8);
+    box-shadow: 0 0 24px color-mix(in srgb, var(--workflow-current-step) 80%, transparent);
   }
 }
 
@@ -42,18 +42,24 @@
 }
 
 .node-running {
-  background: linear-gradient(to bottom, #fef3c7 0%, #fde68a 100%) !important;
-  border-color: #f59e0b !important;
+  background: linear-gradient(to bottom,
+    color-mix(in srgb, var(--workflow-state-running) 15%, var(--card)) 0%,
+    color-mix(in srgb, var(--workflow-state-running) 25%, var(--card)) 100%) !important;
+  border-color: var(--workflow-state-running) !important;
 }
 
 .node-completed {
-  background: linear-gradient(to bottom, #d1fae5 0%, #a7f3d0 100%) !important;
-  border-color: #10b981 !important;
+  background: linear-gradient(to bottom,
+    color-mix(in srgb, var(--workflow-state-completed) 15%, var(--card)) 0%,
+    color-mix(in srgb, var(--workflow-state-completed) 25%, var(--card)) 100%) !important;
+  border-color: var(--workflow-state-completed) !important;
 }
 
 .node-failed {
-  background: linear-gradient(to bottom, #fee2e2 0%, #fecaca 100%) !important;
-  border-color: #ef4444 !important;
+  background: linear-gradient(to bottom,
+    color-mix(in srgb, var(--workflow-state-failed) 15%, var(--card)) 0%,
+    color-mix(in srgb, var(--workflow-state-failed) 25%, var(--card)) 100%) !important;
+  border-color: var(--workflow-state-failed) !important;
 }
 
 .node-skipped {
@@ -83,17 +89,17 @@
 
 /* Running state animation */
 .node-running .execution-status svg.animate-spin {
-  color: #f59e0b;
+  color: var(--workflow-state-running);
 }
 
 /* Completed state icon */
 .node-completed .execution-status svg {
-  color: #10b981;
+  color: var(--workflow-state-completed);
 }
 
 /* Failed state icon */
 .node-failed .execution-status svg {
-  color: #ef4444;
+  color: var(--workflow-state-failed);
 }
 
 /* ============================================
@@ -105,17 +111,17 @@
   align-items: center;
   gap: 4px;
   font-size: 12px;
-  color: #6b7280;
+  color: var(--muted-foreground);
   margin-top: 4px;
   padding: 4px 8px;
-  background: #f3f4f6;
+  background: var(--muted);
   border-radius: 4px;
   font-family: 'Monaco', 'Courier New', monospace;
 }
 
 .execution-timing svg {
   flex-shrink: 0;
-  color: #9ca3af;
+  color: var(--muted-foreground);
 }
 
 /* ============================================
@@ -127,18 +133,18 @@
   align-items: flex-start;
   gap: 4px;
   font-size: 12px;
-  color: #dc2626;
-  background: #fee2e2;
+  color: var(--destructive);
+  background: color-mix(in srgb, var(--destructive) 15%, var(--card));
   padding: 8px;
   border-radius: 4px;
   margin-top: 8px;
-  border-left: 3px solid #ef4444;
+  border-left: 3px solid var(--destructive);
 }
 
 .execution-error svg {
   flex-shrink: 0;
   margin-top: 2px;
-  color: #ef4444;
+  color: var(--destructive);
 }
 
 .execution-error span {
@@ -151,7 +157,7 @@
 
 /* Highlight edges on execution path */
 .react-flow__edge.on-execution-path path {
-  stroke: #3b82f6 !important;
+  stroke: var(--workflow-execution-path) !important;
   stroke-width: 4 !important;
 }
 
@@ -167,110 +173,21 @@
 
 /* Edge markers (arrowheads) on execution path */
 .react-flow__edge.on-execution-path .react-flow__edge-path {
-  stroke: #3b82f6 !important;
+  stroke: var(--workflow-execution-path) !important;
 }
 
 .react-flow__edge.on-execution-path marker {
-  fill: #3b82f6 !important;
+  fill: var(--workflow-execution-path) !important;
 }
 
 .react-flow__edge.on-execution-path marker path {
-  fill: #3b82f6 !important;
-  stroke: #3b82f6 !important;
+  fill: var(--workflow-execution-path) !important;
+  stroke: var(--workflow-execution-path) !important;
 }
 
 /* ============================================
    Dark Mode Overrides
    ============================================ */
 
-.react-flow.dark .node-running {
-  background: linear-gradient(to bottom, #78350f 0%, #92400e 100%) !important;
-}
-
-.react-flow.dark .node-completed {
-  background: linear-gradient(to bottom, #064e3b 0%, #065f46 100%) !important;
-}
-
-.react-flow.dark .node-failed {
-  background: linear-gradient(to bottom, #7f1d1d 0%, #991b1b 100%) !important;
-}
-
-.react-flow.dark .execution-error {
-  background: #7f1d1d;
-  color: #fca5a5;
-  border-left-color: #ef4444;
-}
-
-.react-flow.dark .execution-error svg {
-  color: #fca5a5;
-}
-
-.react-flow.dark .execution-timing {
-  background: #313244;
-  color: #a6adc8;
-}
-
-.react-flow.dark .execution-timing svg {
-  color: #6c7086;
-}
-
-/* Dark mode execution path */
-.react-flow.dark .on-execution-path {
-  box-shadow: 0 0 12px rgba(96, 165, 250, 0.5) !important;
-}
-
-.react-flow.dark .node-completed.on-execution-path,
-.react-flow.dark .node-failed.on-execution-path,
-.react-flow.dark .node-running.on-execution-path,
-.react-flow.dark .node-pending.on-execution-path {
-  border: 3px solid #60a5fa !important;
-}
-
-.react-flow.dark .current-step {
-  border-color: #fbbf24 !important;
-}
-
-@keyframes pulse-dark {
-  0%, 100% {
-    box-shadow: 0 0 12px rgba(251, 191, 36, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 24px rgba(251, 191, 36, 0.8);
-  }
-}
-
-.react-flow.dark .current-step {
-  animation: pulse-dark 2s ease-in-out infinite;
-}
-
-/* Dark mode edge highlighting */
-.react-flow.dark .react-flow__edge.on-execution-path path {
-  stroke: #60a5fa !important;
-  stroke-width: 4 !important;
-}
-
-.react-flow.dark .react-flow__edge.on-execution-path .react-flow__edge-path {
-  stroke: #60a5fa !important;
-}
-
-.react-flow.dark .react-flow__edge.on-execution-path marker {
-  fill: #60a5fa !important;
-}
-
-.react-flow.dark .react-flow__edge.on-execution-path marker path {
-  fill: #60a5fa !important;
-  stroke: #60a5fa !important;
-}
-
-/* Dark mode status icon colors */
-.react-flow.dark .node-running .execution-status svg.animate-spin {
-  color: #fbbf24;
-}
-
-.react-flow.dark .node-completed .execution-status svg {
-  color: #34d399;
-}
-
-.react-flow.dark .node-failed .execution-status svg {
-  color: #f87171;
-}
+/* Most dark mode styling is now handled by CSS variables in theme.css.
+   No additional overrides needed as the variables automatically adapt. */
