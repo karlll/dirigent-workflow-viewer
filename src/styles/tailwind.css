@@ -1,0 +1,8 @@
+/**
+ * Tailwind CSS entry point
+ *
+ * This file imports Tailwind's base utilities and will be processed
+ * by Vite during the build process.
+ */
+
+@import 'tailwindcss';

@@ -79,6 +79,16 @@ export { ApiClient } from './lib/ApiClient'
 // Export EventManager for advanced use cases
 export { eventManager } from './lib/EventManager'
 
+// Export utility functions (for Tailwind CSS className merging)
+export { cn } from './lib/utils'
+
+// Export CVA variants (for component styling)
+export {
+  nodeVariants,
+  instanceItemVariants,
+  statusBadgeVariants,
+} from './lib/variants'
+
 // Export utility types
 export type { LayoutDirection } from './utils/layout'
 
