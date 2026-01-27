@@ -432,11 +432,11 @@ describe('InstanceBrowser', () => {
       const { container } = render(
         <InstanceBrowser
           apiBaseUrl="http://localhost:8080"
-          style={{ maxHeight: '400px' }}
+          className="max-h-[400px]"
         />
       )
 
-      expect(container.firstChild).toHaveStyle({ maxHeight: '400px' })
+      expect(container.firstChild).toHaveClass('max-h-[400px]')
     })
   })
 })

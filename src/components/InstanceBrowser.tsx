@@ -4,6 +4,8 @@
 
 import { useInstances } from '../lib/hooks'
 import type { InstanceSummaryDto } from '../types/api'
+import { cn } from '../lib/utils'
+import { instanceItemVariants, statusBadgeVariants } from '../lib/variants'
 
 /**
  * Props for InstanceBrowser component
@@ -38,9 +40,6 @@ export interface InstanceBrowserProps {
 
   /** Custom CSS class */
   className?: string
-
-  /** Custom styles */
-  style?: React.CSSProperties
 }
 
 /**
@@ -71,7 +70,6 @@ export function InstanceBrowser({
   showHeader = false,
   limit = 50,
   className = '',
-  style,
 }: InstanceBrowserProps) {
   const { instances, total, loading, isRefreshing, error } = useInstances(apiBaseUrl, {
     workflowName,
@@ -83,36 +81,11 @@ export function InstanceBrowser({
   // Only show full loading spinner on INITIAL load
   if (loading && instances.length === 0) {
     return (
-      <div
-        className={className}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '2rem',
-          color: '#6b7280',
-          ...style,
-        }}
-      >
-        <div style={{ textAlign: 'center' }}>
-          <div
-            style={{
-              width: '32px',
-              height: '32px',
-              border: '3px solid #e5e7eb',
-              borderTopColor: '#3b82f6',
-              borderRadius: '50%',
-              animation: 'spin 1s linear infinite',
-              margin: '0 auto 0.5rem',
-            }}
-          />
-          <div style={{ fontSize: '0.875rem' }}>Loading instances...</div>
+      <div className={cn('flex items-center justify-center p-8 text-muted-foreground', className)}>
+        <div className="text-center">
+          <div className="w-8 h-8 border-3 border-border border-t-primary rounded-full animate-spin mx-auto mb-2" />
+          <div className="text-sm">Loading instances...</div>
         </div>
-        <style>{`
-          @keyframes spin {
-            to { transform: rotate(360deg); }
-          }
-        `}</style>
       </div>
     )
   }
@@ -120,16 +93,10 @@ export function InstanceBrowser({
   if (error) {
     return (
       <div
-        className={className}
-        style={{
-          padding: '1rem',
-          color: '#ef4444',
-          backgroundColor: '#fee2e2',
-          borderRadius: '0.5rem',
-          border: '1px solid #fca5a5',
-          fontSize: '0.875rem',
-          ...style,
-        }}
+        className={cn(
+          'p-4 text-destructive bg-destructive/10 rounded-lg border border-destructive text-sm',
+          className
+        )}
       >
         <strong>Error:</strong> {error}
       </div>
@@ -138,19 +105,10 @@ export function InstanceBrowser({
 
   if (instances.length === 0) {
     return (
-      <div
-        className={className}
-        style={{
-          padding: '2rem',
-          color: '#6b7280',
-          textAlign: 'center',
-          fontSize: '0.875rem',
-          ...style,
-        }}
-      >
+      <div className={cn('p-8 text-muted-foreground text-center text-sm', className)}>
         No instances found
         {(workflowName || status) && (
-          <div style={{ marginTop: '0.5rem', fontSize: '0.75rem' }}>
+          <div className="mt-2 text-xs">
             {workflowName && `Workflow: ${workflowName}`}
             {workflowName && status && ' • '}
             {status && `Status: ${status}`}
@@ -161,32 +119,14 @@ export function InstanceBrowser({
   }
 
   return (
-    <div
-      className={className}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        ...style,
-      }}
-    >
+    <div className={cn('flex flex-col', className)}>
       {/* Header with count */}
       {showHeader && (
-        <div
-          style={{
-            padding: '0.75rem 1rem',
-            backgroundColor: '#f9fafb',
-            borderBottom: '1px solid #e5e7eb',
-            fontSize: '0.875rem',
-            color: '#6b7280',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
+        <div className="px-4 py-3 bg-muted border-b border-border text-sm text-muted-foreground flex justify-between items-center">
           <div>
             {total} instance{total !== 1 ? 's' : ''}
             {(workflowName || status) && (
-              <span style={{ marginLeft: '0.5rem' }}>
+              <span className="ml-2">
                 {workflowName && `• ${workflowName}`}
                 {workflowName && status && ' '}
                 {status && `• ${status}`}
@@ -196,14 +136,7 @@ export function InstanceBrowser({
           {/* Show subtle refresh indicator */}
           {isRefreshing && (
             <div
-              style={{
-                width: '16px',
-                height: '16px',
-                border: '2px solid #e5e7eb',
-                borderTopColor: '#3b82f6',
-                borderRadius: '50%',
-                animation: 'spin 1s linear infinite',
-              }}
+              className="w-4 h-4 border-2 border-border border-t-primary rounded-full animate-spin"
               title="Refreshing..."
             />
           )}
@@ -211,16 +144,7 @@ export function InstanceBrowser({
       )}
 
       {/* Instance list */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.5rem',
-          padding: '0.5rem',
-          maxHeight: '600px',
-          overflowY: 'auto',
-        }}
-      >
+      <div className="flex flex-col gap-2 p-2 max-h-[600px] overflow-y-auto">
         {instances.map((instance) => (
           <InstanceItem
             key={instance.id}
@@ -246,13 +170,6 @@ interface InstanceItemProps {
 }
 
 function InstanceItem({ instance, selected, showMetadata, onClick }: InstanceItemProps) {
-  const statusColors: Record<string, { bg: string; border: string; text: string }> = {
-    RUNNING: { bg: '#dbeafe', border: '#3b82f6', text: '#1e40af' },
-    COMPLETED: { bg: '#d1fae5', border: '#10b981', text: '#065f46' },
-    FAILED: { bg: '#fee2e2', border: '#ef4444', text: '#991b1b' },
-  }
-
-  const colors = statusColors[instance.status] || statusColors.RUNNING
   const isRunning = instance.status === 'RUNNING'
 
   // Format duration
@@ -285,120 +202,58 @@ function InstanceItem({ instance, selected, showMetadata, onClick }: InstanceIte
   return (
     <button
       onClick={onClick}
-      style={{
-        padding: '0.75rem',
-        border: `2px solid ${selected ? colors.border : '#e5e7eb'}`,
-        borderRadius: '0.5rem',
-        backgroundColor: selected ? colors.bg : 'white',
-        cursor: 'pointer',
-        textAlign: 'left',
-        transition: 'all 0.2s',
-        position: 'relative',
-      }}
-      onMouseEnter={(e) => {
-        if (!selected) {
-          e.currentTarget.style.borderColor = '#d1d5db'
-          e.currentTarget.style.backgroundColor = '#f9fafb'
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (!selected) {
-          e.currentTarget.style.borderColor = '#e5e7eb'
-          e.currentTarget.style.backgroundColor = 'white'
-        }
-      }}
+      className={cn(
+        instanceItemVariants({
+          status: instance.status as 'RUNNING' | 'COMPLETED' | 'FAILED',
+          selected: selected,
+        }),
+        'relative'
+      )}
       aria-label={`Select instance ${instance.id}`}
       aria-pressed={selected}
     >
       {/* Status badge */}
       <div
-        style={{
-          position: 'absolute',
-          top: '0.75rem',
-          right: '0.75rem',
-          padding: '0.25rem 0.5rem',
-          borderRadius: '0.25rem',
-          fontSize: '0.75rem',
-          fontWeight: 600,
-          backgroundColor: colors.bg,
-          color: colors.text,
-          border: `1px solid ${colors.border}`,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.25rem',
-        }}
+        className={cn(
+          statusBadgeVariants({ status: instance.status as 'RUNNING' | 'COMPLETED' | 'FAILED' }),
+          'absolute top-3 right-3'
+        )}
       >
         {isRunning && (
-          <div
-            style={{
-              width: '6px',
-              height: '6px',
-              borderRadius: '50%',
-              backgroundColor: colors.text,
-              animation: 'pulse 2s infinite',
-            }}
-          />
+          <div className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
         )}
         {instance.status}
       </div>
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.5; }
-        }
-      `}</style>
 
       {/* Instance ID */}
-      <div
-        style={{
-          fontSize: '0.875rem',
-          fontFamily: 'monospace',
-          color: '#111827',
-          marginBottom: '0.5rem',
-          paddingRight: '6rem', // Make space for status badge
-        }}
-      >
+      <div className="text-sm font-mono text-foreground mb-2 pr-24">
         {instance.id}
       </div>
 
       {/* Workflow name and version */}
-      <div style={{ fontSize: '0.875rem', color: '#4b5563', marginBottom: '0.25rem' }}>
-        <strong>{instance.workflowName}</strong> v{instance.workflowVersion}
+      <div className="text-sm text-muted-foreground mb-1">
+        <strong className="text-foreground">{instance.workflowName}</strong> v{instance.workflowVersion}
       </div>
 
       {showMetadata && (
         <>
           {/* Timestamps */}
-          <div style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '0.5rem' }}>
+          <div className="text-xs text-muted-foreground mt-2 space-y-0.5">
             <div>Started: {formatTime(instance.startedAt)}</div>
             {instance.completedAt && (
-              <div style={{ marginTop: '0.125rem' }}>
-                Completed: {formatTime(instance.completedAt)}
-              </div>
+              <div>Completed: {formatTime(instance.completedAt)}</div>
             )}
           </div>
 
           {/* Duration */}
           {instance.durationMs !== null && (
-            <div
-              style={{
-                fontSize: '0.75rem',
-                color: '#6b7280',
-                marginTop: '0.25rem',
-              }}
-            >
+            <div className="text-xs text-muted-foreground mt-1">
               Duration: {formatDuration(instance.durationMs)}
             </div>
           )}
 
           {/* Trigger */}
-          <div
-            style={{
-              fontSize: '0.75rem',
-              color: '#6b7280',
-              marginTop: '0.25rem',
-            }}
-          >
+          <div className="text-xs text-muted-foreground mt-1">
             Triggered by: {instance.triggeredBy}
           </div>
         </>
