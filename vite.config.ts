@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
+import tailwindcss from '@tailwindcss/postcss';
 
 // https://vite.dev/config/
 import path from 'node:path';
@@ -17,6 +18,13 @@ export default defineConfig({
     tsconfigPath: './tsconfig.build.json',
     insertTypesEntry: true
   })],
+  css: {
+    postcss: {
+      plugins: [
+        tailwindcss(),
+      ],
+    },
+  },
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),

@@ -1,3 +1,10 @@
+/* Import library styles (order matters: theme first, then Tailwind, then component styles) */
+@import './styles/theme.css';
+@import './styles/tailwind.css';
+@import '@xyflow/react/dist/style.css';
+@import './styles/nodes.css';
+@import './styles/execution.css';
+
 * {
   margin: 0;
   padding: 0;
