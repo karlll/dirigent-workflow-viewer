@@ -8,7 +8,9 @@ React component library for visualizing and monitoring Dirigent workflows. Provi
 - 🎨 **Visual workflow representation** - Renders workflows as interactive node graphs using React Flow
 - 📊 **Automatic layout** - Uses Dagre algorithm for optimal node positioning
 - 🔄 **Multiple layouts** - Supports left-to-right (LR) and top-to-bottom (TB) orientations
-- 🎨 **Color modes** - Light, dark, and system preference support
+- 🎨 **Catppuccin theming** - Beautiful Latte (light) and Mocha (dark) color schemes
+- 🎭 **Customizable themes** - CSS variables for easy brand integration
+- ⚡ **Tailwind CSS v4** - Modern utility-first styling with CVA variants
 - ✨ **Type-safe** - Full TypeScript support with exported types
 - 🎯 **Zero config** - Works out of the box with YAML or parsed workflow objects
 
@@ -488,6 +490,199 @@ Component for rendering workflows with real-time execution state from the Dirige
 | **On Execution Path** | Blue border with glow effect |
 | **Current Step** | Orange border with pulsing animation |
 
+## Theming & Customization
+
+The workflow viewer uses **Tailwind CSS v4** and the **Catppuccin color system** for consistent, customizable theming. The library supports both light and dark modes and allows parent applications to override theme colors via CSS variables.
+
+### Built-in Color Modes
+
+The viewer includes three color modes:
+
+```tsx
+// Light mode (Catppuccin Latte)
+<Workflow yaml={yaml} colorMode="light" />
+
+// Dark mode (Catppuccin Mocha)
+<Workflow yaml={yaml} colorMode="dark" />
+
+// System preference (default)
+<Workflow yaml={yaml} colorMode="system" />
+```
+
+### Color System
+
+The library uses the [Catppuccin](https://github.com/catppuccin/catppuccin) color palette:
+
+- **Light mode**: Catppuccin Latte (warm, soft tones)
+- **Dark mode**: Catppuccin Mocha (comfortable dark theme)
+
+All colors are exposed as CSS variables for easy customization.
+
+### Theme Inheritance
+
+The workflow viewer inherits theme colors from your application via CSS variables. This allows seamless integration with existing design systems.
+
+#### CSS Variables
+
+Core theme variables:
+
+```css
+:root {
+  /* Base colors */
+  --background: #eff1f5;        /* Latte base */
+  --foreground: #4c4f69;        /* Latte text */
+  --primary: #1e66f5;           /* Latte blue */
+  --border: #dce0e8;            /* Latte surface0 */
+
+  /* Semantic colors */
+  --card: #ffffff;              /* Card background */
+  --muted: #e6e9ef;             /* Muted backgrounds */
+  --muted-foreground: #6c6f85;  /* Muted text */
+  --destructive: #d20f39;       /* Error/danger color */
+
+  /* Catppuccin accent colors */
+  --ctp-green: #40a02b;         /* Success states */
+  --ctp-yellow: #df8e1d;        /* Warning states */
+  --ctp-mauve: #8839ef;         /* LLM steps */
+  --ctp-blue: #1e66f5;          /* Tool steps */
+  /* ... and more */
+}
+
+.dark {
+  --background: #1e1e2e;        /* Mocha base */
+  --foreground: #cdd6f4;        /* Mocha text */
+  --primary: #89b4fa;           /* Mocha blue */
+  /* ... dark mode overrides */
+}
+```
+
+#### Workflow-Specific Variables
+
+Workflow visualization uses semantic variables that map to Catppuccin colors:
+
+```css
+.workflow-viewer {
+  /* Node type colors */
+  --workflow-node-llm: var(--ctp-mauve);
+  --workflow-node-tool: var(--ctp-blue);
+  --workflow-node-switch: var(--ctp-peach);
+  --workflow-node-fail: var(--ctp-red);
+  --workflow-node-special: var(--ctp-sky);
+
+  /* Execution state colors */
+  --workflow-state-running: var(--primary);
+  --workflow-state-completed: var(--ctp-green);
+  --workflow-state-failed: var(--ctp-red);
+  --workflow-state-on-path: var(--ctp-blue);
+}
+```
+
+### Customizing Colors
+
+Override CSS variables in your application to match your brand:
+
+```css
+/* In your global CSS */
+:root {
+  /* Override primary color */
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+
+  /* Override workflow node colors */
+  --workflow-node-llm: #8b5cf6;
+  --workflow-node-tool: #3b82f6;
+
+  /* Override execution states */
+  --workflow-state-running: #f59e0b;
+  --workflow-state-completed: #10b981;
+}
+
+.dark {
+  /* Override dark mode colors */
+  --primary: #60a5fa;
+  --workflow-node-llm: #a78bfa;
+}
+```
+
+### Tailwind Integration
+
+If your application uses Tailwind CSS, the workflow viewer integrates seamlessly. The library uses:
+
+- **Class Variance Authority (CVA)** for type-safe component variants
+- **Tailwind utility classes** for consistent spacing and layout
+- **CSS variables** for theme abstraction
+
+You can extend the viewer's styles using Tailwind utilities:
+
+```tsx
+<div className="rounded-lg border-2 border-primary shadow-lg">
+  <Workflow yaml={yaml} />
+</div>
+```
+
+### Customizing Components
+
+Apply custom classes to library components:
+
+```tsx
+// InstanceBrowser with custom styling
+<InstanceBrowser
+  apiBaseUrl="http://localhost:8080"
+  className="max-h-[600px] rounded-lg border border-border shadow-sm"
+/>
+
+// WorkflowBrowser in grid mode with custom height
+<WorkflowBrowser
+  apiBaseUrl="http://localhost:8080"
+  mode="grid"
+  className="h-screen p-4"
+/>
+```
+
+### Font Customization
+
+The library uses two font families defined via CSS variables:
+
+```css
+:root {
+  --font-sans: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Fira Code', ui-monospace, monospace;
+}
+```
+
+Override in your application:
+
+```css
+:root {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+```
+
+### Design System Integration
+
+For applications with existing design systems (Material UI, Chakra UI, etc.):
+
+1. **Keep the workflow viewer styles isolated** - The viewer uses scoped CSS classes
+2. **Override CSS variables** - Map your design tokens to the viewer's variables
+3. **Use the className prop** - Apply your component library's classes for layout
+
+Example with a custom design system:
+
+```tsx
+import { Workflow } from '@dirigent/workflow-viewer'
+import '@dirigent/workflow-viewer/styles'
+import './theme-overrides.css'  // Your CSS variable overrides
+
+function App() {
+  return (
+    <div className="your-container-class">
+      <Workflow yaml={yaml} />
+    </div>
+  )
+}
+```
+
 ## Exported Types
 
 The library exports comprehensive TypeScript types for type-safe integration.
@@ -563,6 +758,49 @@ import { ApiClient } from '@dirigent/workflow-viewer'
 
 import { version } from '@dirigent/workflow-viewer'
 // Current library version (e.g., "0.1.0")
+```
+
+### Theming Utilities
+
+```typescript
+import { cn } from '@dirigent/workflow-viewer'
+// Utility function for merging Tailwind CSS classes
+// Combines clsx and tailwind-merge for optimal className construction
+
+import {
+  nodeVariants,           // CVA variants for workflow nodes
+  instanceItemVariants,   // CVA variants for instance browser items
+  statusBadgeVariants,    // CVA variants for status badges
+} from '@dirigent/workflow-viewer'
+// Class Variance Authority (CVA) variant definitions for component styling
+```
+
+#### Example: Using cn() utility
+
+```tsx
+import { cn } from '@dirigent/workflow-viewer'
+
+function CustomWrapper({ className }: { className?: string }) {
+  return (
+    <div className={cn('p-4 rounded-lg border', className)}>
+      <Workflow yaml={yaml} />
+    </div>
+  )
+}
+```
+
+#### Example: Using CVA variants
+
+```tsx
+import { statusBadgeVariants } from '@dirigent/workflow-viewer'
+
+function StatusBadge({ status }: { status: 'RUNNING' | 'COMPLETED' | 'FAILED' }) {
+  return (
+    <div className={statusBadgeVariants({ status })}>
+      {status}
+    </div>
+  )
+}
 ```
 
 ## Development
@@ -670,12 +908,18 @@ ui/workflow/
 
 ## Dependencies
 
-### Runtime Dependencies (4)
+### Runtime Dependencies (7)
 
+**Core Visualization:**
 - **@xyflow/react** `12.10.0` - Interactive node-based UI rendering
 - **dagre** `0.8.5` - Graph layout algorithm for automatic node positioning
 - **js-yaml** `4.1.1` - YAML parsing
 - **lucide-react** `^0.468.0` - Icon library for UI elements
+
+**Theming & Styling:**
+- **class-variance-authority** `^0.7.1` - Type-safe component variants (CVA)
+- **clsx** `^2.1.1` - Conditional className construction
+- **tailwind-merge** `^2.6.0` - Tailwind class merging utility
 
 ### Peer Dependencies (Required)
 
@@ -684,10 +928,18 @@ ui/workflow/
 
 ### Dev Dependencies (Testing & Build)
 
+**Build & Tooling:**
 - **Vite** `^7.2.4` - Build tool and dev server
 - **TypeScript** `~5.9.3` - Type checking and compilation
+- **Tailwind CSS** `@next` - Utility-first CSS framework (v4)
+- **@catppuccin/tailwindcss** `^1.0.0` - Catppuccin color palette plugin
+
+**Testing:**
 - **Vitest** `^4.0.16` - Unit testing framework
 - **Testing Library** - React component testing
+- **MSW** - API mocking for tests
+
+**Documentation:**
 - **Storybook** `^10.1.11` - Component documentation and demos
 - **ESLint** - Code linting
 
@@ -695,8 +947,9 @@ ui/workflow/
 
 - Runtime dependencies use **exact versions** for @xyflow/react, dagre, and js-yaml
 - Regular `npm audit` checks for vulnerabilities
-- Minimal dependency tree (4 runtime deps)
+- Minimal dependency tree (7 runtime deps, all small utilities)
 - Clean dependency audit status
+- Tailwind CSS only in devDependencies (compiled to CSS at build time)
 
 ### Dependency Security Status
 
