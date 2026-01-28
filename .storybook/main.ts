@@ -1,4 +1,6 @@
 import type { StorybookConfig } from '@storybook/react-vite';
+import { mergeConfig } from 'vite';
+import tailwindcss from '@tailwindcss/postcss';
 
 const config: StorybookConfig = {
   "stories": [
@@ -14,6 +16,18 @@ const config: StorybookConfig = {
     "msw-storybook-addon"
   ],
   "framework": "@storybook/react-vite",
-  "staticDirs": ["../public"]
+  "staticDirs": ["../public"],
+
+  async viteFinal(config) {
+    return mergeConfig(config, {
+      css: {
+        postcss: {
+          plugins: [
+            tailwindcss(),
+          ],
+        },
+      },
+    });
+  },
 };
 export default config;
