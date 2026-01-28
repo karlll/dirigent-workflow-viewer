@@ -6,7 +6,7 @@
 .tool-node,
 .switch-node,
 .fail-node {
-  background: var(--card);
+  background: var(--wfv-card);
   border: 2px solid;
   border-radius: 8px;
   padding: 0;
@@ -41,34 +41,34 @@
 
 .fail-node {
   border-color: var(--workflow-node-fail);
-  background: var(--destructive);
-  background: color-mix(in srgb, var(--destructive) 5%, var(--card));
+  background: var(--wfv-destructive);
+  background: color-mix(in srgb, var(--wfv-destructive) 5%, var(--wfv-card));
 }
 
 /* Node header */
 .node-header {
   padding: 8px 12px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--wfv-border);
 }
 
 .llm-node .node-header {
-  background: linear-gradient(135deg, var(--ctp-mauve) 0%, color-mix(in srgb, var(--ctp-mauve) 85%, black) 100%);
-  color: var(--primary-foreground);
+  background: linear-gradient(135deg, var(--wfv-ctp-mauve) 0%, color-mix(in srgb, var(--wfv-ctp-mauve) 85%, black) 100%);
+  color: var(--wfv-primary-foreground);
 }
 
 .tool-node .node-header {
-  background: linear-gradient(135deg, var(--ctp-blue) 0%, color-mix(in srgb, var(--ctp-blue) 85%, black) 100%);
-  color: var(--primary-foreground);
+  background: linear-gradient(135deg, var(--wfv-ctp-blue) 0%, color-mix(in srgb, var(--wfv-ctp-blue) 85%, black) 100%);
+  color: var(--wfv-primary-foreground);
 }
 
 .switch-node .node-header {
-  background: linear-gradient(135deg, var(--ctp-yellow) 0%, color-mix(in srgb, var(--ctp-yellow) 85%, black) 100%);
-  color: var(--primary-foreground);
+  background: linear-gradient(135deg, var(--wfv-ctp-yellow) 0%, color-mix(in srgb, var(--wfv-ctp-yellow) 85%, black) 100%);
+  color: var(--wfv-primary-foreground);
 }
 
 .fail-node .node-header {
-  background: linear-gradient(135deg, var(--destructive) 0%, color-mix(in srgb, var(--destructive) 85%, black) 100%);
-  color: var(--destructive-foreground);
+  background: linear-gradient(135deg, var(--wfv-destructive) 0%, color-mix(in srgb, var(--wfv-destructive) 85%, black) 100%);
+  color: var(--wfv-destructive-foreground);
 }
 
 .node-header-content {
@@ -113,45 +113,45 @@
 
 .field-label {
   font-weight: 600;
-  color: var(--muted-foreground);
+  color: var(--wfv-muted-foreground);
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
 
 .field-value {
-  color: var(--foreground);
+  color: var(--wfv-foreground);
   font-weight: 500;
   word-break: break-word;
 }
 
 .fail-node .reason-text {
-  color: var(--destructive);
+  color: var(--wfv-destructive);
   font-weight: 600;
 }
 
 .node-description {
   font-size: 12px;
-  color: var(--muted-foreground);
+  color: var(--wfv-muted-foreground);
   font-style: italic;
   margin: 8px 0;
   padding: 6px;
-  background: var(--muted);
+  background: var(--wfv-muted);
   border-radius: 4px;
-  border-left: 3px solid var(--border);
+  border-left: 3px solid var(--wfv-border);
 }
 
 /* Node sections */
 .node-section {
   margin-top: 10px;
   padding-top: 8px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--wfv-border);
 }
 
 .section-title {
   font-size: 11px;
   font-weight: 700;
-  color: var(--muted-foreground);
+  color: var(--wfv-muted-foreground);
   text-transform: uppercase;
   letter-spacing: 0.3px;
   margin-bottom: 6px;
@@ -169,21 +169,21 @@
   justify-content: space-between;
   align-items: center;
   padding: 4px 8px;
-  background: var(--muted);
+  background: var(--wfv-muted);
   border-radius: 4px;
   font-size: 12px;
 }
 
 .schema-key {
   font-weight: 600;
-  color: var(--foreground);
+  color: var(--wfv-foreground);
   font-family: 'Monaco', 'Courier New', monospace;
 }
 
 .schema-type {
   font-size: 11px;
-  color: var(--muted-foreground);
-  background: var(--border);
+  color: var(--wfv-muted-foreground);
+  background: var(--wfv-border);
   padding: 2px 6px;
   border-radius: 3px;
   font-family: 'Monaco', 'Courier New', monospace;
@@ -199,7 +199,7 @@
 .validation-rule {
   position: relative;
   font-size: 12px;
-  color: var(--foreground);
+  color: var(--wfv-foreground);
   font-family: 'Monaco', 'Courier New', monospace;
   margin-bottom: 4px;
   padding-left: 4px;
@@ -209,7 +209,7 @@
   content: '✓';
   position: absolute;
   left: -14px;
-  color: var(--ctp-green);
+  color: var(--wfv-ctp-green);
   font-weight: bold;
 }
 
@@ -223,19 +223,19 @@
 .arg-field {
   font-size: 12px;
   padding: 4px 8px;
-  background: var(--muted);
+  background: var(--wfv-muted);
   border-radius: 4px;
   font-family: 'Monaco', 'Courier New', monospace;
 }
 
 .arg-key {
-  color: var(--foreground);
+  color: var(--wfv-foreground);
   font-weight: 600;
   margin-right: 4px;
 }
 
 .arg-value {
-  color: var(--muted-foreground);
+  color: var(--wfv-muted-foreground);
 }
 
 /* Switch cases */
@@ -251,30 +251,30 @@
   gap: 6px;
   padding: 4px 8px;
   margin-bottom: 4px;
-  background: var(--muted);
+  background: var(--wfv-muted);
   border-radius: 4px;
   font-size: 12px;
 }
 
 .case-item.case-default {
-  background: color-mix(in srgb, var(--ctp-yellow) 20%, var(--card));
-  border: 1px solid var(--ctp-yellow);
+  background: color-mix(in srgb, var(--wfv-ctp-yellow) 20%, var(--wfv-card));
+  border: 1px solid var(--wfv-ctp-yellow);
 }
 
 .case-when {
   font-family: 'Monaco', 'Courier New', monospace;
-  color: var(--foreground);
+  color: var(--wfv-foreground);
   font-weight: 500;
   flex: 1;
 }
 
 .case-arrow {
-  color: var(--muted-foreground);
+  color: var(--wfv-muted-foreground);
   font-weight: bold;
 }
 
 .case-goto {
-  color: var(--primary);
+  color: var(--wfv-primary);
   font-weight: 600;
 }
 
@@ -289,15 +289,15 @@
 }
 
 .error-handler {
-  background: color-mix(in srgb, var(--ctp-yellow) 20%, var(--card));
-  color: var(--ctp-yellow);
-  border: 1px solid var(--ctp-yellow);
+  background: color-mix(in srgb, var(--wfv-ctp-yellow) 20%, var(--wfv-card));
+  color: var(--wfv-ctp-yellow);
+  border: 1px solid var(--wfv-ctp-yellow);
 }
 
 .error-indicator {
-  background: color-mix(in srgb, var(--destructive) 15%, var(--card));
-  color: var(--destructive);
-  border: 1px solid var(--destructive);
+  background: color-mix(in srgb, var(--wfv-destructive) 15%, var(--wfv-card));
+  color: var(--wfv-destructive);
+  border: 1px solid var(--wfv-destructive);
 }
 
 /* Workflow header */
@@ -310,21 +310,21 @@
 
 .workflow-header {
   padding: 16px 20px;
-  background: var(--muted);
-  border-bottom: 2px solid var(--border);
+  background: var(--wfv-muted);
+  border-bottom: 2px solid var(--wfv-border);
 }
 
 .workflow-name {
   margin: 0 0 8px 0;
   font-size: 18px;
   font-weight: 700;
-  color: var(--foreground);
+  color: var(--wfv-foreground);
 }
 
 .workflow-description {
   margin: 0 0 12px 0;
   font-size: 14px;
-  color: var(--muted-foreground);
+  color: var(--wfv-muted-foreground);
   font-style: italic;
 }
 
@@ -336,14 +336,14 @@
 
 .meta-item {
   font-size: 12px;
-  color: var(--muted-foreground);
+  color: var(--wfv-muted-foreground);
   font-weight: 500;
 }
 
 .meta-item::before {
   content: '•';
   margin-right: 6px;
-  color: var(--border);
+  color: var(--wfv-border);
 }
 
 .meta-item:first-child::before {
@@ -353,7 +353,7 @@
 
 /* Special nodes (start, end, fail-terminal) */
 .special-node {
-  background: var(--card);
+  background: var(--wfv-card);
   border: 3px solid;
   border-radius: 50%;
   width: 80px;
@@ -393,7 +393,7 @@
 /* Start node */
 .start-node {
   border-color: var(--workflow-node-start);
-  color: var(--foreground);
+  color: var(--wfv-foreground);
 }
 
 .start-node .special-node-icon {
@@ -403,7 +403,7 @@
 /* End node */
 .end-node {
   border-color: var(--workflow-node-end);
-  color: var(--foreground);
+  color: var(--wfv-foreground);
 }
 
 .end-node .special-node-icon {
@@ -413,7 +413,7 @@
 /* Fail terminal node */
 .fail-terminal-node {
   border-color: var(--workflow-node-fail);
-  color: var(--foreground);
+  color: var(--wfv-foreground);
 }
 
 .fail-terminal-node .special-node-icon {
@@ -423,7 +423,7 @@
 /* Trigger node */
 .trigger-node {
   border-color: var(--workflow-node-trigger);
-  color: var(--foreground);
+  color: var(--wfv-foreground);
   position: relative;
 }
 
@@ -452,8 +452,8 @@
   bottom: calc(100% + 15px);
   left: 50%;
   transform: translateX(-50%);
-  background: var(--card);
-  border: 2px solid var(--ctp-peach);
+  background: var(--wfv-card);
+  border: 2px solid var(--wfv-ctp-peach);
   border-radius: 8px;
   padding: 10px 12px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -474,7 +474,7 @@
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-top: 8px solid var(--ctp-peach);
+  border-top: 8px solid var(--wfv-ctp-peach);
 }
 
 .trigger-tooltip-header {
@@ -482,18 +482,18 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--muted-foreground);
+  color: var(--wfv-muted-foreground);
   margin-bottom: 8px;
   padding-bottom: 6px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--wfv-border);
 }
 
 .trigger-tooltip-item {
   margin-bottom: 8px;
   padding: 6px 8px;
-  background: color-mix(in srgb, var(--ctp-yellow) 20%, var(--card));
+  background: color-mix(in srgb, var(--wfv-ctp-yellow) 20%, var(--wfv-card));
   border-radius: 4px;
-  border-left: 3px solid var(--ctp-peach);
+  border-left: 3px solid var(--wfv-ctp-peach);
 }
 
 .trigger-tooltip-item:last-child {
@@ -503,14 +503,14 @@
 .trigger-type {
   font-size: 12px;
   font-weight: 600;
-  color: var(--foreground);
+  color: var(--wfv-foreground);
   font-family: 'Monaco', 'Courier New', monospace;
   margin-bottom: 4px;
 }
 
 .trigger-condition {
   font-size: 11px;
-  color: var(--muted-foreground);
+  color: var(--wfv-muted-foreground);
   font-family: 'Monaco', 'Courier New', monospace;
   font-style: italic;
 }
@@ -541,10 +541,10 @@
 
 /* Lighter edges for better visibility in dark mode */
 .react-flow.dark .react-flow__edge-path {
-  stroke: var(--border);
+  stroke: var(--wfv-border);
 }
 
 .react-flow.dark .react-flow__edge.selected .react-flow__edge-path,
 .react-flow.dark .react-flow__edge:focus .react-flow__edge-path {
-  stroke: var(--primary);
+  stroke: var(--wfv-primary);
 }
