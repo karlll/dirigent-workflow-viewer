@@ -4,7 +4,8 @@ import { Brain, CheckCircle, XCircle, AlertCircle, Clock } from 'lucide-react'
 import type { LlmStepDef } from '../../types/workflow'
 import type { LayoutDirection } from '../../utils/layout'
 import type { ExecutionState } from '../../types/execution'
-import { classNames } from '../../utils/classNames'
+import { cn } from '../../lib/utils'
+import { workflowNodeBaseVariants } from '../../lib/variants'
 import { BorderLoadingIndicator } from './BorderLoadingIndicator'
 
 interface LlmNodeData extends Record<string, unknown> {
@@ -29,16 +30,15 @@ export const LlmNode = memo(({ data }: NodeProps<LlmNode>) => {
   const targetPosition = direction === 'TB' ? Position.Top : Position.Left
   const sourcePosition = direction === 'TB' ? Position.Bottom : Position.Right
 
-  // Build dynamic className based on execution state
-  const nodeClassName = classNames('llm-node', {
-    'node-pending': execution?.status === 'pending',
-    'node-running': execution?.status === 'running',
-    'node-completed': execution?.status === 'completed',
-    'node-failed': execution?.status === 'failed',
-    'node-skipped': execution?.status === 'skipped',
-    'on-execution-path': execution?.isOnExecutionPath,
-    'current-step': execution?.isCurrentStep,
-  })
+  // Build dynamic className based on execution state using CVA variants
+  const nodeClassName = cn(
+    'llm-node',
+    workflowNodeBaseVariants({
+      executionStatus: execution?.status,
+      onExecutionPath: execution?.isOnExecutionPath,
+      isCurrentStep: execution?.isCurrentStep,
+    })
+  )
 
   const nodeContent = (
     <div className={nodeClassName}>

@@ -2,6 +2,7 @@ import { memo } from 'react'
 import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
 import { XCircle } from 'lucide-react'
 import type { LayoutDirection } from '../../utils/layout'
+import { cn } from '../../lib/utils'
 
 interface FailTerminalNodeData extends Record<string, unknown> {
   direction?: LayoutDirection
@@ -20,7 +21,7 @@ export const FailTerminalNode = memo(({ data }: NodeProps<FailTerminalNode>) => 
   const targetPosition = direction === 'TB' ? Position.Top : Position.Left
 
   return (
-    <div className="fail-terminal-node special-node">
+    <div className={cn('fail-terminal-node', 'special-node')}>
       <Handle type="target" position={targetPosition} />
       <div className="special-node-content">
         <XCircle className="special-node-icon" />

@@ -2,6 +2,7 @@ import { memo } from 'react'
 import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
 import { CheckCircle2 } from 'lucide-react'
 import type { LayoutDirection } from '../../utils/layout'
+import { cn } from '../../lib/utils'
 
 interface EndNodeData extends Record<string, unknown> {
   direction?: LayoutDirection
@@ -20,7 +21,7 @@ export const EndNode = memo(({ data }: NodeProps<EndNode>) => {
   const targetPosition = direction === 'TB' ? Position.Top : Position.Left
 
   return (
-    <div className="end-node special-node">
+    <div className={cn('end-node', 'special-node')}>
       <Handle type="target" position={targetPosition} />
       <div className="special-node-content">
         <CheckCircle2 className="special-node-icon" />

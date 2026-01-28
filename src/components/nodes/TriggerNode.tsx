@@ -3,6 +3,7 @@ import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
 import { Zap } from 'lucide-react'
 import type { LayoutDirection } from '../../utils/layout'
 import type { Trigger } from '../../types/workflow'
+import { cn } from '../../lib/utils'
 
 interface TriggerNodeData extends Record<string, unknown> {
   direction?: LayoutDirection
@@ -23,12 +24,11 @@ export const TriggerNode = memo(({ data }: NodeProps<TriggerNode>) => {
   // Only source handle (no target - this is the entry point)
   const sourcePosition = direction === 'TB' ? Position.Bottom : Position.Right
 
-  // Dynamically size circle based on trigger count
-  const nodeSize = triggerCount > 1 ? 'trigger-node-large' : ''
-
   return (
     <div
-      className={`trigger-node special-node ${nodeSize}`}
+      className={cn('trigger-node', 'special-node', {
+        'trigger-node-large': triggerCount > 1,
+      })}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >

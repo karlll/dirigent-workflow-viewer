@@ -4,7 +4,8 @@ import { AlertTriangle, CheckCircle, XCircle, AlertCircle, Clock } from 'lucide-
 import type { FailStepDef } from '../../types/workflow'
 import type { LayoutDirection } from '../../utils/layout'
 import type { ExecutionState } from '../../types/execution'
-import { classNames } from '../../utils/classNames'
+import { cn } from '../../lib/utils'
+import { workflowNodeBaseVariants } from '../../lib/variants'
 import { BorderLoadingIndicator } from './BorderLoadingIndicator'
 
 interface FailNodeData extends Record<string, unknown> {
@@ -27,16 +28,15 @@ export const FailNode = memo(({ data }: NodeProps<FailNode>) => {
   const targetPosition = direction === 'TB' ? Position.Top : Position.Left
   const sourcePosition = direction === 'TB' ? Position.Bottom : Position.Right
 
-  // Build dynamic className based on execution state
-  const nodeClassName = classNames('fail-node', {
-    'node-pending': execution?.status === 'pending',
-    'node-running': execution?.status === 'running',
-    'node-completed': execution?.status === 'completed',
-    'node-failed': execution?.status === 'failed',
-    'node-skipped': execution?.status === 'skipped',
-    'on-execution-path': execution?.isOnExecutionPath,
-    'current-step': execution?.isCurrentStep,
-  })
+  // Build dynamic className based on execution state using CVA variants
+  const nodeClassName = cn(
+    'fail-node',
+    workflowNodeBaseVariants({
+      executionStatus: execution?.status,
+      onExecutionPath: execution?.isOnExecutionPath,
+      isCurrentStep: execution?.isCurrentStep,
+    })
+  )
 
   const nodeContent = (
     <div className={nodeClassName}>

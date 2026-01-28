@@ -96,3 +96,67 @@ export const statusBadgeVariants = cva(
     },
   }
 )
+
+/**
+ * Workflow node variants for React Flow nodes
+ *
+ * Base styling for workflow step nodes with execution state support.
+ * Does NOT include inline CSS class names from nodes.css - those remain for backward compatibility.
+ */
+export const workflowNodeBaseVariants = cva(
+  '', // Empty base - node styling comes from CSS classes (llm-node, tool-node, etc.)
+  {
+    variants: {
+      executionStatus: {
+        pending: 'node-pending',
+        running: 'node-running',
+        completed: 'node-completed',
+        failed: 'node-failed',
+        skipped: 'node-skipped',
+      },
+      onExecutionPath: {
+        true: 'on-execution-path',
+        false: '',
+      },
+      isCurrentStep: {
+        true: 'current-step',
+        false: '',
+      },
+    },
+    compoundVariants: [
+      {
+        onExecutionPath: true,
+        executionStatus: 'completed',
+        class: 'on-execution-path',
+      },
+    ],
+  }
+)
+
+/**
+ * Special node variants (circular nodes: start, end, fail-terminal, trigger)
+ *
+ * Does NOT include base CSS class - those remain in nodes.css for backward compatibility.
+ */
+export const specialNodeVariants = cva(
+  '', // Empty base - styling comes from CSS classes (start-node, end-node, etc.)
+  {
+    variants: {
+      executionStatus: {
+        pending: 'node-pending',
+        running: 'node-running',
+        completed: 'node-completed',
+        failed: 'node-failed',
+        skipped: 'node-skipped',
+      },
+      onExecutionPath: {
+        true: 'on-execution-path',
+        false: '',
+      },
+      isCurrentStep: {
+        true: 'current-step',
+        false: '',
+      },
+    },
+  }
+)

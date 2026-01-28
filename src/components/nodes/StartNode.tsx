@@ -2,6 +2,7 @@ import { memo } from 'react'
 import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
 import { Play } from 'lucide-react'
 import type { LayoutDirection } from '../../utils/layout'
+import { cn } from '../../lib/utils'
 
 interface StartNodeData extends Record<string, unknown> {
   direction?: LayoutDirection
@@ -20,7 +21,7 @@ export const StartNode = memo(({ data }: NodeProps<StartNode>) => {
   const sourcePosition = direction === 'TB' ? Position.Bottom : Position.Right
 
   return (
-    <div className="start-node special-node">
+    <div className={cn('start-node', 'special-node')}>
       <div className="special-node-content">
         <Play className="special-node-icon" />
         <div className="special-node-title">START</div>
