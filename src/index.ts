@@ -4,6 +4,8 @@
 // Import CSS (order matters: theme first, then Tailwind, then component styles)
 import './styles/theme.css'
 import './styles/tailwind.css'
+import './styles/nodes.css'
+import './styles/execution.css'
 
 export const version = '0.1.0'
 

@@ -6,6 +6,7 @@ import '../src/styles/theme.css'
 import '../src/styles/tailwind.css'
 import '@xyflow/react/dist/style.css'
 import '../src/styles/nodes.css'
+import '../src/styles/execution.css'
 
 // Initialize MSW
 initialize()

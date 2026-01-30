@@ -192,3 +192,128 @@
 
 /* Most dark mode styling is now handled by CSS variables in theme.css.
    No additional overrides needed as the variables automatically adapt. */
+
+/* ============================================
+   Color Utilities for CVA Variants
+   ============================================ */
+
+/* These utilities are used by CVA variants in src/lib/variants.ts
+   and need to be explicitly defined since Tailwind can't detect
+   dynamically constructed class names */
+
+/* Background colors */
+.workflow-viewer .bg-primary {
+  background-color: var(--primary);
+}
+
+.workflow-viewer .bg-primary\/10 {
+  background-color: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+
+.workflow-viewer .bg-primary\/20 {
+  background-color: color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+.workflow-viewer .bg-muted {
+  background-color: var(--muted);
+}
+
+.workflow-viewer .bg-muted\/50 {
+  background-color: color-mix(in srgb, var(--muted) 50%, transparent);
+}
+
+.workflow-viewer .bg-muted\/10 {
+  background-color: color-mix(in srgb, var(--muted) 10%, transparent);
+}
+
+.workflow-viewer .bg-destructive {
+  background-color: var(--destructive);
+}
+
+.workflow-viewer .bg-destructive\/10 {
+  background-color: color-mix(in srgb, var(--destructive) 10%, transparent);
+}
+
+.workflow-viewer .bg-destructive\/20 {
+  background-color: color-mix(in srgb, var(--destructive) 20%, transparent);
+}
+
+.workflow-viewer .bg-ctp-green {
+  background-color: var(--ctp-green);
+}
+
+.workflow-viewer .bg-ctp-green\/10 {
+  background-color: color-mix(in srgb, var(--ctp-green) 10%, transparent);
+}
+
+.workflow-viewer .bg-ctp-green\/20 {
+  background-color: color-mix(in srgb, var(--ctp-green) 20%, transparent);
+}
+
+/* Text colors */
+.workflow-viewer .text-primary {
+  color: var(--primary);
+}
+
+.workflow-viewer .text-muted-foreground {
+  color: var(--muted-foreground);
+}
+
+.workflow-viewer .text-destructive {
+  color: var(--destructive);
+}
+
+.workflow-viewer .text-ctp-green {
+  color: var(--ctp-green);
+}
+
+/* Border colors */
+.workflow-viewer .border-primary {
+  border-color: var(--primary);
+}
+
+.workflow-viewer .border-border {
+  border-color: var(--border);
+}
+
+.workflow-viewer .border-muted-foreground {
+  border-color: var(--muted-foreground);
+}
+
+.workflow-viewer .border-destructive {
+  border-color: var(--destructive);
+}
+
+.workflow-viewer .border-ctp-green {
+  border-color: var(--ctp-green);
+}
+
+/* Ring colors */
+.workflow-viewer .ring-primary {
+  --tw-ring-color: var(--primary);
+}
+
+.workflow-viewer .ring-destructive {
+  --tw-ring-color: var(--destructive);
+}
+
+.workflow-viewer .ring-ctp-green {
+  --tw-ring-color: var(--ctp-green);
+}
+
+/* Hover states */
+.workflow-viewer .hover\:bg-primary\/20:hover {
+  background-color: color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+.workflow-viewer .hover\:bg-ctp-green\/20:hover {
+  background-color: color-mix(in srgb, var(--ctp-green) 20%, transparent);
+}
+
+.workflow-viewer .hover\:bg-destructive\/20:hover {
+  background-color: color-mix(in srgb, var(--destructive) 20%, transparent);
+}
+
+.workflow-viewer .hover\:border-muted-foreground:hover {
+  border-color: var(--muted-foreground);
+}
