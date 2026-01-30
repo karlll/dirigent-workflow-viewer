@@ -20,47 +20,47 @@ export default {
     extend: {
       colors: {
         // Semantic colors that inherit from CSS variables
-        // These variables are defined in src/styles/theme.css and scoped to .workflow-viewer
-        border: 'var(--wfv-border)',
-        input: 'var(--wfv-input)',
-        ring: 'var(--wfv-ring)',
-        background: 'var(--wfv-background)',
-        foreground: 'var(--wfv-foreground)',
+        // These variables are defined in src/styles/theme.css (unprefixed for Tailwind)
+        border: 'var(--border)',
+        input: 'var(--input)',
+        ring: 'var(--ring)',
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
         primary: {
-          DEFAULT: 'var(--wfv-primary)',
-          foreground: 'var(--wfv-primary-foreground)',
+          DEFAULT: 'var(--primary)',
+          foreground: 'var(--primary-foreground)',
         },
         secondary: {
-          DEFAULT: 'var(--wfv-secondary)',
-          foreground: 'var(--wfv-secondary-foreground)',
+          DEFAULT: 'var(--secondary)',
+          foreground: 'var(--secondary-foreground)',
         },
         destructive: {
-          DEFAULT: 'var(--wfv-destructive)',
-          foreground: 'var(--wfv-destructive-foreground)',
+          DEFAULT: 'var(--destructive)',
+          foreground: 'var(--destructive-foreground)',
         },
         muted: {
-          DEFAULT: 'var(--wfv-muted)',
-          foreground: 'var(--wfv-muted-foreground)',
+          DEFAULT: 'var(--muted)',
+          foreground: 'var(--muted-foreground)',
         },
         accent: {
-          DEFAULT: 'var(--wfv-accent)',
-          foreground: 'var(--wfv-accent-foreground)',
+          DEFAULT: 'var(--accent)',
+          foreground: 'var(--accent-foreground)',
         },
         card: {
-          DEFAULT: 'var(--wfv-card)',
-          foreground: 'var(--wfv-card-foreground)',
+          DEFAULT: 'var(--card)',
+          foreground: 'var(--card-foreground)',
         },
         popover: {
-          DEFAULT: 'var(--wfv-popover)',
-          foreground: 'var(--wfv-popover-foreground)',
+          DEFAULT: 'var(--popover)',
+          foreground: 'var(--popover-foreground)',
         },
         // Catppuccin-specific colors
-        'ctp-green': 'var(--wfv-ctp-green)',
-        'ctp-yellow': 'var(--wfv-ctp-yellow)',
-        'ctp-peach': 'var(--wfv-ctp-peach)',
-        'ctp-lavender': 'var(--wfv-ctp-lavender)',
-        'ctp-mauve': 'var(--wfv-ctp-mauve)',
-        'ctp-blue': 'var(--wfv-ctp-blue)',
+        'ctp-green': 'var(--ctp-green)',
+        'ctp-yellow': 'var(--ctp-yellow)',
+        'ctp-peach': 'var(--ctp-peach)',
+        'ctp-lavender': 'var(--ctp-lavender)',
+        'ctp-mauve': 'var(--ctp-mauve)',
+        'ctp-blue': 'var(--ctp-blue)',
       },
       fontFamily: {
         // Typography aligned with Knutpunkt design system
@@ -70,9 +70,9 @@ export default {
       },
       borderRadius: {
         // Border radius scale matching Knutpunkt
-        lg: 'var(--wfv-radius)',
-        md: 'calc(var(--wfv-radius) - 2px)',
-        sm: 'calc(var(--wfv-radius) - 4px)',
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
       },
       keyframes: {
         // Pulse animation for current step indicator

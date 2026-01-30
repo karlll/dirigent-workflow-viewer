@@ -11,38 +11,26 @@
    Light Mode - Catppuccin Latte (Default)
    ============================================ */
 .workflow-viewer {
-  /* Base colors */
+  /* Namespaced variables (--wfv-* prefix for consumers to customize) */
   --wfv-background: #eff1f5;
   --wfv-foreground: #4c4f69;
-
-  /* Semantic colors */
   --wfv-primary: #1e66f5;
   --wfv-primary-foreground: #ffffff;
-
   --wfv-secondary: #acb0be;
   --wfv-secondary-foreground: #4c4f69;
-
   --wfv-destructive: #d20f39;
   --wfv-destructive-foreground: #ffffff;
-
   --wfv-muted: #e6e9ef;
   --wfv-muted-foreground: #6c6f85;
-
   --wfv-accent: #7287fd;
   --wfv-accent-foreground: #ffffff;
-
   --wfv-card: #ffffff;
   --wfv-card-foreground: #4c4f69;
-
   --wfv-popover: #ffffff;
   --wfv-popover-foreground: #4c4f69;
-
-  /* UI elements */
   --wfv-border: #acb0be;
   --wfv-input: #ccd0da;
   --wfv-ring: #1e66f5;
-
-  /* Catppuccin-specific colors */
   --wfv-ctp-rosewater: #dc8a78;
   --wfv-ctp-flamingo: #dd7878;
   --wfv-ctp-pink: #ea76cb;
@@ -57,9 +45,35 @@
   --wfv-ctp-sapphire: #209fb5;
   --wfv-ctp-blue: #1e66f5;
   --wfv-ctp-lavender: #7287fd;
-
-  /* Design system */
   --wfv-radius: 0.35rem;
+
+  /* Unprefixed aliases for Tailwind utilities (map to namespaced vars) */
+  --background: var(--wfv-background);
+  --foreground: var(--wfv-foreground);
+  --primary: var(--wfv-primary);
+  --primary-foreground: var(--wfv-primary-foreground);
+  --secondary: var(--wfv-secondary);
+  --secondary-foreground: var(--wfv-secondary-foreground);
+  --destructive: var(--wfv-destructive);
+  --destructive-foreground: var(--wfv-destructive-foreground);
+  --muted: var(--wfv-muted);
+  --muted-foreground: var(--wfv-muted-foreground);
+  --accent: var(--wfv-accent);
+  --accent-foreground: var(--wfv-accent-foreground);
+  --card: var(--wfv-card);
+  --card-foreground: var(--wfv-card-foreground);
+  --popover: var(--wfv-popover);
+  --popover-foreground: var(--wfv-popover-foreground);
+  --border: var(--wfv-border);
+  --input: var(--wfv-input);
+  --ring: var(--wfv-ring);
+  --ctp-green: var(--wfv-ctp-green);
+  --ctp-yellow: var(--wfv-ctp-yellow);
+  --ctp-peach: var(--wfv-ctp-peach);
+  --ctp-lavender: var(--wfv-ctp-lavender);
+  --ctp-mauve: var(--wfv-ctp-mauve);
+  --ctp-blue: var(--wfv-ctp-blue);
+  --radius: var(--wfv-radius);
 
   /* ============================================
      Workflow-Specific Semantic Colors
@@ -92,38 +106,26 @@
    ============================================ */
 .dark .workflow-viewer,
 .workflow-viewer.dark {
-  /* Base colors */
+  /* Namespaced variables (--wfv-* prefix) */
   --wfv-background: #1e1e2e;
   --wfv-foreground: #cdd6f4;
-
-  /* Semantic colors */
   --wfv-primary: #89b4fa;
   --wfv-primary-foreground: #11111b;
-
   --wfv-secondary: #585b70;
   --wfv-secondary-foreground: #cdd6f4;
-
   --wfv-destructive: #f38ba8;
   --wfv-destructive-foreground: #11111b;
-
   --wfv-muted: #313244;
   --wfv-muted-foreground: #a6adc8;
-
   --wfv-accent: #b4befe;
   --wfv-accent-foreground: #11111b;
-
   --wfv-card: #181825;
   --wfv-card-foreground: #cdd6f4;
-
   --wfv-popover: #181825;
   --wfv-popover-foreground: #cdd6f4;
-
-  /* UI elements */
   --wfv-border: #585b70;
   --wfv-input: #45475a;
   --wfv-ring: #89b4fa;
-
-  /* Catppuccin-specific colors */
   --wfv-ctp-rosewater: #f5e0dc;
   --wfv-ctp-flamingo: #f2cdcd;
   --wfv-ctp-pink: #f5c2e7;
@@ -138,4 +140,31 @@
   --wfv-ctp-sapphire: #74c7ec;
   --wfv-ctp-blue: #89b4fa;
   --wfv-ctp-lavender: #b4befe;
+
+  /* Unprefixed aliases for Tailwind utilities */
+  --background: var(--wfv-background);
+  --foreground: var(--wfv-foreground);
+  --primary: var(--wfv-primary);
+  --primary-foreground: var(--wfv-primary-foreground);
+  --secondary: var(--wfv-secondary);
+  --secondary-foreground: var(--wfv-secondary-foreground);
+  --destructive: var(--wfv-destructive);
+  --destructive-foreground: var(--wfv-destructive-foreground);
+  --muted: var(--wfv-muted);
+  --muted-foreground: var(--wfv-muted-foreground);
+  --accent: var(--wfv-accent);
+  --accent-foreground: var(--wfv-accent-foreground);
+  --card: var(--wfv-card);
+  --card-foreground: var(--wfv-card-foreground);
+  --popover: var(--wfv-popover);
+  --popover-foreground: var(--wfv-popover-foreground);
+  --border: var(--wfv-border);
+  --input: var(--wfv-input);
+  --ring: var(--wfv-ring);
+  --ctp-green: var(--wfv-ctp-green);
+  --ctp-yellow: var(--wfv-ctp-yellow);
+  --ctp-peach: var(--wfv-ctp-peach);
+  --ctp-lavender: var(--wfv-ctp-lavender);
+  --ctp-mauve: var(--wfv-ctp-mauve);
+  --ctp-blue: var(--wfv-ctp-blue);
 }
