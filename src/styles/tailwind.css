@@ -1,8 +1,8 @@
 /**
  * Tailwind CSS entry point
  *
- * This file imports Tailwind's base utilities and will be processed
- * by Vite during the build process.
+ * Note: The @layer base will be stripped out by postcss-remove-base-layer plugin
+ * to prevent global CSS pollution in consuming applications.
  */
 
 @import 'tailwindcss';

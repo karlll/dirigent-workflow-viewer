@@ -30,23 +30,37 @@ React component library for visualizing and monitoring Dirigent workflows. Provi
 - 🔧 **API Client** - HTTP client for Dirigent API integration
 
 ### Dependencies
-- 📦 **Minimal dependencies** - Only 4 runtime dependencies (@xyflow/react, dagre, js-yaml, lucide-react)
+- 📦 **Minimal dependencies** - Only 4 runtime dependencies (dagre, js-yaml, lucide-react, class-variance-authority)
+- 🔗 **Peer dependencies** - @xyflow/react (graph rendering), react, react-dom
 
 ## Installation
 
 ### From npm (When Published)
 
 ```bash
-npm install @dirigent/workflow-viewer
+npm install @dirigent/workflow-viewer @xyflow/react
 ```
 
-**Important:** You must also import the CSS in your application:
+**Peer Dependencies** (must be installed):
+- `@xyflow/react@>=12.0.0` - Graph visualization engine
+- `react@>=18.0.0` - React library
+- `react-dom@>=18.0.0` - React DOM renderer
+
+### CSS Setup
+
+**Critical:** Import CSS files in this order in your application entry point:
 
 ```javascript
+// 1. Import ReactFlow CSS first
+import '@xyflow/react/dist/style.css';
+
+// 2. Then import workflow-viewer CSS
 import '@dirigent/workflow-viewer/styles';
 // or
 import '@dirigent/workflow-viewer/dist/index.css';
 ```
+
+The order matters - ReactFlow CSS must be imported before workflow-viewer CSS to ensure proper styling.
 
 **Status:** Package is configured for public npm publishing (`"private": false` in package.json). To publish:
 
@@ -88,9 +102,11 @@ npm link @dirigent/workflow-viewer
 
 ## Quick Start
 
-**Important:** Import the CSS before using any components:
+**Important:** Import CSS files in the correct order (ReactFlow first, then workflow-viewer):
 
 ```tsx
+// In your main application file (e.g., main.tsx or App.tsx)
+import '@xyflow/react/dist/style.css';
 import '@dirigent/workflow-viewer/styles';
 ```
 
@@ -100,7 +116,7 @@ For complete usage examples, API documentation, and integration guide, see **[US
 
 ```tsx
 import { Workflow } from '@dirigent/workflow-viewer'
-import '@dirigent/workflow-viewer/styles'
+// CSS imports should be in your main application file, not component files
 
 function App() {
   const yaml = `
@@ -126,7 +142,7 @@ function App() {
 
 ```tsx
 import { ExecutableWorkflow } from '@dirigent/workflow-viewer'
-import '@dirigent/workflow-viewer/styles'
+// CSS imports should be in your main application file
 
 function Monitor({ instanceId }: { instanceId: string }) {
   return (
@@ -145,7 +161,7 @@ function Monitor({ instanceId }: { instanceId: string }) {
 
 ```tsx
 import { InstanceMonitor } from '@dirigent/workflow-viewer'
-import '@dirigent/workflow-viewer/styles'
+// CSS imports should be in your main application file
 
 function Dashboard({ instanceId }: { instanceId: string }) {
   return (

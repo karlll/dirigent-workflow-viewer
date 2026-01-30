@@ -7,6 +7,10 @@
 import type { Config } from 'tailwindcss'
 
 export default {
+  // Disable preflight - consuming apps have their own resets
+  corePlugins: {
+    preflight: false,
+  },
   darkMode: ['class'],
   content: [
     './src/**/*.{ts,tsx}',
@@ -16,47 +20,47 @@ export default {
     extend: {
       colors: {
         // Semantic colors that inherit from CSS variables
-        // These variables are defined in src/styles/theme.css
-        border: 'var(--border)',
-        input: 'var(--input)',
-        ring: 'var(--ring)',
-        background: 'var(--background)',
-        foreground: 'var(--foreground)',
+        // These variables are defined in src/styles/theme.css and scoped to .workflow-viewer
+        border: 'var(--wfv-border)',
+        input: 'var(--wfv-input)',
+        ring: 'var(--wfv-ring)',
+        background: 'var(--wfv-background)',
+        foreground: 'var(--wfv-foreground)',
         primary: {
-          DEFAULT: 'var(--primary)',
-          foreground: 'var(--primary-foreground)',
+          DEFAULT: 'var(--wfv-primary)',
+          foreground: 'var(--wfv-primary-foreground)',
         },
         secondary: {
-          DEFAULT: 'var(--secondary)',
-          foreground: 'var(--secondary-foreground)',
+          DEFAULT: 'var(--wfv-secondary)',
+          foreground: 'var(--wfv-secondary-foreground)',
         },
         destructive: {
-          DEFAULT: 'var(--destructive)',
-          foreground: 'var(--destructive-foreground)',
+          DEFAULT: 'var(--wfv-destructive)',
+          foreground: 'var(--wfv-destructive-foreground)',
         },
         muted: {
-          DEFAULT: 'var(--muted)',
-          foreground: 'var(--muted-foreground)',
+          DEFAULT: 'var(--wfv-muted)',
+          foreground: 'var(--wfv-muted-foreground)',
         },
         accent: {
-          DEFAULT: 'var(--accent)',
-          foreground: 'var(--accent-foreground)',
+          DEFAULT: 'var(--wfv-accent)',
+          foreground: 'var(--wfv-accent-foreground)',
         },
         card: {
-          DEFAULT: 'var(--card)',
-          foreground: 'var(--card-foreground)',
+          DEFAULT: 'var(--wfv-card)',
+          foreground: 'var(--wfv-card-foreground)',
         },
         popover: {
-          DEFAULT: 'var(--popover)',
-          foreground: 'var(--popover-foreground)',
+          DEFAULT: 'var(--wfv-popover)',
+          foreground: 'var(--wfv-popover-foreground)',
         },
         // Catppuccin-specific colors
-        'ctp-green': 'var(--ctp-green)',
-        'ctp-yellow': 'var(--ctp-yellow)',
-        'ctp-peach': 'var(--ctp-peach)',
-        'ctp-lavender': 'var(--ctp-lavender)',
-        'ctp-mauve': 'var(--ctp-mauve)',
-        'ctp-blue': 'var(--ctp-blue)',
+        'ctp-green': 'var(--wfv-ctp-green)',
+        'ctp-yellow': 'var(--wfv-ctp-yellow)',
+        'ctp-peach': 'var(--wfv-ctp-peach)',
+        'ctp-lavender': 'var(--wfv-ctp-lavender)',
+        'ctp-mauve': 'var(--wfv-ctp-mauve)',
+        'ctp-blue': 'var(--wfv-ctp-blue)',
       },
       fontFamily: {
         // Typography aligned with Knutpunkt design system
@@ -66,9 +70,9 @@ export default {
       },
       borderRadius: {
         // Border radius scale matching Knutpunkt
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        lg: 'var(--wfv-radius)',
+        md: 'calc(var(--wfv-radius) - 2px)',
+        sm: 'calc(var(--wfv-radius) - 4px)',
       },
       keyframes: {
         // Pulse animation for current step indicator

@@ -61,7 +61,7 @@ export function WorkflowBrowser({
   if (loading) {
     return (
       <div
-        className={className}
+        className={`workflow-viewer ${className}`}
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -97,7 +97,7 @@ export function WorkflowBrowser({
   if (error) {
     return (
       <div
-        className={className}
+        className={`workflow-viewer ${className}`}
         style={{
           padding: '1rem',
           color: '#ef4444',
@@ -116,7 +116,7 @@ export function WorkflowBrowser({
   if (workflows.length === 0) {
     return (
       <div
-        className={className}
+        className={`workflow-viewer ${className}`}
         style={{
           padding: '2rem',
           color: '#6b7280',
@@ -133,7 +133,7 @@ export function WorkflowBrowser({
   if (mode === 'dropdown') {
     return (
       <select
-        className={className}
+        className={`workflow-viewer ${className}`}
         value={selectedWorkflow || ''}
         onChange={(e) => onSelect?.(e.target.value)}
         style={{
@@ -161,7 +161,7 @@ export function WorkflowBrowser({
   if (mode === 'grid') {
     return (
       <div
-        className={className}
+        className={`workflow-viewer ${className}`}
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
@@ -185,7 +185,7 @@ export function WorkflowBrowser({
   // Default: list mode
   return (
     <div
-      className={className}
+      className={`workflow-viewer ${className}`}
       style={{
         display: 'flex',
         flexDirection: 'column',

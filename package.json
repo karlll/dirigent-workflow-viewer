@@ -49,6 +49,7 @@
     "build-storybook": "storybook build"
   },
   "peerDependencies": {
+    "@xyflow/react": ">=12.0.0",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
@@ -73,6 +74,7 @@
     "@vitejs/plugin-react": "^5.1.1",
     "@vitest/browser-playwright": "^4.0.16",
     "@vitest/coverage-v8": "^4.0.16",
+    "@xyflow/react": "12.10.0",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
@@ -94,7 +96,6 @@
     "vitest": "^4.0.16"
   },
   "dependencies": {
-    "@xyflow/react": "12.10.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dagre": "0.8.5",

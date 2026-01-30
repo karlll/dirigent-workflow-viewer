@@ -7,19 +7,38 @@ Complete guide for integrating `@dirigent/workflow-viewer` into external applica
 ## Installation
 
 ```bash
-npm install @dirigent/workflow-viewer
+npm install @dirigent/workflow-viewer @xyflow/react
 ```
 
 **Peer Dependencies** (must be installed in your app):
 ```bash
-npm install react@>=18.0.0 react-dom@>=18.0.0
+npm install @xyflow/react@>=12.0.0 react@>=18.0.0 react-dom@>=18.0.0
 ```
 
 **Runtime Dependencies** (bundled with library):
-- `@xyflow/react@12.10.0` - Graph visualization
 - `dagre@0.8.5` - Graph layout algorithm
 - `js-yaml@4.1.1` - YAML parsing
 - `lucide-react@^0.468.0` - Icons
+- `class-variance-authority@^0.7.1` - CVA variants
+- `clsx@^2.1.1` - CSS class utilities
+- `tailwind-merge@^3.4.0` - Tailwind class merging
+
+### CSS Setup
+
+**Critical:** Import CSS files in this exact order in your application entry point (e.g., `main.tsx` or `App.tsx`):
+
+```tsx
+// 1. Import ReactFlow CSS first
+import '@xyflow/react/dist/style.css';
+
+// 2. Then import workflow-viewer CSS
+import '@dirigent/workflow-viewer/styles';
+```
+
+**Why this order matters:**
+- ReactFlow provides base styles for the graph visualization
+- Workflow-viewer CSS is scoped to `.workflow-viewer` class and extends ReactFlow styles
+- Importing in the wrong order may cause styling issues
 
 ---
 
@@ -30,6 +49,10 @@ npm install react@>=18.0.0 react-dom@>=18.0.0
 Display a workflow from YAML without execution state:
 
 ```tsx
+// Import CSS in your main application file (main.tsx or App.tsx):
+// import '@xyflow/react/dist/style.css';
+// import '@dirigent/workflow-viewer/styles';
+
 import { Workflow } from '@dirigent/workflow-viewer'
 
 function MyWorkflowView() {

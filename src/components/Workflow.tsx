@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
 import { ReactFlow, Background, Controls, type Node, type Edge, type ColorMode } from '@xyflow/react'
-import '@xyflow/react/dist/style.css'
-import '../styles/nodes.css'
 
 import { parseWorkflow } from '../utils/parser'
 import { workflowToGraph } from '../utils/graphConverter'

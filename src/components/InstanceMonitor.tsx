@@ -81,7 +81,7 @@ export function InstanceMonitor({
   if (loading && showLoading) {
     return (
       <div
-        className={className}
+        className={`workflow-viewer ${className}`}
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -117,7 +117,7 @@ export function InstanceMonitor({
   if (error) {
     return (
       <div
-        className={className}
+        className={`workflow-viewer ${className}`}
         style={{
           padding: '1rem',
           color: '#ef4444',
@@ -136,7 +136,7 @@ export function InstanceMonitor({
   if (!workflow || !yaml) {
     return (
       <div
-        className={className}
+        className={`workflow-viewer ${className}`}
         style={{
           padding: '2rem',
           color: '#6b7280',
@@ -152,7 +152,7 @@ export function InstanceMonitor({
 
   return (
     <div
-      className={className}
+      className={`workflow-viewer ${className}`}
       style={{
         display: 'flex',
         flexDirection: 'column',

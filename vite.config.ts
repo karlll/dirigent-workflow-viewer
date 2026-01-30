@@ -4,6 +4,8 @@ import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
 import tailwindcss from '@tailwindcss/postcss';
+// @ts-ignore - PostCSS plugin without types
+import postcssRemoveBaseLayer from './postcss-remove-base-layer.js';
 
 // https://vite.dev/config/
 import path from 'node:path';
@@ -22,6 +24,7 @@ export default defineConfig({
     postcss: {
       plugins: [
         tailwindcss(),
+        postcssRemoveBaseLayer(),
       ],
     },
   },
@@ -34,12 +37,13 @@ export default defineConfig({
     },
     rollupOptions: {
       // Externalize deps that shouldn't be bundled
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      external: ['react', 'react-dom', 'react/jsx-runtime', '@xyflow/react'],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
-          'react/jsx-runtime': 'react/jsx-runtime'
+          'react/jsx-runtime': 'react/jsx-runtime',
+          '@xyflow/react': 'ReactFlow'
         }
       }
     }

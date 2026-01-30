@@ -1,30 +1,31 @@
 /* ============================================
    Workflow Execution State Styles
+   All styles scoped to .workflow-viewer
    ============================================ */
 
 /* ============================================
    Execution Path Highlighting
    ============================================ */
 
-.on-execution-path {
+.workflow-viewer .on-execution-path {
   box-shadow: 0 0 12px color-mix(in srgb, var(--workflow-execution-path) 50%, transparent) !important;
 }
 
 /* Override completed/failed borders for execution path */
-.node-completed.on-execution-path,
-.node-failed.on-execution-path,
-.node-running.on-execution-path,
-.node-pending.on-execution-path {
+.workflow-viewer .node-completed.on-execution-path,
+.workflow-viewer .node-failed.on-execution-path,
+.workflow-viewer .node-running.on-execution-path,
+.workflow-viewer .node-pending.on-execution-path {
   border: 3px solid var(--workflow-execution-path) !important;
 }
 
 /* Current executing step */
-.current-step {
+.workflow-viewer .current-step {
   border: 2px solid var(--workflow-current-step) !important;
-  animation: pulse 2s ease-in-out infinite;
+  animation: wfv-pulse 2s ease-in-out infinite;
 }
 
-@keyframes pulse {
+@keyframes wfv-pulse {
   0%, 100% {
     box-shadow: 0 0 12px color-mix(in srgb, var(--workflow-current-step) 50%, transparent);
   }
@@ -37,32 +38,32 @@
    Step Execution States
    ============================================ */
 
-.node-pending {
+.workflow-viewer .node-pending {
   opacity: 0.5;
 }
 
-.node-running {
+.workflow-viewer .node-running {
   background: linear-gradient(to bottom,
     color-mix(in srgb, var(--workflow-state-running) 15%, var(--wfv-card)) 0%,
     color-mix(in srgb, var(--workflow-state-running) 25%, var(--wfv-card)) 100%) !important;
   border-color: var(--workflow-state-running) !important;
 }
 
-.node-completed {
+.workflow-viewer .node-completed {
   background: linear-gradient(to bottom,
     color-mix(in srgb, var(--workflow-state-completed) 15%, var(--wfv-card)) 0%,
     color-mix(in srgb, var(--workflow-state-completed) 25%, var(--wfv-card)) 100%) !important;
   border-color: var(--workflow-state-completed) !important;
 }
 
-.node-failed {
+.workflow-viewer .node-failed {
   background: linear-gradient(to bottom,
     color-mix(in srgb, var(--workflow-state-failed) 15%, var(--wfv-card)) 0%,
     color-mix(in srgb, var(--workflow-state-failed) 25%, var(--wfv-card)) 100%) !important;
   border-color: var(--workflow-state-failed) !important;
 }
 
-.node-skipped {
+.workflow-viewer .node-skipped {
   opacity: 0.3;
   filter: grayscale(100%);
 }
@@ -71,34 +72,34 @@
    Execution Status Indicators
    ============================================ */
 
-.node-header-icons {
+.workflow-viewer .node-header-icons {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.execution-status {
+.workflow-viewer .execution-status {
   display: flex;
   align-items: center;
   margin-left: auto;
 }
 
-.execution-status svg {
+.workflow-viewer .execution-status svg {
   color: inherit;
 }
 
 /* Running state animation */
-.node-running .execution-status svg.animate-spin {
+.workflow-viewer .node-running .execution-status svg.animate-spin {
   color: var(--workflow-state-running);
 }
 
 /* Completed state icon */
-.node-completed .execution-status svg {
+.workflow-viewer .node-completed .execution-status svg {
   color: var(--workflow-state-completed);
 }
 
 /* Failed state icon */
-.node-failed .execution-status svg {
+.workflow-viewer .node-failed .execution-status svg {
   color: var(--workflow-state-failed);
 }
 
@@ -106,7 +107,7 @@
    Execution Timing Display
    ============================================ */
 
-.execution-timing {
+.workflow-viewer .execution-timing {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -119,7 +120,7 @@
   font-family: 'Monaco', 'Courier New', monospace;
 }
 
-.execution-timing svg {
+.workflow-viewer .execution-timing svg {
   flex-shrink: 0;
   color: var(--wfv-muted-foreground);
 }
@@ -128,7 +129,7 @@
    Error Message Display
    ============================================ */
 
-.execution-error {
+.workflow-viewer .execution-error {
   display: flex;
   align-items: flex-start;
   gap: 4px;
@@ -141,13 +142,13 @@
   border-left: 3px solid var(--wfv-destructive);
 }
 
-.execution-error svg {
+.workflow-viewer .execution-error svg {
   flex-shrink: 0;
   margin-top: 2px;
   color: var(--wfv-destructive);
 }
 
-.execution-error span {
+.workflow-viewer .execution-error span {
   word-break: break-word;
 }
 
@@ -156,31 +157,31 @@
    ============================================ */
 
 /* Highlight edges on execution path */
-.react-flow__edge.on-execution-path path {
+.workflow-viewer .react-flow__edge.on-execution-path path {
   stroke: var(--workflow-execution-path) !important;
   stroke-width: 4 !important;
 }
 
-.react-flow__edge.on-execution-path.animated path {
+.workflow-viewer .react-flow__edge.on-execution-path.animated path {
   stroke-dasharray: 5;
-  animation: dashdraw 0.5s linear infinite;
+  animation: wfv-dashdraw 0.5s linear infinite;
 }
 
-@keyframes dashdraw {
+@keyframes wfv-dashdraw {
   0% { stroke-dashoffset: 0; }
   100% { stroke-dashoffset: 10; }
 }
 
 /* Edge markers (arrowheads) on execution path */
-.react-flow__edge.on-execution-path .react-flow__edge-path {
+.workflow-viewer .react-flow__edge.on-execution-path .react-flow__edge-path {
   stroke: var(--workflow-execution-path) !important;
 }
 
-.react-flow__edge.on-execution-path marker {
+.workflow-viewer .react-flow__edge.on-execution-path marker {
   fill: var(--workflow-execution-path) !important;
 }
 
-.react-flow__edge.on-execution-path marker path {
+.workflow-viewer .react-flow__edge.on-execution-path marker path {
   fill: var(--workflow-execution-path) !important;
   stroke: var(--workflow-execution-path) !important;
 }

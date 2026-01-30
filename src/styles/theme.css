@@ -2,145 +2,140 @@
  * Theme CSS Variables
  *
  * Defines Catppuccin color system for light (Latte) and dark (Mocha) modes.
+ * All variables are scoped to .workflow-viewer to prevent global CSS pollution.
  * These variables can be overridden by parent applications (e.g., Knutpunkt)
  * to inherit theme seamlessly.
  */
 
-@layer base {
-  :root {
-    /* ============================================
-       Light Mode - Catppuccin Latte
-       ============================================ */
+/* ============================================
+   Light Mode - Catppuccin Latte (Default)
+   ============================================ */
+.workflow-viewer {
+  /* Base colors */
+  --wfv-background: #eff1f5;
+  --wfv-foreground: #4c4f69;
 
-    /* Base colors */
-    --wfv-background: #eff1f5;
-    --wfv-foreground: #4c4f69;
+  /* Semantic colors */
+  --wfv-primary: #1e66f5;
+  --wfv-primary-foreground: #ffffff;
 
-    /* Semantic colors */
-    --wfv-primary: #1e66f5;
-    --wfv-primary-foreground: #ffffff;
+  --wfv-secondary: #acb0be;
+  --wfv-secondary-foreground: #4c4f69;
 
-    --wfv-secondary: #acb0be;
-    --wfv-secondary-foreground: #4c4f69;
+  --wfv-destructive: #d20f39;
+  --wfv-destructive-foreground: #ffffff;
 
-    --wfv-destructive: #d20f39;
-    --wfv-destructive-foreground: #ffffff;
+  --wfv-muted: #e6e9ef;
+  --wfv-muted-foreground: #6c6f85;
 
-    --wfv-muted: #e6e9ef;
-    --wfv-muted-foreground: #6c6f85;
+  --wfv-accent: #7287fd;
+  --wfv-accent-foreground: #ffffff;
 
-    --wfv-accent: #7287fd;
-    --wfv-accent-foreground: #ffffff;
+  --wfv-card: #ffffff;
+  --wfv-card-foreground: #4c4f69;
 
-    --wfv-card: #ffffff;
-    --wfv-card-foreground: #4c4f69;
+  --wfv-popover: #ffffff;
+  --wfv-popover-foreground: #4c4f69;
 
-    --wfv-popover: #ffffff;
-    --wfv-popover-foreground: #4c4f69;
+  /* UI elements */
+  --wfv-border: #acb0be;
+  --wfv-input: #ccd0da;
+  --wfv-ring: #1e66f5;
 
-    /* UI elements */
-    --wfv-border: #acb0be;
-    --wfv-input: #ccd0da;
-    --wfv-ring: #1e66f5;
+  /* Catppuccin-specific colors */
+  --wfv-ctp-rosewater: #dc8a78;
+  --wfv-ctp-flamingo: #dd7878;
+  --wfv-ctp-pink: #ea76cb;
+  --wfv-ctp-mauve: #8839ef;
+  --wfv-ctp-red: #d20f39;
+  --wfv-ctp-maroon: #e64553;
+  --wfv-ctp-peach: #fe640b;
+  --wfv-ctp-yellow: #df8e1d;
+  --wfv-ctp-green: #40a02b;
+  --wfv-ctp-teal: #179299;
+  --wfv-ctp-sky: #04a5e5;
+  --wfv-ctp-sapphire: #209fb5;
+  --wfv-ctp-blue: #1e66f5;
+  --wfv-ctp-lavender: #7287fd;
 
-    /* Catppuccin-specific colors */
-    --wfv-ctp-rosewater: #dc8a78;
-    --wfv-ctp-flamingo: #dd7878;
-    --wfv-ctp-pink: #ea76cb;
-    --wfv-ctp-mauve: #8839ef;
-    --wfv-ctp-red: #d20f39;
-    --wfv-ctp-maroon: #e64553;
-    --wfv-ctp-peach: #fe640b;
-    --wfv-ctp-yellow: #df8e1d;
-    --wfv-ctp-green: #40a02b;
-    --wfv-ctp-teal: #179299;
-    --wfv-ctp-sky: #04a5e5;
-    --wfv-ctp-sapphire: #209fb5;
-    --wfv-ctp-blue: #1e66f5;
-    --wfv-ctp-lavender: #7287fd;
+  /* Design system */
+  --wfv-radius: 0.35rem;
 
-    /* Design system */
-    --wfv-radius: 0.35rem;
-  }
+  /* ============================================
+     Workflow-Specific Semantic Colors
+     ============================================ */
 
-  .dark {
-    /* ============================================
-       Dark Mode - Catppuccin Mocha
-       ============================================ */
+  /* Node type colors */
+  --workflow-node-llm: var(--wfv-ctp-mauve);
+  --workflow-node-tool: var(--wfv-ctp-blue);
+  --workflow-node-switch: var(--wfv-ctp-yellow);
+  --workflow-node-fail: var(--wfv-destructive);
+  --workflow-node-start: var(--wfv-ctp-green);
+  --workflow-node-end: var(--wfv-ctp-blue);
+  --workflow-node-trigger: var(--wfv-ctp-peach);
 
-    /* Base colors */
-    --wfv-background: #1e1e2e;
-    --wfv-foreground: #cdd6f4;
+  /* Execution state colors */
+  --workflow-state-pending: var(--wfv-muted);
+  --workflow-state-running: var(--wfv-primary);
+  --workflow-state-completed: var(--wfv-ctp-green);
+  --workflow-state-failed: var(--wfv-destructive);
+  --workflow-state-skipped: var(--wfv-muted);
 
-    /* Semantic colors */
-    --wfv-primary: #89b4fa;
-    --wfv-primary-foreground: #11111b;
-
-    --wfv-secondary: #585b70;
-    --wfv-secondary-foreground: #cdd6f4;
-
-    --wfv-destructive: #f38ba8;
-    --wfv-destructive-foreground: #11111b;
-
-    --wfv-muted: #313244;
-    --wfv-muted-foreground: #a6adc8;
-
-    --wfv-accent: #b4befe;
-    --wfv-accent-foreground: #11111b;
-
-    --wfv-card: #181825;
-    --wfv-card-foreground: #cdd6f4;
-
-    --wfv-popover: #181825;
-    --wfv-popover-foreground: #cdd6f4;
-
-    /* UI elements */
-    --wfv-border: #585b70;
-    --wfv-input: #45475a;
-    --wfv-ring: #89b4fa;
-
-    /* Catppuccin-specific colors */
-    --wfv-ctp-rosewater: #f5e0dc;
-    --wfv-ctp-flamingo: #f2cdcd;
-    --wfv-ctp-pink: #f5c2e7;
-    --wfv-ctp-mauve: #cba6f7;
-    --wfv-ctp-red: #f38ba8;
-    --wfv-ctp-maroon: #eba0ac;
-    --wfv-ctp-peach: #fab387;
-    --wfv-ctp-yellow: #f9e2af;
-    --wfv-ctp-green: #a6e3a1;
-    --wfv-ctp-teal: #94e2d5;
-    --wfv-ctp-sky: #89dceb;
-    --wfv-ctp-sapphire: #74c7ec;
-    --wfv-ctp-blue: #89b4fa;
-    --wfv-ctp-lavender: #b4befe;
-  }
+  /* Special states */
+  --workflow-execution-path: var(--wfv-primary);
+  --workflow-current-step: var(--wfv-ctp-peach);
 }
 
-@layer components {
-  .workflow-viewer {
-    /* ============================================
-       Workflow-Specific Semantic Colors
-       ============================================ */
+/* ============================================
+   Dark Mode - Catppuccin Mocha
+   Support both .dark ancestor and direct .dark class
+   ============================================ */
+.dark .workflow-viewer,
+.workflow-viewer.dark {
+  /* Base colors */
+  --wfv-background: #1e1e2e;
+  --wfv-foreground: #cdd6f4;
 
-    /* Node type colors */
-    --workflow-node-llm: var(--wfv-ctp-mauve);
-    --workflow-node-tool: var(--wfv-ctp-blue);
-    --workflow-node-switch: var(--wfv-ctp-yellow);
-    --workflow-node-fail: var(--wfv-destructive);
-    --workflow-node-start: var(--wfv-ctp-green);
-    --workflow-node-end: var(--wfv-ctp-blue);
-    --workflow-node-trigger: var(--wfv-ctp-peach);
+  /* Semantic colors */
+  --wfv-primary: #89b4fa;
+  --wfv-primary-foreground: #11111b;
 
-    /* Execution state colors */
-    --workflow-state-pending: var(--wfv-muted);
-    --workflow-state-running: var(--wfv-primary);
-    --workflow-state-completed: var(--wfv-ctp-green);
-    --workflow-state-failed: var(--wfv-destructive);
-    --workflow-state-skipped: var(--wfv-muted);
+  --wfv-secondary: #585b70;
+  --wfv-secondary-foreground: #cdd6f4;
 
-    /* Special states */
-    --workflow-execution-path: var(--wfv-primary);
-    --workflow-current-step: var(--wfv-ctp-peach);
-  }
+  --wfv-destructive: #f38ba8;
+  --wfv-destructive-foreground: #11111b;
+
+  --wfv-muted: #313244;
+  --wfv-muted-foreground: #a6adc8;
+
+  --wfv-accent: #b4befe;
+  --wfv-accent-foreground: #11111b;
+
+  --wfv-card: #181825;
+  --wfv-card-foreground: #cdd6f4;
+
+  --wfv-popover: #181825;
+  --wfv-popover-foreground: #cdd6f4;
+
+  /* UI elements */
+  --wfv-border: #585b70;
+  --wfv-input: #45475a;
+  --wfv-ring: #89b4fa;
+
+  /* Catppuccin-specific colors */
+  --wfv-ctp-rosewater: #f5e0dc;
+  --wfv-ctp-flamingo: #f2cdcd;
+  --wfv-ctp-pink: #f5c2e7;
+  --wfv-ctp-mauve: #cba6f7;
+  --wfv-ctp-red: #f38ba8;
+  --wfv-ctp-maroon: #eba0ac;
+  --wfv-ctp-peach: #fab387;
+  --wfv-ctp-yellow: #f9e2af;
+  --wfv-ctp-green: #a6e3a1;
+  --wfv-ctp-teal: #94e2d5;
+  --wfv-ctp-sky: #89dceb;
+  --wfv-ctp-sapphire: #74c7ec;
+  --wfv-ctp-blue: #89b4fa;
+  --wfv-ctp-lavender: #b4befe;
 }

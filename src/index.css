@@ -1,6 +1,6 @@
 /* Import library styles (order matters: theme first, then Tailwind, then component styles) */
+/* NOTE: Consuming applications must import @xyflow/react/dist/style.css separately */
 @import './styles/theme.css';
 @import './styles/tailwind.css';
-@import '@xyflow/react/dist/style.css';
 @import './styles/nodes.css';
 @import './styles/execution.css';

@@ -1,11 +1,10 @@
-/* Custom Node Styles */
-@import './execution.css';
+/* Custom Node Styles - All styles scoped to .workflow-viewer */
 
 /* Base node styles */
-.llm-node,
-.tool-node,
-.switch-node,
-.fail-node {
+.workflow-viewer .llm-node,
+.workflow-viewer .tool-node,
+.workflow-viewer .switch-node,
+.workflow-viewer .fail-node {
   background: var(--wfv-card);
   border: 2px solid;
   border-radius: 8px;
@@ -18,74 +17,74 @@
   transition: box-shadow 0.2s, transform 0.2s;
 }
 
-.llm-node:hover,
-.tool-node:hover,
-.switch-node:hover,
-.fail-node:hover {
+.workflow-viewer .llm-node:hover,
+.workflow-viewer .tool-node:hover,
+.workflow-viewer .switch-node:hover,
+.workflow-viewer .fail-node:hover {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   transform: translateY(-1px);
 }
 
 /* Node type colors */
-.llm-node {
+.workflow-viewer .llm-node {
   border-color: var(--workflow-node-llm);
 }
 
-.tool-node {
+.workflow-viewer .tool-node {
   border-color: var(--workflow-node-tool);
 }
 
-.switch-node {
+.workflow-viewer .switch-node {
   border-color: var(--workflow-node-switch);
 }
 
-.fail-node {
+.workflow-viewer .fail-node {
   border-color: var(--workflow-node-fail);
   background: var(--wfv-destructive);
   background: color-mix(in srgb, var(--wfv-destructive) 5%, var(--wfv-card));
 }
 
 /* Node header */
-.node-header {
+.workflow-viewer .node-header {
   padding: 8px 12px;
   border-bottom: 1px solid var(--wfv-border);
 }
 
-.llm-node .node-header {
+.workflow-viewer .llm-node .node-header {
   background: linear-gradient(135deg, var(--wfv-ctp-mauve) 0%, color-mix(in srgb, var(--wfv-ctp-mauve) 85%, black) 100%);
   color: var(--wfv-primary-foreground);
 }
 
-.tool-node .node-header {
+.workflow-viewer .tool-node .node-header {
   background: linear-gradient(135deg, var(--wfv-ctp-blue) 0%, color-mix(in srgb, var(--wfv-ctp-blue) 85%, black) 100%);
   color: var(--wfv-primary-foreground);
 }
 
-.switch-node .node-header {
+.workflow-viewer .switch-node .node-header {
   background: linear-gradient(135deg, var(--wfv-ctp-yellow) 0%, color-mix(in srgb, var(--wfv-ctp-yellow) 85%, black) 100%);
   color: var(--wfv-primary-foreground);
 }
 
-.fail-node .node-header {
+.workflow-viewer .fail-node .node-header {
   background: linear-gradient(135deg, var(--wfv-destructive) 0%, color-mix(in srgb, var(--wfv-destructive) 85%, black) 100%);
   color: var(--wfv-destructive-foreground);
 }
 
-.node-header-content {
+.workflow-viewer .node-header-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
 }
 
-.node-icon {
+.workflow-viewer .node-icon {
   width: 20px;
   height: 20px;
   flex-shrink: 0;
   opacity: 0.8;
 }
 
-.node-type {
+.workflow-viewer .node-type {
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
@@ -94,24 +93,24 @@
   margin-bottom: 2px;
 }
 
-.node-label {
+.workflow-viewer .node-label {
   font-weight: 600;
   font-size: 14px;
 }
 
 /* Node body */
-.node-body {
+.workflow-viewer .node-body {
   padding: 10px 12px;
 }
 
-.node-field {
+.workflow-viewer .node-field {
   margin-bottom: 6px;
   display: flex;
   align-items: baseline;
   gap: 6px;
 }
 
-.field-label {
+.workflow-viewer .field-label {
   font-weight: 600;
   color: var(--wfv-muted-foreground);
   font-size: 11px;
@@ -119,18 +118,18 @@
   letter-spacing: 0.3px;
 }
 
-.field-value {
+.workflow-viewer .field-value {
   color: var(--wfv-foreground);
   font-weight: 500;
   word-break: break-word;
 }
 
-.fail-node .reason-text {
+.workflow-viewer .fail-node .reason-text {
   color: var(--wfv-destructive);
   font-weight: 600;
 }
 
-.node-description {
+.workflow-viewer .node-description {
   font-size: 12px;
   color: var(--wfv-muted-foreground);
   font-style: italic;
@@ -142,13 +141,13 @@
 }
 
 /* Node sections */
-.node-section {
+.workflow-viewer .node-section {
   margin-top: 10px;
   padding-top: 8px;
   border-top: 1px solid var(--wfv-border);
 }
 
-.section-title {
+.workflow-viewer .section-title {
   font-size: 11px;
   font-weight: 700;
   color: var(--wfv-muted-foreground);
@@ -158,13 +157,13 @@
 }
 
 /* Output schema */
-.output-schema {
+.workflow-viewer .output-schema {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.schema-field {
+.workflow-viewer .schema-field {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -174,13 +173,13 @@
   font-size: 12px;
 }
 
-.schema-key {
+.workflow-viewer .schema-key {
   font-weight: 600;
   color: var(--wfv-foreground);
   font-family: 'Monaco', 'Courier New', monospace;
 }
 
-.schema-type {
+.workflow-viewer .schema-type {
   font-size: 11px;
   color: var(--wfv-muted-foreground);
   background: var(--wfv-border);
@@ -190,13 +189,13 @@
 }
 
 /* Validation rules */
-.validation-list {
+.workflow-viewer .validation-list {
   margin: 0;
   padding-left: 18px;
   list-style-type: none;
 }
 
-.validation-rule {
+.workflow-viewer .validation-rule {
   position: relative;
   font-size: 12px;
   color: var(--wfv-foreground);
@@ -205,7 +204,7 @@
   padding-left: 4px;
 }
 
-.validation-rule::before {
+.workflow-viewer .validation-rule::before {
   content: '✓';
   position: absolute;
   left: -14px;
@@ -214,13 +213,13 @@
 }
 
 /* Arguments */
-.args-list {
+.workflow-viewer .args-list {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.arg-field {
+.workflow-viewer .arg-field {
   font-size: 12px;
   padding: 4px 8px;
   background: var(--wfv-muted);
@@ -228,24 +227,24 @@
   font-family: 'Monaco', 'Courier New', monospace;
 }
 
-.arg-key {
+.workflow-viewer .arg-key {
   color: var(--wfv-foreground);
   font-weight: 600;
   margin-right: 4px;
 }
 
-.arg-value {
+.workflow-viewer .arg-value {
   color: var(--wfv-muted-foreground);
 }
 
 /* Switch cases */
-.cases-list {
+.workflow-viewer .cases-list {
   margin: 0;
   padding: 0;
   list-style-type: none;
 }
 
-.case-item {
+.workflow-viewer .case-item {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -256,30 +255,30 @@
   font-size: 12px;
 }
 
-.case-item.case-default {
+.workflow-viewer .case-item.case-default {
   background: color-mix(in srgb, var(--wfv-ctp-yellow) 20%, var(--wfv-card));
   border: 1px solid var(--wfv-ctp-yellow);
 }
 
-.case-when {
+.workflow-viewer .case-when {
   font-family: 'Monaco', 'Courier New', monospace;
   color: var(--wfv-foreground);
   font-weight: 500;
   flex: 1;
 }
 
-.case-arrow {
+.workflow-viewer .case-arrow {
   color: var(--wfv-muted-foreground);
   font-weight: bold;
 }
 
-.case-goto {
+.workflow-viewer .case-goto {
   color: var(--wfv-primary);
   font-weight: 600;
 }
 
 /* Node indicators */
-.node-indicator {
+.workflow-viewer .node-indicator {
   margin-top: 8px;
   padding: 6px 8px;
   border-radius: 4px;
@@ -288,13 +287,13 @@
   text-align: center;
 }
 
-.error-handler {
+.workflow-viewer .error-handler {
   background: color-mix(in srgb, var(--wfv-ctp-yellow) 20%, var(--wfv-card));
   color: var(--wfv-ctp-yellow);
   border: 1px solid var(--wfv-ctp-yellow);
 }
 
-.error-indicator {
+.workflow-viewer .error-indicator {
   background: color-mix(in srgb, var(--wfv-destructive) 15%, var(--wfv-card));
   color: var(--wfv-destructive);
   border: 1px solid var(--wfv-destructive);
@@ -308,51 +307,51 @@
   flex-direction: column;
 }
 
-.workflow-header {
+.workflow-viewer .workflow-header {
   padding: 16px 20px;
   background: var(--wfv-muted);
   border-bottom: 2px solid var(--wfv-border);
 }
 
-.workflow-name {
+.workflow-viewer .workflow-name {
   margin: 0 0 8px 0;
   font-size: 18px;
   font-weight: 700;
   color: var(--wfv-foreground);
 }
 
-.workflow-description {
+.workflow-viewer .workflow-description {
   margin: 0 0 12px 0;
   font-size: 14px;
   color: var(--wfv-muted-foreground);
   font-style: italic;
 }
 
-.workflow-meta {
+.workflow-viewer .workflow-meta {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
 }
 
-.meta-item {
+.workflow-viewer .meta-item {
   font-size: 12px;
   color: var(--wfv-muted-foreground);
   font-weight: 500;
 }
 
-.meta-item::before {
+.workflow-viewer .meta-item::before {
   content: '•';
   margin-right: 6px;
   color: var(--wfv-border);
 }
 
-.meta-item:first-child::before {
+.workflow-viewer .meta-item:first-child::before {
   content: none;
   margin-right: 0;
 }
 
 /* Special nodes (start, end, fail-terminal) */
-.special-node {
+.workflow-viewer .special-node {
   background: var(--wfv-card);
   border: 3px solid;
   border-radius: 50%;
@@ -365,12 +364,12 @@
   transition: box-shadow 0.2s, transform 0.2s;
 }
 
-.special-node:hover {
+.workflow-viewer .special-node:hover {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   transform: scale(1.05);
 }
 
-.special-node-content {
+.workflow-viewer .special-node-content {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -378,12 +377,12 @@
   gap: 4px;
 }
 
-.special-node-icon {
+.workflow-viewer .special-node-icon {
   width: 28px;
   height: 28px;
 }
 
-.special-node-title {
+.workflow-viewer .special-node-title {
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
@@ -391,63 +390,63 @@
 }
 
 /* Start node */
-.start-node {
+.workflow-viewer .start-node {
   border-color: var(--workflow-node-start);
   color: var(--wfv-foreground);
 }
 
-.start-node .special-node-icon {
+.workflow-viewer .start-node .special-node-icon {
   color: var(--workflow-node-start);
 }
 
 /* End node */
-.end-node {
+.workflow-viewer .end-node {
   border-color: var(--workflow-node-end);
   color: var(--wfv-foreground);
 }
 
-.end-node .special-node-icon {
+.workflow-viewer .end-node .special-node-icon {
   color: var(--workflow-node-end);
 }
 
 /* Fail terminal node */
-.fail-terminal-node {
+.workflow-viewer .fail-terminal-node {
   border-color: var(--workflow-node-fail);
   color: var(--wfv-foreground);
 }
 
-.fail-terminal-node .special-node-icon {
+.workflow-viewer .fail-terminal-node .special-node-icon {
   color: var(--workflow-node-fail);
 }
 
 /* Trigger node */
-.trigger-node {
+.workflow-viewer .trigger-node {
   border-color: var(--workflow-node-trigger);
   color: var(--wfv-foreground);
   position: relative;
 }
 
-.trigger-node .special-node-icon {
+.workflow-viewer .trigger-node .special-node-icon {
   color: var(--workflow-node-trigger);
 }
 
 /* Larger trigger node for multiple triggers */
-.trigger-node-large {
+.workflow-viewer .trigger-node-large {
   width: 100px;
   height: 100px;
 }
 
-.trigger-node-large .special-node-icon {
+.workflow-viewer .trigger-node-large .special-node-icon {
   width: 32px;
   height: 32px;
 }
 
-.trigger-node-large .special-node-title {
+.workflow-viewer .trigger-node-large .special-node-title {
   font-size: 9px;
 }
 
 /* Trigger tooltip */
-.trigger-tooltip {
+.workflow-viewer .trigger-tooltip {
   position: absolute;
   bottom: calc(100% + 15px);
   left: 50%;
@@ -464,7 +463,7 @@
 }
 
 /* Tooltip arrow */
-.trigger-tooltip::after {
+.workflow-viewer .trigger-tooltip::after {
   content: '';
   position: absolute;
   top: 100%;
@@ -477,7 +476,7 @@
   border-top: 8px solid var(--wfv-ctp-peach);
 }
 
-.trigger-tooltip-header {
+.workflow-viewer .trigger-tooltip-header {
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
@@ -488,7 +487,7 @@
   border-bottom: 1px solid var(--wfv-border);
 }
 
-.trigger-tooltip-item {
+.workflow-viewer .trigger-tooltip-item {
   margin-bottom: 8px;
   padding: 6px 8px;
   background: color-mix(in srgb, var(--wfv-ctp-yellow) 20%, var(--wfv-card));
@@ -496,11 +495,11 @@
   border-left: 3px solid var(--wfv-ctp-peach);
 }
 
-.trigger-tooltip-item:last-child {
+.workflow-viewer .trigger-tooltip-item:last-child {
   margin-bottom: 0;
 }
 
-.trigger-type {
+.workflow-viewer .trigger-type {
   font-size: 12px;
   font-weight: 600;
   color: var(--wfv-foreground);
@@ -508,7 +507,7 @@
   margin-bottom: 4px;
 }
 
-.trigger-condition {
+.workflow-viewer .trigger-condition {
   font-size: 11px;
   color: var(--wfv-muted-foreground);
   font-family: 'Monaco', 'Courier New', monospace;
@@ -523,28 +522,28 @@
    These overrides are only for specific cases that need different styling. */
 
 /* Darker box shadows for dark mode */
-.react-flow.dark .llm-node,
-.react-flow.dark .tool-node,
-.react-flow.dark .switch-node,
-.react-flow.dark .fail-node,
-.react-flow.dark .special-node {
+.workflow-viewer .react-flow.dark .llm-node,
+.workflow-viewer .react-flow.dark .tool-node,
+.workflow-viewer .react-flow.dark .switch-node,
+.workflow-viewer .react-flow.dark .fail-node,
+.workflow-viewer .react-flow.dark .special-node {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
 }
 
-.react-flow.dark .llm-node:hover,
-.react-flow.dark .tool-node:hover,
-.react-flow.dark .switch-node:hover,
-.react-flow.dark .fail-node:hover,
-.react-flow.dark .special-node:hover {
+.workflow-viewer .react-flow.dark .llm-node:hover,
+.workflow-viewer .react-flow.dark .tool-node:hover,
+.workflow-viewer .react-flow.dark .switch-node:hover,
+.workflow-viewer .react-flow.dark .fail-node:hover,
+.workflow-viewer .react-flow.dark .special-node:hover {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
 }
 
 /* Lighter edges for better visibility in dark mode */
-.react-flow.dark .react-flow__edge-path {
+.workflow-viewer .react-flow.dark .react-flow__edge-path {
   stroke: var(--wfv-border);
 }
 
-.react-flow.dark .react-flow__edge.selected .react-flow__edge-path,
-.react-flow.dark .react-flow__edge:focus .react-flow__edge-path {
+.workflow-viewer .react-flow.dark .react-flow__edge.selected .react-flow__edge-path,
+.workflow-viewer .react-flow.dark .react-flow__edge:focus .react-flow__edge-path {
   stroke: var(--wfv-primary);
 }

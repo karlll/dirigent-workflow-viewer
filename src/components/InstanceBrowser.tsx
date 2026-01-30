@@ -81,7 +81,7 @@ export function InstanceBrowser({
   // Only show full loading spinner on INITIAL load
   if (loading && instances.length === 0) {
     return (
-      <div className={cn('flex items-center justify-center p-8 text-muted-foreground', className)}>
+      <div className={cn('workflow-viewer flex items-center justify-center p-8 text-muted-foreground', className)}>
         <div className="text-center">
           <div className="w-8 h-8 border-3 border-border border-t-primary rounded-full animate-spin mx-auto mb-2" />
           <div className="text-sm">Loading instances...</div>
@@ -94,7 +94,7 @@ export function InstanceBrowser({
     return (
       <div
         className={cn(
-          'p-4 text-destructive bg-destructive/10 rounded-lg border border-destructive text-sm',
+          'workflow-viewer p-4 text-destructive bg-destructive/10 rounded-lg border border-destructive text-sm',
           className
         )}
       >
@@ -105,7 +105,7 @@ export function InstanceBrowser({
 
   if (instances.length === 0) {
     return (
-      <div className={cn('p-8 text-muted-foreground text-center text-sm', className)}>
+      <div className={cn('workflow-viewer p-8 text-muted-foreground text-center text-sm', className)}>
         No instances found
         {(workflowName || status) && (
           <div className="mt-2 text-xs">
@@ -119,7 +119,7 @@ export function InstanceBrowser({
   }
 
   return (
-    <div className={cn('flex flex-col', className)}>
+    <div className={cn('workflow-viewer flex flex-col', className)}>
       {/* Header with count */}
       {showHeader && (
         <div className="px-4 py-3 bg-muted border-b border-border text-sm text-muted-foreground flex justify-between items-center">
