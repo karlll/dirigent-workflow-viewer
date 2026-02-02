@@ -4,6 +4,7 @@
 
 import { useWorkflows } from '../lib/hooks'
 import type { WorkflowMetadata } from '../types/api'
+import { cn } from '../lib/utils'
 
 /**
  * Props for WorkflowBrowser component
@@ -61,35 +62,13 @@ export function WorkflowBrowser({
   if (loading) {
     return (
       <div
-        className={`workflow-viewer ${className}`}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '2rem',
-          color: '#6b7280',
-          ...style,
-        }}
+        className={cn('workflow-viewer flex items-center justify-center p-8 text-muted-foreground', className)}
+        style={style}
       >
-        <div style={{ textAlign: 'center' }}>
-          <div
-            style={{
-              width: '32px',
-              height: '32px',
-              border: '3px solid #e5e7eb',
-              borderTopColor: '#3b82f6',
-              borderRadius: '50%',
-              animation: 'spin 1s linear infinite',
-              margin: '0 auto 0.5rem',
-            }}
-          />
-          <div style={{ fontSize: '0.875rem' }}>Loading workflows...</div>
+        <div className="text-center">
+          <div className="w-8 h-8 border-3 border-border border-t-primary rounded-full animate-spin mx-auto mb-2" />
+          <div className="text-sm">Loading workflows...</div>
         </div>
-        <style>{`
-          @keyframes spin {
-            to { transform: rotate(360deg); }
-          }
-        `}</style>
       </div>
     )
   }
@@ -97,16 +76,11 @@ export function WorkflowBrowser({
   if (error) {
     return (
       <div
-        className={`workflow-viewer ${className}`}
-        style={{
-          padding: '1rem',
-          color: '#ef4444',
-          backgroundColor: '#fee2e2',
-          borderRadius: '0.5rem',
-          border: '1px solid #fca5a5',
-          fontSize: '0.875rem',
-          ...style,
-        }}
+        className={cn(
+          'workflow-viewer p-4 text-destructive bg-destructive/10 rounded-lg border border-destructive text-sm',
+          className
+        )}
+        style={style}
       >
         <strong>Error:</strong> {error}
       </div>
@@ -116,14 +90,8 @@ export function WorkflowBrowser({
   if (workflows.length === 0) {
     return (
       <div
-        className={`workflow-viewer ${className}`}
-        style={{
-          padding: '2rem',
-          color: '#6b7280',
-          textAlign: 'center',
-          fontSize: '0.875rem',
-          ...style,
-        }}
+        className={cn('workflow-viewer p-8 text-muted-foreground text-center text-sm', className)}
+        style={style}
       >
         No workflows found
       </div>
@@ -133,19 +101,10 @@ export function WorkflowBrowser({
   if (mode === 'dropdown') {
     return (
       <select
-        className={`workflow-viewer ${className}`}
+        className={cn('workflow-viewer w-full p-2 border border-border rounded-md text-sm bg-card cursor-pointer', className)}
         value={selectedWorkflow || ''}
         onChange={(e) => onSelect?.(e.target.value)}
-        style={{
-          width: '100%',
-          padding: '0.5rem',
-          border: '1px solid #d1d5db',
-          borderRadius: '0.375rem',
-          fontSize: '0.875rem',
-          backgroundColor: 'white',
-          cursor: 'pointer',
-          ...style,
-        }}
+        style={style}
         aria-label="Select workflow"
       >
         <option value="">Select a workflow...</option>
@@ -220,43 +179,28 @@ function WorkflowCard({ workflow, selected, showMetadata, onClick }: WorkflowCar
   return (
     <button
       onClick={onClick}
-      style={{
-        padding: '1rem',
-        border: `2px solid ${selected ? '#3b82f6' : '#e5e7eb'}`,
-        borderRadius: '0.5rem',
-        backgroundColor: selected ? '#eff6ff' : 'white',
-        cursor: 'pointer',
-        textAlign: 'left',
-        transition: 'all 0.2s',
-      }}
-      onMouseEnter={(e) => {
-        if (!selected) {
-          e.currentTarget.style.borderColor = '#d1d5db'
-          e.currentTarget.style.backgroundColor = '#f9fafb'
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (!selected) {
-          e.currentTarget.style.borderColor = '#e5e7eb'
-          e.currentTarget.style.backgroundColor = 'white'
-        }
-      }}
+      className={cn(
+        'p-4 border-2 rounded-lg bg-card cursor-pointer text-left transition-all duration-200',
+        selected
+          ? 'border-primary bg-primary/10'
+          : 'border-border hover:border-muted-foreground hover:bg-muted/10'
+      )}
       aria-label={`Select workflow ${workflow.name}`}
       aria-pressed={selected}
     >
-      <div style={{ fontWeight: 600, marginBottom: '0.25rem', color: '#111827' }}>
+      <div className="font-semibold mb-1 text-foreground">
         {workflow.name}
       </div>
-      <div style={{ fontSize: '0.75rem', color: '#6b7280', marginBottom: '0.5rem' }}>
+      <div className="text-xs text-muted-foreground mb-2">
         Version {workflow.version}
       </div>
       {showMetadata && (
         <>
-          <div style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '0.5rem' }}>
+          <div className="text-xs text-muted-foreground mt-2">
             {workflow.stepCount} step{workflow.stepCount !== 1 ? 's' : ''}
           </div>
           {workflow.triggerTypes.length > 0 && (
-            <div style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '0.25rem' }}>
+            <div className="text-xs text-muted-foreground mt-1">
               Triggers: {workflow.triggerTypes.join(', ')}
             </div>
           )}
@@ -280,45 +224,26 @@ function WorkflowListItem({ workflow, selected, showMetadata, onClick }: Workflo
   return (
     <button
       onClick={onClick}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0.75rem 1rem',
-        border: `1px solid ${selected ? '#3b82f6' : '#e5e7eb'}`,
-        borderRadius: '0.375rem',
-        backgroundColor: selected ? '#eff6ff' : 'white',
-        cursor: 'pointer',
-        textAlign: 'left',
-        transition: 'all 0.2s',
-        width: '100%',
-      }}
-      onMouseEnter={(e) => {
-        if (!selected) {
-          e.currentTarget.style.borderColor = '#d1d5db'
-          e.currentTarget.style.backgroundColor = '#f9fafb'
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (!selected) {
-          e.currentTarget.style.borderColor = '#e5e7eb'
-          e.currentTarget.style.backgroundColor = 'white'
-        }
-      }}
+      className={cn(
+        'flex items-center justify-between p-3 border rounded-md bg-card cursor-pointer text-left transition-all duration-200 w-full',
+        selected
+          ? 'border-primary bg-primary/10'
+          : 'border-border hover:border-muted-foreground hover:bg-muted/10'
+      )}
       aria-label={`Select workflow ${workflow.name}`}
       aria-pressed={selected}
     >
-      <div style={{ flex: 1 }}>
-        <div style={{ fontWeight: 600, color: '#111827', marginBottom: '0.125rem' }}>
+      <div className="flex-1">
+        <div className="font-semibold text-foreground mb-0.5">
           {workflow.name}
         </div>
-        <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>Version {workflow.version}</div>
+        <div className="text-xs text-muted-foreground">Version {workflow.version}</div>
       </div>
       {showMetadata && (
-        <div style={{ fontSize: '0.75rem', color: '#6b7280', textAlign: 'right' }}>
+        <div className="text-xs text-muted-foreground text-right">
           <div>{workflow.stepCount} steps</div>
           {workflow.triggerTypes.length > 0 && (
-            <div style={{ marginTop: '0.125rem' }}>{workflow.triggerTypes.length} triggers</div>
+            <div className="mt-0.5">{workflow.triggerTypes.length} triggers</div>
           )}
         </div>
       )}

@@ -207,11 +207,11 @@
 }
 
 .workflow-viewer .bg-primary\/10 {
-  background-color: color-mix(in srgb, var(--primary) 10%, transparent);
+  background-color: color-mix(in srgb, var(--primary) 10%, var(--card) 90%);
 }
 
 .workflow-viewer .bg-primary\/20 {
-  background-color: color-mix(in srgb, var(--primary) 20%, transparent);
+  background-color: color-mix(in srgb, var(--primary) 20%, var(--card) 80%);
 }
 
 .workflow-viewer .bg-muted {
@@ -219,11 +219,11 @@
 }
 
 .workflow-viewer .bg-muted\/50 {
-  background-color: color-mix(in srgb, var(--muted) 50%, transparent);
+  background-color: color-mix(in srgb, var(--muted) 50%, var(--card) 50%);
 }
 
 .workflow-viewer .bg-muted\/10 {
-  background-color: color-mix(in srgb, var(--muted) 10%, transparent);
+  background-color: color-mix(in srgb, var(--muted) 10%, var(--card) 90%);
 }
 
 .workflow-viewer .bg-destructive {
@@ -231,11 +231,11 @@
 }
 
 .workflow-viewer .bg-destructive\/10 {
-  background-color: color-mix(in srgb, var(--destructive) 10%, transparent);
+  background-color: color-mix(in srgb, var(--destructive) 10%, var(--card) 90%);
 }
 
 .workflow-viewer .bg-destructive\/20 {
-  background-color: color-mix(in srgb, var(--destructive) 20%, transparent);
+  background-color: color-mix(in srgb, var(--destructive) 20%, var(--card) 80%);
 }
 
 .workflow-viewer .bg-ctp-green {
@@ -243,11 +243,11 @@
 }
 
 .workflow-viewer .bg-ctp-green\/10 {
-  background-color: color-mix(in srgb, var(--ctp-green) 10%, transparent);
+  background-color: color-mix(in srgb, var(--ctp-green) 10%, var(--card) 90%);
 }
 
 .workflow-viewer .bg-ctp-green\/20 {
-  background-color: color-mix(in srgb, var(--ctp-green) 20%, transparent);
+  background-color: color-mix(in srgb, var(--ctp-green) 20%, var(--card) 80%);
 }
 
 .workflow-viewer .bg-card {
@@ -263,12 +263,20 @@
   color: var(--primary);
 }
 
+.workflow-viewer .text-primary-foreground {
+  color: var(--primary-foreground);
+}
+
 .workflow-viewer .text-muted-foreground {
   color: var(--muted-foreground);
 }
 
 .workflow-viewer .text-destructive {
   color: var(--destructive);
+}
+
+.workflow-viewer .text-destructive-foreground {
+  color: var(--destructive-foreground);
 }
 
 .workflow-viewer .text-ctp-green {
@@ -310,16 +318,20 @@
 }
 
 /* Hover states */
+.workflow-viewer .hover\:bg-muted\/10:hover {
+  background-color: color-mix(in srgb, var(--muted) 10%, var(--card) 90%);
+}
+
 .workflow-viewer .hover\:bg-primary\/20:hover {
-  background-color: color-mix(in srgb, var(--primary) 20%, transparent);
+  background-color: color-mix(in srgb, var(--primary) 20%, var(--card) 80%);
 }
 
 .workflow-viewer .hover\:bg-ctp-green\/20:hover {
-  background-color: color-mix(in srgb, var(--ctp-green) 20%, transparent);
+  background-color: color-mix(in srgb, var(--ctp-green) 20%, var(--card) 80%);
 }
 
 .workflow-viewer .hover\:bg-destructive\/20:hover {
-  background-color: color-mix(in srgb, var(--destructive) 20%, transparent);
+  background-color: color-mix(in srgb, var(--destructive) 20%, var(--card) 80%);
 }
 
 .workflow-viewer .hover\:border-muted-foreground:hover {

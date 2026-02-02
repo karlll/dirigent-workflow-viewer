@@ -5,6 +5,8 @@
 
 import { useInstanceState, useWorkflowDefinition } from '../lib/hooks'
 import { ExecutableWorkflow } from './ExecutableWorkflow'
+import { cn } from '../lib/utils'
+import { statusBadgeVariants } from '../lib/variants'
 
 /**
  * Props for InstanceMonitor component
@@ -81,35 +83,13 @@ export function InstanceMonitor({
   if (loading && showLoading) {
     return (
       <div
-        className={`workflow-viewer ${className}`}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '2rem',
-          color: '#6b7280',
-          ...style,
-        }}
+        className={cn('workflow-viewer flex items-center justify-center p-8 text-muted-foreground', className)}
+        style={style}
       >
-        <div style={{ textAlign: 'center' }}>
-          <div
-            style={{
-              width: '32px',
-              height: '32px',
-              border: '3px solid #e5e7eb',
-              borderTopColor: '#3b82f6',
-              borderRadius: '50%',
-              animation: 'spin 1s linear infinite',
-              margin: '0 auto 0.5rem',
-            }}
-          />
-          <div style={{ fontSize: '0.875rem' }}>Loading instance monitor...</div>
+        <div className="text-center">
+          <div className="w-8 h-8 border-3 border-border border-t-primary rounded-full animate-spin mx-auto mb-2" />
+          <div className="text-sm">Loading instance monitor...</div>
         </div>
-        <style>{`
-          @keyframes spin {
-            to { transform: rotate(360deg); }
-          }
-        `}</style>
       </div>
     )
   }
@@ -117,16 +97,11 @@ export function InstanceMonitor({
   if (error) {
     return (
       <div
-        className={`workflow-viewer ${className}`}
-        style={{
-          padding: '1rem',
-          color: '#ef4444',
-          backgroundColor: '#fee2e2',
-          borderRadius: '0.5rem',
-          border: '1px solid #fca5a5',
-          fontSize: '0.875rem',
-          ...style,
-        }}
+        className={cn(
+          'workflow-viewer p-4 text-destructive bg-destructive/10 rounded-lg border border-destructive text-sm',
+          className
+        )}
+        style={style}
       >
         <strong>Error:</strong> {error}
       </div>
@@ -136,14 +111,8 @@ export function InstanceMonitor({
   if (!workflow || !yaml) {
     return (
       <div
-        className={`workflow-viewer ${className}`}
-        style={{
-          padding: '2rem',
-          color: '#6b7280',
-          textAlign: 'center',
-          fontSize: '0.875rem',
-          ...style,
-        }}
+        className={cn('workflow-viewer p-8 text-muted-foreground text-center text-sm', className)}
+        style={style}
       >
         Workflow not found
       </div>
@@ -152,36 +121,16 @@ export function InstanceMonitor({
 
   return (
     <div
-      className={`workflow-viewer ${className}`}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        ...style,
-      }}
+      className={cn('workflow-viewer flex flex-col', className)}
+      style={style}
     >
       {/* Header with instance info */}
-      <div
-        style={{
-          padding: '1rem',
-          backgroundColor: '#f9fafb',
-          borderBottom: '1px solid #e5e7eb',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
+      <div className="p-4 bg-muted border-b border-border flex justify-between items-center">
         <div>
-          <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>
+          <div className="text-sm text-muted-foreground">
             Monitoring Instance
           </div>
-          <div
-            style={{
-              fontSize: '0.875rem',
-              fontFamily: 'monospace',
-              color: '#111827',
-              marginTop: '0.25rem',
-            }}
-          >
+          <div className="text-sm font-mono text-foreground mt-1">
             {instanceId}
           </div>
         </div>
@@ -194,7 +143,7 @@ export function InstanceMonitor({
       </div>
 
       {/* Workflow visualization */}
-      <div style={{ flex: 1, minHeight: 0 }}>
+      <div className="flex-1 min-h-0">
         <ExecutableWorkflow
           yaml={yaml}
           instanceId={instanceId}
@@ -216,70 +165,22 @@ interface StatusBadgeProps {
 }
 
 function StatusBadge({ status, currentStep }: StatusBadgeProps) {
-  const statusColors = {
-    running: { bg: '#dbeafe', border: '#3b82f6', text: '#1e40af' },
-    completed: { bg: '#d1fae5', border: '#10b981', text: '#065f46' },
-    failed: { bg: '#fee2e2', border: '#ef4444', text: '#991b1b' },
-  }
-
-  const colors =
-    statusColors[status.toLowerCase() as keyof typeof statusColors] ||
-    statusColors.running
-
   const isRunning = status.toLowerCase() === 'running'
+  const statusValue = status.toUpperCase() as 'RUNNING' | 'COMPLETED' | 'FAILED'
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-end',
-        gap: '0.25rem',
-      }}
-    >
-      <div
-        style={{
-          padding: '0.25rem 0.75rem',
-          borderRadius: '0.25rem',
-          fontSize: '0.75rem',
-          fontWeight: 600,
-          backgroundColor: colors.bg,
-          color: colors.text,
-          border: `1px solid ${colors.border}`,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-        }}
-      >
+    <div className="flex flex-col items-end gap-1">
+      <div className={cn(statusBadgeVariants({ status: statusValue }))}>
         {isRunning && (
-          <div
-            style={{
-              width: '6px',
-              height: '6px',
-              borderRadius: '50%',
-              backgroundColor: colors.text,
-              animation: 'pulse 2s infinite',
-            }}
-          />
+          <div className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
         )}
         {status.toUpperCase()}
       </div>
       {currentStep && isRunning && (
-        <div
-          style={{
-            fontSize: '0.75rem',
-            color: '#6b7280',
-          }}
-        >
+        <div className="text-xs text-muted-foreground">
           Current: {currentStep}
         </div>
       )}
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.5; }
-        }
-      `}</style>
     </div>
   )
 }

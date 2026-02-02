@@ -6,6 +6,7 @@ import { workflowToGraph } from '../utils/graphConverter'
 import { applyDagreLayout, type LayoutDirection } from '../utils/layout'
 import type { Workflow as WorkflowType } from '../types/workflow'
 import { LlmNode, ToolNode, SwitchNode, FailNode, StartNode, EndNode, FailTerminalNode, TriggerNode } from './nodes'
+import { cn } from '../lib/utils'
 
 /**
  * Props for the Workflow component
@@ -126,13 +127,11 @@ export function Workflow({
 
   if (error) {
     return (
-      <div style={{
-        padding: '20px',
-        color: '#ef4444',
-        backgroundColor: '#fee2e2',
-        borderRadius: '8px',
-        border: '1px solid #fca5a5'
-      }}>
+      <div className={cn(
+        'workflow-viewer',
+        isDark ? 'dark' : '',
+        'p-5 text-destructive bg-destructive/10 rounded-lg border border-destructive'
+      )}>
         <strong>Error:</strong> {error}
       </div>
     )
@@ -140,11 +139,11 @@ export function Workflow({
 
   if (nodes.length === 0) {
     return (
-      <div style={{
-        padding: '20px',
-        color: '#6b7280',
-        textAlign: 'center'
-      }}>
+      <div className={cn(
+        'workflow-viewer',
+        isDark ? 'dark' : '',
+        'p-5 text-muted-foreground text-center'
+      )}>
         No workflow to display
       </div>
     )

@@ -85,15 +85,16 @@ export const instanceItemVariants = cva(
  * Status badge variants
  *
  * Used for status indicators in the InstanceBrowser and other components.
+ * Uses theme-aware foreground colors that work in both light and dark modes.
  */
 export const statusBadgeVariants = cva(
   'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold gap-1.5',
   {
     variants: {
       status: {
-        RUNNING: 'bg-primary text-white',
-        COMPLETED: 'bg-ctp-green text-white',
-        FAILED: 'bg-destructive text-white',
+        RUNNING: 'bg-primary text-primary-foreground',
+        COMPLETED: 'bg-ctp-green text-primary-foreground',
+        FAILED: 'bg-destructive text-destructive-foreground',
       },
     },
   }

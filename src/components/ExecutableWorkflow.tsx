@@ -205,34 +205,11 @@ export function ExecutableWorkflow({
   // Loading state
   if (loading && showLoading) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '40px',
-          color: '#6b7280',
-        }}
-      >
-        <div style={{ textAlign: 'center' }}>
-          <div
-            style={{
-              width: '40px',
-              height: '40px',
-              border: '4px solid #e5e7eb',
-              borderTopColor: '#3b82f6',
-              borderRadius: '50%',
-              animation: 'spin 1s linear infinite',
-              margin: '0 auto 16px',
-            }}
-          />
+      <div className="workflow-viewer flex items-center justify-center p-10 text-muted-foreground">
+        <div className="text-center">
+          <div className="w-10 h-10 border-4 border-border border-t-primary rounded-full animate-spin mx-auto mb-4" />
           <div>Loading execution state...</div>
         </div>
-        <style>{`
-          @keyframes spin {
-            to { transform: rotate(360deg); }
-          }
-        `}</style>
       </div>
     )
   }
@@ -240,15 +217,7 @@ export function ExecutableWorkflow({
   // Error state
   if (error) {
     return (
-      <div
-        style={{
-          padding: '20px',
-          color: '#ef4444',
-          backgroundColor: '#fee2e2',
-          borderRadius: '8px',
-          border: '1px solid #fca5a5',
-        }}
-      >
+      <div className="workflow-viewer p-5 text-destructive bg-destructive/10 rounded-lg border border-destructive">
         <strong>Error:</strong> {error}
       </div>
     )
@@ -257,13 +226,7 @@ export function ExecutableWorkflow({
   // No workflow
   if (!enrichedWorkflow) {
     return (
-      <div
-        style={{
-          padding: '20px',
-          color: '#6b7280',
-          textAlign: 'center',
-        }}
-      >
+      <div className="workflow-viewer p-5 text-muted-foreground text-center">
         No workflow to display
       </div>
     )
