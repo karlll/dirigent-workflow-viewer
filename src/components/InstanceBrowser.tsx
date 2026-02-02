@@ -224,14 +224,14 @@ function InstanceItem({ instance, selected, showMetadata, onClick }: InstanceIte
         {instance.status}
       </div>
 
-      {/* Instance ID */}
-      <div className="text-sm font-mono text-foreground mb-2 pr-24">
-        {instance.id}
+      {/* Workflow name and version */}
+      <div className="text-sm text-foreground font-semibold mb-1 pr-24">
+        {instance.workflowName} <span className="text-muted-foreground font-normal">v{instance.workflowVersion}</span>
       </div>
 
-      {/* Workflow name and version */}
-      <div className="text-sm text-muted-foreground mb-1">
-        <strong className="text-foreground">{instance.workflowName}</strong> v{instance.workflowVersion}
+      {/* Instance ID */}
+      <div className="text-sm font-mono text-muted-foreground mb-2">
+        {instance.id}
       </div>
 
       {showMetadata && (
