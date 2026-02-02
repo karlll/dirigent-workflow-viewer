@@ -7,6 +7,7 @@ import { useInstanceState, useWorkflowDefinition } from '../lib/hooks'
 import { ExecutableWorkflow } from './ExecutableWorkflow'
 import { cn } from '../lib/utils'
 import { statusBadgeVariants } from '../lib/variants'
+import type { ColorMode } from '@xyflow/react'
 
 /**
  * Props for InstanceMonitor component
@@ -32,6 +33,9 @@ export interface InstanceMonitorProps {
 
   /** Custom styles */
   style?: React.CSSProperties
+
+  /** Color mode for the component (default: system) */
+  colorMode?: ColorMode
 }
 
 /**
@@ -63,6 +67,7 @@ export function InstanceMonitor({
   showLoading = true,
   className = '',
   style,
+  colorMode = 'system',
 }: InstanceMonitorProps) {
   const {
     workflow,
@@ -150,6 +155,7 @@ export function InstanceMonitor({
           apiBaseUrl={apiBaseUrl}
           direction={direction}
           showLoading={false} // We handle loading at this level
+          colorMode={colorMode}
         />
       </div>
     </div>
