@@ -40,37 +40,38 @@ export const nodeVariants = cva(
  * Instance browser item variants
  *
  * Used for styling workflow instance items in the InstanceBrowser component.
- * Will be applied in Phase 3.
+ * Matches WorkflowBrowser styling: thin borders, subtle appearance, colors only on selection.
  */
 export const instanceItemVariants = cva(
-  'rounded-lg border-2 p-3 cursor-pointer transition-all duration-200',
+  'rounded-md border p-3 cursor-pointer transition-all duration-200 bg-white text-left relative',
   {
     variants: {
       status: {
-        RUNNING: 'bg-primary/10 border-primary hover:bg-primary/20',
-        COMPLETED: 'bg-ctp-green/10 border-ctp-green hover:bg-ctp-green/20',
-        FAILED: 'bg-destructive/10 border-destructive hover:bg-destructive/20',
+        RUNNING: '',
+        COMPLETED: '',
+        FAILED: '',
       },
       selected: {
-        true: 'ring-2 ring-offset-2 ring-primary',
-        false: 'hover:border-muted-foreground',
+        true: '',
+        false: 'border-border hover:border-muted-foreground hover:bg-muted/10',
       },
     },
     compoundVariants: [
+      // Only apply colored styling when SELECTED
       {
         selected: true,
         status: 'RUNNING',
-        class: 'ring-primary',
+        class: 'bg-primary/10 border-primary',
       },
       {
         selected: true,
         status: 'COMPLETED',
-        class: 'ring-ctp-green',
+        class: 'bg-ctp-green/10 border-ctp-green',
       },
       {
         selected: true,
         status: 'FAILED',
-        class: 'ring-destructive',
+        class: 'bg-destructive/10 border-destructive',
       },
     ],
     defaultVariants: {

@@ -206,8 +206,7 @@ function InstanceItem({ instance, selected, showMetadata, onClick }: InstanceIte
         instanceItemVariants({
           status: instance.status as 'RUNNING' | 'COMPLETED' | 'FAILED',
           selected: selected,
-        }),
-        'relative'
+        })
       )}
       aria-label={`Select instance ${instance.id}`}
       aria-pressed={selected}
