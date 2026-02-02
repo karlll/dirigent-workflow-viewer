@@ -17,6 +17,25 @@ const meta: Meta<typeof InstanceBrowser> = {
       handlers,
     },
   },
+  argTypes: {
+    colorMode: {
+      control: 'radio',
+      options: ['light', 'dark', 'system'],
+      description: 'Color scheme: light, dark, or system (follows OS preference)',
+    },
+    showMetadata: {
+      control: 'boolean',
+      description: 'Show detailed metadata (timestamps, duration, trigger)',
+    },
+    showHeader: {
+      control: 'boolean',
+      description: 'Show header with instance count and filters',
+    },
+    refreshInterval: {
+      control: 'number',
+      description: 'Auto-refresh interval in milliseconds (0 to disable)',
+    },
+  },
 }
 
 export default meta
@@ -24,26 +43,31 @@ type Story = StoryObj<typeof InstanceBrowser>
 
 // Interactive wrapper to demonstrate selection
 function InteractiveWrapper({
+  apiBaseUrl,
   status,
   workflowName,
   refreshInterval,
   showMetadata,
+  colorMode,
 }: {
+  apiBaseUrl: string
   status?: 'RUNNING' | 'COMPLETED' | 'FAILED'
   workflowName?: string
   refreshInterval?: number
   showMetadata?: boolean
+  colorMode?: 'light' | 'dark' | 'system'
 }) {
   const [selected, setSelected] = useState<string>()
 
   return (
     <div>
       <InstanceBrowser
-        apiBaseUrl="http://localhost:8080"
+        apiBaseUrl={apiBaseUrl}
         status={status}
         workflowName={workflowName}
         refreshInterval={refreshInterval}
         showMetadata={showMetadata}
+        colorMode={colorMode}
         selectedInstance={selected}
         onSelect={setSelected}
       />
@@ -64,22 +88,26 @@ function InteractiveWrapper({
 }
 
 export const AllInstances: Story = {
-  render: () => <InteractiveWrapper />,
+  args: {
+    apiBaseUrl: 'http://localhost:8080',
+  },
+  render: (args) => <InteractiveWrapper {...args} />
 }
 
 export const WithMetadata: Story = {
-  render: () => <InteractiveWrapper showMetadata />,
+  args: {
+    apiBaseUrl: 'http://localhost:8080',
+    showMetadata: true,
+  },
+  render: (args) => <InteractiveWrapper {...args} />,
 }
 
 export const WithSelection: Story = {
-  render: () => (
-    <InstanceBrowser
-      apiBaseUrl="http://localhost:8080"
-      showMetadata
-      selectedInstance="instance-2"
-      onSelect={() => {}}
-    />
-  ),
+  args: {
+    apiBaseUrl: 'http://localhost:8080',
+    showMetadata: true,
+    selectedInstance: 'instance-2',
+  },
 }
 
 export const FilteredByStatus: Story = {
@@ -122,7 +150,12 @@ export const FilteredByStatus: Story = {
       ],
     },
   },
-  render: () => <InteractiveWrapper status="RUNNING" showMetadata />,
+  args: {
+    apiBaseUrl: 'http://localhost:8080',
+    status: 'RUNNING',
+    showMetadata: true,
+  },
+  render: (args) => <InteractiveWrapper {...args} />,
 }
 
 export const FilteredByWorkflow: Story = {
@@ -176,13 +209,21 @@ export const FilteredByWorkflow: Story = {
       ],
     },
   },
-  render: () => (
-    <InteractiveWrapper workflowName="sample_workflow" showMetadata />
-  ),
+  args: {
+    apiBaseUrl: 'http://localhost:8080',
+    workflowName: 'sample_workflow',
+    showMetadata: true,
+  },
+  render: (args) => <InteractiveWrapper {...args} />,
 }
 
 export const WithAutoRefresh: Story = {
-  render: () => <InteractiveWrapper refreshInterval={5000} showMetadata />,
+  args: {
+    apiBaseUrl: 'http://localhost:8080',
+    refreshInterval: 5000,
+    showMetadata: true,
+  },
+  render: (args) => <InteractiveWrapper {...args} />,
 }
 
 export const Empty: Story = {
@@ -201,7 +242,9 @@ export const Empty: Story = {
       ],
     },
   },
-  render: () => <InstanceBrowser apiBaseUrl="http://localhost:8080" />,
+  args: {
+    apiBaseUrl: 'http://localhost:8080',
+  },
 }
 
 export const EmptyWithFilters: Story = {
@@ -220,13 +263,11 @@ export const EmptyWithFilters: Story = {
       ],
     },
   },
-  render: () => (
-    <InstanceBrowser
-      apiBaseUrl="http://localhost:8080"
-      workflowName="missing_workflow"
-      status="RUNNING"
-    />
-  ),
+  args: {
+    apiBaseUrl: 'http://localhost:8080',
+    workflowName: 'missing_workflow',
+    status: 'RUNNING',
+  },
 }
 
 export const Error: Story = {
@@ -240,5 +281,43 @@ export const Error: Story = {
       ],
     },
   },
-  render: () => <InstanceBrowser apiBaseUrl="http://localhost:8080" />,
+  args: {
+    apiBaseUrl: 'http://localhost:8080',
+  },
+}
+
+/**
+ * Dark mode - demonstrates dark color scheme with Catppuccin Mocha colors.
+ */
+export const DarkMode: Story = {
+  args: {
+    apiBaseUrl: 'http://localhost:8080',
+    colorMode: 'dark',
+    showMetadata: true,
+  },
+  render: (args) => <InteractiveWrapper {...args} />,
+}
+
+/**
+ * Dark mode with selection - demonstrates dark mode with selected item.
+ */
+export const DarkModeWithSelection: Story = {
+  args: {
+    apiBaseUrl: 'http://localhost:8080',
+    colorMode: 'dark',
+    showMetadata: true,
+    selectedInstance: 'instance-2',
+  },
+}
+
+/**
+ * System color mode - follows OS preference.
+ */
+export const SystemColorMode: Story = {
+  args: {
+    apiBaseUrl: 'http://localhost:8080',
+    colorMode: 'system',
+    showMetadata: true,
+  },
+  render: (args) => <InteractiveWrapper {...args} />,
 }

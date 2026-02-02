@@ -250,7 +250,15 @@
   background-color: color-mix(in srgb, var(--ctp-green) 20%, transparent);
 }
 
+.workflow-viewer .bg-card {
+  background-color: var(--card);
+}
+
 /* Text colors */
+.workflow-viewer .text-foreground {
+  color: var(--foreground);
+}
+
 .workflow-viewer .text-primary {
   color: var(--primary);
 }

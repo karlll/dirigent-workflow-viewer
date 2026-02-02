@@ -41,9 +41,10 @@ export const nodeVariants = cva(
  *
  * Used for styling workflow instance items in the InstanceBrowser component.
  * Matches WorkflowBrowser styling: thin borders, subtle appearance, colors only on selection.
+ * Uses bg-card for theme-aware background (white in light mode, dark card color in dark mode).
  */
 export const instanceItemVariants = cva(
-  'rounded-md border p-3 cursor-pointer transition-all duration-200 bg-white text-left relative',
+  'rounded-md border p-3 cursor-pointer transition-all duration-200 bg-card text-foreground text-left relative',
   {
     variants: {
       status: {

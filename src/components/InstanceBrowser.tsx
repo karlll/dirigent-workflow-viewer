@@ -2,8 +2,10 @@
  * InstanceBrowser component for browsing and filtering workflow instances.
  */
 
+import { useEffect, useState } from 'react'
 import { useInstances } from '../lib/hooks'
 import type { InstanceSummaryDto } from '../types/api'
+import type { ColorMode } from '@xyflow/react'
 import { cn } from '../lib/utils'
 import { instanceItemVariants, statusBadgeVariants } from '../lib/variants'
 
@@ -40,6 +42,9 @@ export interface InstanceBrowserProps {
 
   /** Custom CSS class */
   className?: string
+
+  /** Color mode for the component (default: system) */
+  colorMode?: ColorMode
 }
 
 /**
@@ -70,6 +75,7 @@ export function InstanceBrowser({
   showHeader = false,
   limit = 50,
   className = '',
+  colorMode = 'system',
 }: InstanceBrowserProps) {
   const { instances, total, loading, isRefreshing, error } = useInstances(apiBaseUrl, {
     workflowName,
@@ -78,10 +84,26 @@ export function InstanceBrowser({
     refreshInterval,
   })
 
+  const [isDark, setIsDark] = useState(false)
+
+  // Track system color scheme for 'system' mode
+  useEffect(() => {
+    if (colorMode === 'system') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      setIsDark(mediaQuery.matches)
+
+      const listener = (e: MediaQueryListEvent) => setIsDark(e.matches)
+      mediaQuery.addEventListener('change', listener)
+      return () => mediaQuery.removeEventListener('change', listener)
+    } else {
+      setIsDark(colorMode === 'dark')
+    }
+  }, [colorMode])
+
   // Only show full loading spinner on INITIAL load
   if (loading && instances.length === 0) {
     return (
-      <div className={cn('workflow-viewer flex items-center justify-center p-8 text-muted-foreground', className)}>
+      <div className={cn('workflow-viewer', isDark ? 'dark' : '', 'flex items-center justify-center p-8 text-muted-foreground', className)}>
         <div className="text-center">
           <div className="w-8 h-8 border-3 border-border border-t-primary rounded-full animate-spin mx-auto mb-2" />
           <div className="text-sm">Loading instances...</div>
@@ -94,7 +116,9 @@ export function InstanceBrowser({
     return (
       <div
         className={cn(
-          'workflow-viewer p-4 text-destructive bg-destructive/10 rounded-lg border border-destructive text-sm',
+          'workflow-viewer',
+          isDark ? 'dark' : '',
+          'p-4 text-destructive bg-destructive/10 rounded-lg border border-destructive text-sm',
           className
         )}
       >
@@ -105,7 +129,7 @@ export function InstanceBrowser({
 
   if (instances.length === 0) {
     return (
-      <div className={cn('workflow-viewer p-8 text-muted-foreground text-center text-sm', className)}>
+      <div className={cn('workflow-viewer', isDark ? 'dark' : '', 'p-8 text-muted-foreground text-center text-sm', className)}>
         No instances found
         {(workflowName || status) && (
           <div className="mt-2 text-xs">
@@ -119,7 +143,7 @@ export function InstanceBrowser({
   }
 
   return (
-    <div className={cn('workflow-viewer flex flex-col', className)}>
+    <div className={cn('workflow-viewer', isDark ? 'dark' : '', 'flex flex-col', className)}>
       {/* Header with count */}
       {showHeader && (
         <div className="px-4 py-3 bg-muted border-b border-border text-sm text-muted-foreground flex justify-between items-center">
