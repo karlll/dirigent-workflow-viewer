@@ -5,6 +5,9 @@
 
 import { useInstanceDetails, useWorkflowDefinition } from '../hooks'
 import { ExecutableWorkflow } from '../../components/ExecutableWorkflow'
+import type { ColorMode } from '@xyflow/react'
+import { cn } from '../utils'
+import { statusBadgeVariants } from '../variants'
 
 export interface InstanceMonitorProps {
   /** Instance ID to monitor */
@@ -13,22 +16,25 @@ export interface InstanceMonitorProps {
   apiBaseUrl: string
   /** Optional: layout direction for workflow visualization */
   direction?: 'LR' | 'TB'
+  /** Color mode for the component (default: system) */
+  colorMode?: ColorMode
 }
 
 /**
  * Component that monitors a workflow instance in real-time.
- * 
+ *
  * Features:
  * - Fetches instance details from API
  * - Subscribes to SSE for real-time updates (if instance is running)
  * - Displays workflow visualization with execution state
  * - Shows instance metadata and status
- * 
+ *
  * @example
  * ```tsx
  * <InstanceMonitor
  *   instanceId="abc123"
  *   apiBaseUrl="http://localhost:8080"
+ *   colorMode="dark"
  * />
  * ```
  */
@@ -36,15 +42,16 @@ export function InstanceMonitor({
   instanceId,
   apiBaseUrl,
   direction = 'LR',
+  colorMode = 'system',
 }: InstanceMonitorProps) {
   const { instance, loading, error } = useInstanceDetails(instanceId, apiBaseUrl)
-  
+
   // Fetch the workflow definition for visualization
-  const { 
-    workflow, 
-    loading: workflowLoading 
+  const {
+    workflow,
+    loading: workflowLoading
   } = useWorkflowDefinition(
-    instance?.workflowName || '', 
+    instance?.workflowName || '',
     apiBaseUrl
   )
 
@@ -52,15 +59,7 @@ export function InstanceMonitor({
 
   if (loading || workflowLoading) {
     return (
-      <div
-        style={{
-          padding: '2rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#6b7280',
-        }}
-      >
+      <div className="workflow-viewer flex items-center justify-center p-8 text-muted-foreground">
         Loading instance details...
       </div>
     )
@@ -68,26 +67,11 @@ export function InstanceMonitor({
 
   if (error) {
     return (
-      <div
-        style={{
-          padding: '2rem',
-          backgroundColor: '#fef2f2',
-          border: '1px solid #fecaca',
-          borderRadius: '0.375rem',
-          margin: '1rem',
-        }}
-      >
-        <h3
-          style={{
-            margin: '0 0 0.5rem 0',
-            fontSize: '1rem',
-            fontWeight: 600,
-            color: '#991b1b',
-          }}
-        >
+      <div className="workflow-viewer p-4 text-destructive bg-destructive/10 rounded-md border border-destructive">
+        <h3 className="text-base font-semibold mb-2">
           Error loading instance
         </h3>
-        <p style={{ margin: 0, fontSize: '0.875rem', color: '#7f1d1d' }}>
+        <p className="text-sm">
           {error}
         </p>
       </div>
@@ -96,94 +80,31 @@ export function InstanceMonitor({
 
   if (!instance || !workflow) {
     return (
-      <div
-        style={{
-          padding: '2rem',
-          textAlign: 'center',
-          color: '#6b7280',
-        }}
-      >
+      <div className="workflow-viewer p-8 text-center text-muted-foreground">
         Instance not found
       </div>
     )
   }
 
+  const statusValue = instance.status.toUpperCase() as 'RUNNING' | 'COMPLETED' | 'FAILED'
+
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        overflow: 'hidden',
-      }}
-    >
+    <div className="workflow-viewer flex flex-col h-full overflow-hidden">
       {/* Instance Header */}
-      <header
-        style={{
-          padding: '1rem',
-          borderBottom: '1px solid #e5e7eb',
-          backgroundColor: 'white',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '0.5rem',
-          }}
-        >
-          <h2
-            style={{
-              margin: 0,
-              fontSize: '1.125rem',
-              fontWeight: 600,
-            }}
-          >
+      <header className="p-4 border-b border-border bg-muted">
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="text-lg font-semibold text-foreground">
             {instance.workflowName}
           </h2>
-          <span
-            style={{
-              fontSize: '0.875rem',
-              padding: '0.25rem 0.75rem',
-              borderRadius: '0.25rem',
-              fontWeight: 500,
-              backgroundColor:
-                instance.status === 'RUNNING'
-                  ? '#dbeafe'
-                  : instance.status === 'COMPLETED'
-                    ? '#d1fae5'
-                    : '#fee2e2',
-              color:
-                instance.status === 'RUNNING'
-                  ? '#1e40af'
-                  : instance.status === 'COMPLETED'
-                    ? '#065f46'
-                    : '#991b1b',
-            }}
-          >
+          <span className={cn(statusBadgeVariants({ status: statusValue }))}>
             {instance.status}
           </span>
         </div>
 
-        <div
-          style={{
-            display: 'flex',
-            gap: '1.5rem',
-            fontSize: '0.75rem',
-            color: '#6b7280',
-          }}
-        >
+        <div className="flex gap-6 text-xs text-muted-foreground">
           <span>
             ID:{' '}
-            <code
-              style={{
-                fontFamily: 'ui-monospace, monospace',
-                backgroundColor: '#f3f4f6',
-                padding: '0.125rem 0.25rem',
-                borderRadius: '0.125rem',
-              }}
-            >
+            <code className="font-mono bg-muted/10 px-1 rounded text-xs">
               {instance.id}
             </code>
           </span>
@@ -200,17 +121,7 @@ export function InstanceMonitor({
         </div>
 
         {instance.error && (
-          <div
-            style={{
-              marginTop: '0.5rem',
-              padding: '0.5rem',
-              backgroundColor: '#fef2f2',
-              border: '1px solid #fecaca',
-              borderRadius: '0.25rem',
-              fontSize: '0.75rem',
-              color: '#991b1b',
-            }}
-          >
+          <div className="mt-2 p-2 bg-destructive/10 border border-destructive rounded text-xs text-destructive">
             <strong>Error:</strong> {instance.error}
             {instance.failedStep && <> (Step: {instance.failedStep})</>}
           </div>
@@ -218,12 +129,13 @@ export function InstanceMonitor({
       </header>
 
       {/* Workflow Visualization */}
-      <div style={{ flex: 1, overflow: 'auto', padding: '1rem' }}>
+      <div className="flex-1 overflow-auto p-4">
         <ExecutableWorkflow
           workflow={workflow}
           instanceId={instance.id}
           apiBaseUrl={apiBaseUrl}
           direction={direction}
+          colorMode={colorMode}
         />
       </div>
     </div>
