@@ -3,6 +3,7 @@
  * Displays instance details and subscribes to SSE updates for running instances.
  */
 
+import { useState, useEffect } from 'react'
 import { useInstanceDetails, useWorkflowDefinition } from '../hooks'
 import { ExecutableWorkflow } from '../../components/ExecutableWorkflow'
 import type { ColorMode } from '@xyflow/react'
@@ -55,11 +56,23 @@ export function InstanceMonitor({
     apiBaseUrl
   )
 
-  // No need to subscribe here - ExecutableWorkflow handles SSE subscriptions
+  // Resolve colorMode into a boolean for applying the dark class
+  const [isDark, setIsDark] = useState(false)
+  useEffect(() => {
+    if (colorMode === 'system') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      setIsDark(mediaQuery.matches)
+      const listener = (e: MediaQueryListEvent) => setIsDark(e.matches)
+      mediaQuery.addEventListener('change', listener)
+      return () => mediaQuery.removeEventListener('change', listener)
+    } else {
+      setIsDark(colorMode === 'dark')
+    }
+  }, [colorMode])
 
   if (loading || workflowLoading) {
     return (
-      <div className="workflow-viewer flex items-center justify-center p-8 text-muted-foreground">
+      <div className={cn('workflow-viewer font-sans', isDark ? 'dark' : '', 'flex items-center justify-center p-8 text-muted-foreground')}>
         Loading instance details...
       </div>
     )
@@ -67,7 +80,7 @@ export function InstanceMonitor({
 
   if (error) {
     return (
-      <div className="workflow-viewer p-4 text-destructive bg-destructive/10 rounded-md border border-destructive">
+      <div className={cn('workflow-viewer font-sans', isDark ? 'dark' : '', 'p-4 text-destructive bg-destructive/10 rounded-md border border-destructive')}>
         <h3 className="text-base font-semibold mb-2">
           Error loading instance
         </h3>
@@ -80,7 +93,7 @@ export function InstanceMonitor({
 
   if (!instance || !workflow) {
     return (
-      <div className="workflow-viewer p-8 text-center text-muted-foreground">
+      <div className={cn('workflow-viewer font-sans', isDark ? 'dark' : '', 'p-8 text-center text-muted-foreground')}>
         Instance not found
       </div>
     )
@@ -89,7 +102,7 @@ export function InstanceMonitor({
   const statusValue = instance.status.toUpperCase() as 'RUNNING' | 'COMPLETED' | 'FAILED'
 
   return (
-    <div className="workflow-viewer flex flex-col h-full overflow-hidden">
+    <div className={cn('workflow-viewer font-sans', isDark ? 'dark' : '', 'flex flex-col h-full overflow-hidden')}>
       {/* Instance Header */}
       <header className="p-4 border-b border-border bg-muted">
         <div className="flex justify-between items-center mb-2">

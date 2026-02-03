@@ -1,21 +1,21 @@
 /**
- * Tests for InstanceMonitor component
+ * Tests for InstanceMonitor component (src/lib/components/InstanceMonitor)
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { InstanceMonitor } from './InstanceMonitor'
-import type { InstanceState } from '../types/execution'
+import { InstanceMonitor } from '../lib/components/InstanceMonitor'
+import type { InstanceDetailsDto } from '../types/api'
 import * as hooks from '../lib/hooks'
 
 // Mock the hooks
 vi.mock('../lib/hooks', () => ({
+  useInstanceDetails: vi.fn(),
   useWorkflowDefinition: vi.fn(),
-  useInstanceState: vi.fn(),
 }))
 
+const mockUseInstanceDetails = vi.mocked(hooks.useInstanceDetails)
 const mockUseWorkflowDefinition = vi.mocked(hooks.useWorkflowDefinition)
-const mockUseInstanceState = vi.mocked(hooks.useInstanceState)
 
 describe('InstanceMonitor', () => {
   const mockWorkflow = {
@@ -31,33 +31,19 @@ describe('InstanceMonitor', () => {
     },
   }
 
-  const mockYaml = `name: sample_workflow
-version: 1
-start: step1
-steps:
-  step1:
-    kind: tool
-    tool: sample_tool
-    end: true
-`
-
-  const mockInstanceState: InstanceState = {
+  const mockInstance: InstanceDetailsDto = {
+    id: 'test-123',
     workflowName: 'sample_workflow',
     workflowVersion: 1,
-    status: 'running',
+    status: 'RUNNING',
+    triggeredBy: 'evt-001',
     startedAt: '2026-01-07T10:00:00Z',
-    currentStepId: 'step1',
-    branches: [],
-    steps: new Map([
-      [
-        'step1',
-        {
-          status: 'running',
-          stepKind: 'tool',
-          startedAt: '2026-01-07T10:00:00Z',
-        },
-      ],
-    ]),
+    completedAt: null,
+    durationMs: null,
+    steps: [],
+    finalState: null,
+    error: null,
+    failedStep: null,
   }
 
   beforeEach(() => {
@@ -65,90 +51,63 @@ steps:
   })
 
   describe('Loading state', () => {
-    it('should show loading indicator when workflow is loading', () => {
+    it('should show loading indicator when instance details are loading', () => {
+      mockUseInstanceDetails.mockReturnValue({
+        instance: null,
+        loading: true,
+        error: null,
+      })
+      mockUseWorkflowDefinition.mockReturnValue({
+        workflow: null,
+        yaml: null,
+        loading: false,
+        error: null,
+      })
+
+      render(
+        <InstanceMonitor
+          apiBaseUrl="http://localhost:8080"
+          instanceId="test-123"
+        />
+      )
+
+      expect(screen.getByText('Loading instance details...')).toBeInTheDocument()
+    })
+
+    it('should show loading indicator when workflow definition is loading', () => {
+      mockUseInstanceDetails.mockReturnValue({
+        instance: mockInstance,
+        loading: false,
+        error: null,
+      })
       mockUseWorkflowDefinition.mockReturnValue({
         workflow: null,
         yaml: null,
         loading: true,
         error: null,
       })
-      mockUseInstanceState.mockReturnValue({
-        state: null,
-        loading: false,
-        error: null,
-      })
 
       render(
         <InstanceMonitor
           apiBaseUrl="http://localhost:8080"
           instanceId="test-123"
-          workflowName="sample_workflow"
         />
       )
 
-      expect(screen.getByText('Loading instance monitor...')).toBeInTheDocument()
-    })
-
-    it('should show loading indicator when instance state is loading', () => {
-      mockUseWorkflowDefinition.mockReturnValue({
-        workflow: mockWorkflow,
-        yaml: mockYaml,
-        loading: false,
-        error: null,
-      })
-      mockUseInstanceState.mockReturnValue({
-        state: null,
-        loading: true,
-        error: null,
-      })
-
-      render(
-        <InstanceMonitor
-          apiBaseUrl="http://localhost:8080"
-          instanceId="test-123"
-          workflowName="sample_workflow"
-        />
-      )
-
-      expect(screen.getByText('Loading instance monitor...')).toBeInTheDocument()
-    })
-
-    it('should not show loading when showLoading is false', () => {
-      mockUseWorkflowDefinition.mockReturnValue({
-        workflow: null,
-        yaml: null,
-        loading: true,
-        error: null,
-      })
-      mockUseInstanceState.mockReturnValue({
-        state: null,
-        loading: false,
-        error: null,
-      })
-
-      render(
-        <InstanceMonitor
-          apiBaseUrl="http://localhost:8080"
-          instanceId="test-123"
-          workflowName="sample_workflow"
-          showLoading={false}
-        />
-      )
-
-      expect(screen.queryByText('Loading instance monitor...')).not.toBeInTheDocument()
+      expect(screen.getByText('Loading instance details...')).toBeInTheDocument()
     })
   })
 
   describe('Error state', () => {
-    it('should show workflow error', () => {
+    it('should show error when instance details fail to load', () => {
+      mockUseInstanceDetails.mockReturnValue({
+        instance: null,
+        loading: false,
+        error: 'Failed to fetch instance',
+      })
       mockUseWorkflowDefinition.mockReturnValue({
         workflow: null,
         yaml: null,
-        loading: false,
-        error: 'Failed to fetch workflow',
-      })
-      mockUseInstanceState.mockReturnValue({
-        state: null,
         loading: false,
         error: null,
       })
@@ -157,72 +116,47 @@ steps:
         <InstanceMonitor
           apiBaseUrl="http://localhost:8080"
           instanceId="test-123"
-          workflowName="sample_workflow"
         />
       )
 
-      expect(screen.getByText(/Failed to fetch workflow/)).toBeInTheDocument()
-    })
-
-    it('should show instance state error', () => {
-      mockUseWorkflowDefinition.mockReturnValue({
-        workflow: mockWorkflow,
-        yaml: mockYaml,
-        loading: false,
-        error: null,
-      })
-      mockUseInstanceState.mockReturnValue({
-        state: null,
-        loading: false,
-        error: 'Failed to fetch instance state',
-      })
-
-      render(
-        <InstanceMonitor
-          apiBaseUrl="http://localhost:8080"
-          instanceId="test-123"
-          workflowName="sample_workflow"
-        />
-      )
-
-      expect(screen.getByText(/Failed to fetch instance state/)).toBeInTheDocument()
-    })
-
-    it('should prioritize workflow error over instance error', () => {
-      mockUseWorkflowDefinition.mockReturnValue({
-        workflow: null,
-        yaml: null,
-        loading: false,
-        error: 'Workflow error',
-      })
-      mockUseInstanceState.mockReturnValue({
-        state: null,
-        loading: false,
-        error: 'Instance error',
-      })
-
-      render(
-        <InstanceMonitor
-          apiBaseUrl="http://localhost:8080"
-          instanceId="test-123"
-          workflowName="sample_workflow"
-        />
-      )
-
-      expect(screen.getByText(/Workflow error/)).toBeInTheDocument()
+      expect(screen.getByText('Error loading instance')).toBeInTheDocument()
+      expect(screen.getByText('Failed to fetch instance')).toBeInTheDocument()
     })
   })
 
   describe('Empty state', () => {
-    it('should show workflow not found when workflow is null', () => {
+    it('should show not found when instance is null', () => {
+      mockUseInstanceDetails.mockReturnValue({
+        instance: null,
+        loading: false,
+        error: null,
+      })
       mockUseWorkflowDefinition.mockReturnValue({
         workflow: null,
         yaml: null,
         loading: false,
         error: null,
       })
-      mockUseInstanceState.mockReturnValue({
-        state: mockInstanceState,
+
+      render(
+        <InstanceMonitor
+          apiBaseUrl="http://localhost:8080"
+          instanceId="test-123"
+        />
+      )
+
+      expect(screen.getByText('Instance not found')).toBeInTheDocument()
+    })
+
+    it('should show not found when workflow is null but instance exists', () => {
+      mockUseInstanceDetails.mockReturnValue({
+        instance: mockInstance,
+        loading: false,
+        error: null,
+      })
+      mockUseWorkflowDefinition.mockReturnValue({
+        workflow: null,
+        yaml: null,
         loading: false,
         error: null,
       })
@@ -231,24 +165,23 @@ steps:
         <InstanceMonitor
           apiBaseUrl="http://localhost:8080"
           instanceId="test-123"
-          workflowName="sample_workflow"
         />
       )
 
-      expect(screen.getByText('Workflow not found')).toBeInTheDocument()
+      expect(screen.getByText('Instance not found')).toBeInTheDocument()
     })
   })
 
-  describe('Monitoring display', () => {
-    it('should render instance header with ID', () => {
-      mockUseWorkflowDefinition.mockReturnValue({
-        workflow: mockWorkflow,
-        yaml: mockYaml,
+  describe('Instance header', () => {
+    it('should display workflow name', () => {
+      mockUseInstanceDetails.mockReturnValue({
+        instance: mockInstance,
         loading: false,
         error: null,
       })
-      mockUseInstanceState.mockReturnValue({
-        state: mockInstanceState,
+      mockUseWorkflowDefinition.mockReturnValue({
+        workflow: mockWorkflow,
+        yaml: 'name: sample_workflow',
         loading: false,
         error: null,
       })
@@ -257,23 +190,21 @@ steps:
         <InstanceMonitor
           apiBaseUrl="http://localhost:8080"
           instanceId="test-123"
-          workflowName="sample_workflow"
         />
       )
 
-      expect(screen.getByText('Monitoring Instance')).toBeInTheDocument()
-      expect(screen.getByText('test-123')).toBeInTheDocument()
+      expect(screen.getByText('sample_workflow')).toBeInTheDocument()
     })
 
-    it('should show status badge', () => {
-      mockUseWorkflowDefinition.mockReturnValue({
-        workflow: mockWorkflow,
-        yaml: mockYaml,
+    it('should display instance ID', () => {
+      mockUseInstanceDetails.mockReturnValue({
+        instance: mockInstance,
         loading: false,
         error: null,
       })
-      mockUseInstanceState.mockReturnValue({
-        state: mockInstanceState,
+      mockUseWorkflowDefinition.mockReturnValue({
+        workflow: mockWorkflow,
+        yaml: 'name: sample_workflow',
         loading: false,
         error: null,
       })
@@ -282,52 +213,51 @@ steps:
         <InstanceMonitor
           apiBaseUrl="http://localhost:8080"
           instanceId="test-123"
-          workflowName="sample_workflow"
+        />
+      )
+
+      expect(screen.getByText('test-123')).toBeInTheDocument()
+    })
+
+    it('should display status badge', () => {
+      mockUseInstanceDetails.mockReturnValue({
+        instance: mockInstance,
+        loading: false,
+        error: null,
+      })
+      mockUseWorkflowDefinition.mockReturnValue({
+        workflow: mockWorkflow,
+        yaml: 'name: sample_workflow',
+        loading: false,
+        error: null,
+      })
+
+      render(
+        <InstanceMonitor
+          apiBaseUrl="http://localhost:8080"
+          instanceId="test-123"
         />
       )
 
       expect(screen.getByText('RUNNING')).toBeInTheDocument()
     })
 
-    it('should show current step for running instances', () => {
-      mockUseWorkflowDefinition.mockReturnValue({
-        workflow: mockWorkflow,
-        yaml: mockYaml,
-        loading: false,
-        error: null,
-      })
-      mockUseInstanceState.mockReturnValue({
-        state: mockInstanceState,
-        loading: false,
-        error: null,
-      })
-
-      render(
-        <InstanceMonitor
-          apiBaseUrl="http://localhost:8080"
-          instanceId="test-123"
-          workflowName="sample_workflow"
-        />
-      )
-
-      expect(screen.getByText(/Current: step1/)).toBeInTheDocument()
-    })
-
-    it('should not show current step for completed instances', () => {
-      const completedState: InstanceState = {
-        ...mockInstanceState,
-        status: 'completed',
-        currentStepId: undefined,
+    it('should display completion time when instance is completed', () => {
+      const completedInstance: InstanceDetailsDto = {
+        ...mockInstance,
+        status: 'COMPLETED',
+        completedAt: '2026-01-07T10:01:00Z',
+        durationMs: 60000,
       }
 
-      mockUseWorkflowDefinition.mockReturnValue({
-        workflow: mockWorkflow,
-        yaml: mockYaml,
+      mockUseInstanceDetails.mockReturnValue({
+        instance: completedInstance,
         loading: false,
         error: null,
       })
-      mockUseInstanceState.mockReturnValue({
-        state: completedState,
+      mockUseWorkflowDefinition.mockReturnValue({
+        workflow: mockWorkflow,
+        yaml: 'name: sample_workflow',
         loading: false,
         error: null,
       })
@@ -336,49 +266,78 @@ steps:
         <InstanceMonitor
           apiBaseUrl="http://localhost:8080"
           instanceId="test-123"
-          workflowName="sample_workflow"
         />
       )
 
-      expect(screen.queryByText(/Current:/)).not.toBeInTheDocument()
+      expect(screen.getByText(/Completed:/)).toBeInTheDocument()
+      expect(screen.getByText(/Duration: 60000ms/)).toBeInTheDocument()
     })
 
-    it('should render ExecutableWorkflow component', () => {
-      mockUseWorkflowDefinition.mockReturnValue({
-        workflow: mockWorkflow,
-        yaml: mockYaml,
+    it('should display error details when instance has failed', () => {
+      const failedInstance: InstanceDetailsDto = {
+        ...mockInstance,
+        status: 'FAILED',
+        error: 'LLM timeout',
+        failedStep: 'step2',
+      }
+
+      mockUseInstanceDetails.mockReturnValue({
+        instance: failedInstance,
         loading: false,
         error: null,
       })
-      mockUseInstanceState.mockReturnValue({
-        state: mockInstanceState,
+      mockUseWorkflowDefinition.mockReturnValue({
+        workflow: mockWorkflow,
+        yaml: 'name: sample_workflow',
         loading: false,
         error: null,
       })
 
-      const { container } = render(
+      render(
         <InstanceMonitor
           apiBaseUrl="http://localhost:8080"
           instanceId="test-123"
-          workflowName="sample_workflow"
         />
       )
 
-      // ExecutableWorkflow should be rendered (check for React Flow container)
-      expect(container.querySelector('.react-flow')).toBeInTheDocument()
+      expect(screen.getByText(/LLM timeout/)).toBeInTheDocument()
+      expect(screen.getByText(/Step: step2/)).toBeInTheDocument()
     })
   })
 
-  describe('Props handling', () => {
-    it('should pass direction prop to ExecutableWorkflow', () => {
+  describe('Hook wiring', () => {
+    it('should pass instanceId and apiBaseUrl to useInstanceDetails', () => {
+      mockUseInstanceDetails.mockReturnValue({
+        instance: null,
+        loading: true,
+        error: null,
+      })
       mockUseWorkflowDefinition.mockReturnValue({
-        workflow: mockWorkflow,
-        yaml: mockYaml,
+        workflow: null,
+        yaml: null,
         loading: false,
         error: null,
       })
-      mockUseInstanceState.mockReturnValue({
-        state: mockInstanceState,
+
+      render(
+        <InstanceMonitor
+          apiBaseUrl="http://localhost:8080"
+          instanceId="abc-456"
+        />
+      )
+
+      expect(mockUseInstanceDetails).toHaveBeenCalledWith('abc-456', 'http://localhost:8080')
+    })
+
+    it('should derive workflowName from instance and pass to useWorkflowDefinition', () => {
+      mockUseInstanceDetails.mockReturnValue({
+        instance: mockInstance,
+        loading: false,
+        error: null,
+      })
+      mockUseWorkflowDefinition.mockReturnValue({
+        workflow: mockWorkflow,
+        yaml: 'name: sample_workflow',
         loading: false,
         error: null,
       })
@@ -387,63 +346,33 @@ steps:
         <InstanceMonitor
           apiBaseUrl="http://localhost:8080"
           instanceId="test-123"
-          workflowName="sample_workflow"
-          direction="TB"
         />
       )
 
-      // Component should render without errors
-      expect(screen.getByText('Monitoring Instance')).toBeInTheDocument()
+      expect(mockUseWorkflowDefinition).toHaveBeenCalledWith('sample_workflow', 'http://localhost:8080')
     })
 
-    it('should apply custom className', () => {
-      mockUseWorkflowDefinition.mockReturnValue({
-        workflow: mockWorkflow,
-        yaml: mockYaml,
-        loading: false,
+    it('should pass empty string to useWorkflowDefinition when instance is not yet loaded', () => {
+      mockUseInstanceDetails.mockReturnValue({
+        instance: null,
+        loading: true,
         error: null,
       })
-      mockUseInstanceState.mockReturnValue({
-        state: mockInstanceState,
-        loading: false,
+      mockUseWorkflowDefinition.mockReturnValue({
+        workflow: null,
+        yaml: null,
+        loading: true,
         error: null,
       })
 
-      const { container } = render(
+      render(
         <InstanceMonitor
           apiBaseUrl="http://localhost:8080"
           instanceId="test-123"
-          workflowName="sample_workflow"
-          className="custom-class"
         />
       )
 
-      expect(container.firstChild).toHaveClass('custom-class')
-    })
-
-    it('should apply custom styles', () => {
-      mockUseWorkflowDefinition.mockReturnValue({
-        workflow: mockWorkflow,
-        yaml: mockYaml,
-        loading: false,
-        error: null,
-      })
-      mockUseInstanceState.mockReturnValue({
-        state: mockInstanceState,
-        loading: false,
-        error: null,
-      })
-
-      const { container } = render(
-        <InstanceMonitor
-          apiBaseUrl="http://localhost:8080"
-          instanceId="test-123"
-          workflowName="sample_workflow"
-          style={{ maxHeight: '500px' }}
-        />
-      )
-
-      expect(container.firstChild).toHaveStyle({ maxHeight: '500px' })
+      expect(mockUseWorkflowDefinition).toHaveBeenCalledWith('', 'http://localhost:8080')
     })
   })
 })
