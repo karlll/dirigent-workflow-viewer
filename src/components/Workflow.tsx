@@ -150,7 +150,7 @@ export function Workflow({
   }
 
   return (
-    <div className={`workflow-viewer ${isDark ? 'dark' : ''}`}>
+    <div className={`workflow-viewer ${isDark ? 'dark' : ''}`} style={{ height: '100%' }}>
       {showHeader && workflowData && (
         <div className="workflow-header">
           <h3 className="workflow-name">{workflowData.name}</h3>
@@ -164,7 +164,7 @@ export function Workflow({
           </div>
         </div>
       )}
-      <div style={{ width: '100%', height: showHeader ? 'calc(100% - 80px)' : '600px' }}>
+      <div style={{ width: '100%', height: showHeader ? 'calc(100% - 80px)' : '100%' }}>
         <ReactFlow
           nodes={nodes}
           edges={edges}

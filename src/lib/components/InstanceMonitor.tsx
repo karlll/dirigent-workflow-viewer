@@ -149,6 +149,7 @@ export function InstanceMonitor({
           apiBaseUrl={apiBaseUrl}
           direction={direction}
           colorMode={colorMode}
+          showHeader={false}
         />
       </div>
     </div>
